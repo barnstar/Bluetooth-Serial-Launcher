@@ -35,6 +35,7 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
     @IBOutlet weak var autoRecordSwitch: UISwitch!
     
     override func viewDidLoad() {
+        self.title = "Settings"
         validationCodeField.text = LocalSettings.settings.validationCode
         autoRecordSwitch.setOn(LocalSettings.settings.autoRecord, animated: false)
     }

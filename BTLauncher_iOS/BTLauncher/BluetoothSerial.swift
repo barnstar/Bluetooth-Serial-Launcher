@@ -65,13 +65,15 @@ protocol BluetoothConnectionDelegate {
 }
 
 // Make some of the delegate functions optional
-extension BluetoothSerialDelegate {
+extension BluetoothSerialDelegate 
+{
     func serialDidReceiveString(_ message: String) {}
     func serialDidReceiveBytes(_ bytes: [UInt8]) {}
     func serialDidReceiveData(_ data: Data) {}
 }
 
-extension BluetoothConnectionDelegate {
+extension BluetoothConnectionDelegate 
+{
     func serialDidDiscoverPeripheral(_ peripheral: CBPeripheral, RSSI: NSNumber?) {}
     func serialDidConnect(_ peripheral: CBPeripheral) {}
     func serialDidFailToConnect(_ peripheral: CBPeripheral, error: NSError?) {}
@@ -79,8 +81,8 @@ extension BluetoothConnectionDelegate {
     func serialDidReadRSSI(_ rssi: NSNumber) {}
 }
 
-final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
-    
+final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate 
+{
     // MARK: Variables
     private static let serial : BluetoothSerial = {
         let instance = BluetoothSerial()

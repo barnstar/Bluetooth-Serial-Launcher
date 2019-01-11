@@ -36,6 +36,10 @@
 #define VALIDATE    "VALIDATE"
 #define VCODE       "2V55GTU"   //Use something unique here
 
+#define DEVICEID    "DEVICEID"
+
+#define CTY_OK      "CTY_OK"
+#define CTY_NONE    "CTY_NONE"
 
 #define CMD_TERM    ':'
 #define CMD_SEP     '|'

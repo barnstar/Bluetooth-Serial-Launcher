@@ -37,7 +37,13 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     @IBOutlet weak var fireButton: UIButton!
     @IBOutlet weak var ctyButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
+    @IBOutlet weak var pingButton: UIButton!
+    @IBOutlet weak var validateButton: UIBarButtonItem!
+
+    @IBOutlet var roundedViews: [UIView]!
+
     @IBOutlet weak var recordingLabel: UILabel!
+    @IBOutlet weak var continuityIndicator: UIView!
 
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
@@ -53,20 +59,21 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
 
     override func viewDidLoad()
     {
+        self.title = "Fire Control"
         self.connectionStatusLabel.text = "Not Connected"
-        startObservers()
-        LaunchController.shared().armed = false
+
         stopButton.isHidden = true
         recordingLabel.isHidden = true
         fireButton.isHidden = true
+        continuityIndicator.isHidden = true;
 
-        //Don't want to poke ourselves on any sharp corners.
-        fireButton.clipsToBounds = true
-        fireButton.layer.cornerRadius = 5.0
-        armButton.clipsToBounds = true
-        armButton.layer.cornerRadius = 5.0
-        ctyButton.clipsToBounds = true
-        ctyButton.layer.cornerRadius = 5.0
+        roundedViews.forEach { (button) in
+            button.clipsToBounds = true
+            button.layer.cornerRadius = 5.0
+        }
+
+        continuityIndicator.clipsToBounds = true
+        continuityIndicator.layer.cornerRadius = 24
 
         AVCaptureDevice.requestAccess(for: AVMediaType.video) { response in
             if response {
@@ -77,6 +84,9 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
                 }
             }
         }
+
+        startObservers()
+        updateConnectionStatusLabel()
     }
 
     func startCamera()
@@ -168,12 +178,19 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     {
         let connected = LaunchController.shared().connected
         let validated = LaunchController.shared().validated
-        let vString = validated ? "Verified" : "Unverified"
+        let vString = validated ? "Validated" : "Not Validated"
         if(connected) {
             self.connectionStatusLabel.text = "Connected & " + vString
+            self.connectionStatusLabel.textColor = validated ? .green : .red
         }else{
-            self.connectionStatusLabel.text = "Not Connected"
+            self.connectionStatusLabel.text = ":: Not Connected ::"
+            self.connectionStatusLabel.textColor = .red
+        }
 
+        if(validated) {
+            self.navigationItem.rightBarButtonItem = nil;
+        }else{
+            self.navigationItem.rightBarButtonItem = validateButton;
         }
     }
 
@@ -189,6 +206,11 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
                 [weak self] (_,_) in
                 self?.updateConnectionStatusLabel()
             },
+
+            LaunchController.shared().observe(\LaunchController.continuity, options: [.new]) {
+                [weak self] (_,_) in
+                self?.continuityIndicator.isHidden = !LaunchController.shared().continuity;
+            },
         ]
     }
 
@@ -196,6 +218,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         LaunchController.shared().armed = true
         fireButton.isHidden = false
         ctyButton.isHidden = true
+        pingButton.isHidden = true;
         setRecording(true)
     }
 
@@ -203,6 +226,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         LaunchController.shared().armed = false
         fireButton.isHidden = true
         ctyButton.isHidden = false
+        pingButton.isHidden = false;
     }
 
     @IBAction func fireTouchDown(_ sender: Any) {
@@ -228,5 +252,10 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
 
     @IBAction func validatePressed(_ sender: Any) {
         LaunchController.shared().sendValidationCommand()
+    }
+
+
+    @IBAction func pingPressed(_ sender: Any) {
+        LaunchController.shared().pingConnectedDevice()
     }
 }

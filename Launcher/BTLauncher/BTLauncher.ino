@@ -41,7 +41,7 @@ String kCTestOff = String(CTEST_OFF);
 String kValidate = String(VALIDATE);
 String kValidationCode = String(VCODE);
 
-//Basic command structure is :COMMAND|VALUE:
+//Command structure is :COMMAND|VALUE:
 const char cmdTerminator = CMD_TERM;
 const char cmdValSeparator = CMD_SEP;
 const size_t cmdLen = CMD_LEN_MAX;
@@ -68,6 +68,7 @@ const int MAX_CONTINUITY_TIME_MS = 5000;
 long continuityTime = 0;
 
 bool isReady = false;
+bool continuity = false;
 
 void setup()
 {
@@ -81,6 +82,7 @@ void setup()
     pinMode(CONTINUTITY_CONTROL_PIN, INPUT);
     pinMode(FIRE_CONTROL_PIN, INPUT);
     pinMode(ARM_CONTROL_PIN, INPUT);
+    pinMode(CONTINUITY_READ_PIN, INPUT);
 
     pinMode(ARMED_INDICATOR_PIN, OUTPUT);
     digitalWrite(ARMED_INDICATOR_PIN, LOW);
@@ -98,6 +100,7 @@ void loop()
         playReadyTone();
         isReady = true;
     }
+    
     readCommand();
 
     //Safety.  We don't want to keep any of these relays engaged for more than a few
@@ -111,6 +114,18 @@ void loop()
     {
         setFired(false);
     }
+
+    //Read the voltage on the continuity pin.  
+    int cty_val = analogRead(CONTINUITY_READ_PIN);
+    if(cty_val > 512 && !continuity) {
+        String cmd = command(CTY_OK);
+        BTSerial.println(cmd)
+        continuity = true
+    }else if(cty_val < 128 && continuity) {
+        String cmd = command(CTY_NONE);
+        BTSerial.println(cmd)
+        continuity = false
+    }    
 }
 
 void readCommand()
@@ -162,12 +177,6 @@ void readCommand()
 
 void executeCommand(const String &command, const String &value)
 {
-    //The relay boards I'm using trigger when the "input" pin
-    //is grounded.  So to turn them off, we set the pin to an
-    //input (without a pullup resistor) and to turn them on
-    //And set them to an ouput and set the pin to low.
-    //Your setup may be different
-
     Serial.println("Command: " + command);
     if (command == kFireOn)
     {
@@ -207,7 +216,7 @@ void executeCommand(const String &command, const String &value)
         if (value == VCODE)
         {
             String validateCmd = command(VALIDATE, VCODE);
-            //Return our validation code
+            //Return our internal validation code
             BTSerial.println(validateCmd);
             playPingTone();
         }
@@ -223,6 +232,12 @@ String command(String &cmd)
 {
     return CMD_TERM_S + cmd + CMD_TERM_S;
 }
+
+//The relay boards I'm using trigger when the "input" pin
+//is grounded.  So to turn them off, we set the pin to an
+//input (without a pullup resistor) and to turn them on
+//And set them to an ouput and set the pin to low.
+//Your setup may be different.
 
 void setContinuityTestOn(bool on)
 {

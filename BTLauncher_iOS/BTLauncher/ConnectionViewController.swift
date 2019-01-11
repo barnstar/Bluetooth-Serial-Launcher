@@ -43,12 +43,25 @@ class ConnectionViewController : UIViewController, UITableViewDelegate, UITableV
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        self.title = "Connect"
         BluetoothSerial.shared().connectionDelegate = self
-        BluetoothSerial.shared().startScan()
+        self.scanPressed(self);
     }
 
+    var scanning : Bool = false;
     @IBAction func scanPressed(_ sender: Any) {
-        BluetoothSerial.shared().startScan()
+        if(!scanning) {
+            BluetoothSerial.shared().startScan()
+            scanning = true;
+            self.title = "Scanning..."
+        }
+
+        //Abort scan after 5 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            BluetoothSerial.shared().stopScan()
+            self.scanning = false;
+            self.title = "Connect"
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -86,7 +99,6 @@ class ConnectionViewController : UIViewController, UITableViewDelegate, UITableV
     }
 
     func serialDidChangeState() {
-
     }
 
     func serialDidDisconnect(_ peripheral: CBPeripheral, error: NSError?) {
@@ -96,7 +108,7 @@ class ConnectionViewController : UIViewController, UITableViewDelegate, UITableV
 
     func serialDidConnect(_ peripheral: CBPeripheral) {
         LaunchController.shared().connected = true
-        LaunchController.shared().pingConnectedDevice()
+        LaunchController.shared().sendValidationCommand()
         tableView.reloadData()
     }
 

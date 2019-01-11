@@ -28,6 +28,8 @@
 import Foundation
 import CoreBluetooth
 
+let kEnableLoopbackTest = false
+
 class LaunchController : NSObject, BluetoothSerialDelegate
 {
     private static let instance : LaunchController = {
@@ -43,6 +45,10 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
     //MARK: Obserable Properties
 
+    @objc dynamic var continuity : Bool = false;
+
+    @objc dynamic var deviceId : String?
+
     @objc dynamic var armed : Bool = false {
         didSet {
             sendArmedCommand(armed)
@@ -57,7 +63,11 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         }
     }
 
-    @objc dynamic var validated : Bool = true //For testing
+    @objc dynamic var validated : Bool = false {
+        didSet {
+            NSLog("Validated \(validated)")
+        }
+    }
 
 
     //MARK: Command Interface
@@ -75,15 +85,19 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
     public func pingConnectedDevice()
     {
-        if(connected) {
-            BluetoothSerial.shared().sendMessageToDevice(command(PING, value:nil))
-        }
+        BluetoothSerial.shared().sendMessageToDevice(command(PING, value:nil))
     }
 
     public func sendValidationCommand()
     {
         let cmdStr = command(VALIDATE, value: LocalSettings.settings.validationCode)
         BluetoothSerial.shared().sendMessageToDevice(cmdStr)
+
+        if(kEnableLoopbackTest) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+                self.handleIncomingCommand(cmdStr)
+            }
+        }
     }
 
     public func sendFireCommand(_ enable: Bool)
@@ -109,6 +123,10 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
         let cmdStr = command((enable ? CTY_ON : CTY_OFF), value:nil)
         BluetoothSerial.shared().sendMessageToDevice(cmdStr)
+
+        if(kEnableLoopbackTest) {
+            handleIncomingCommand(enable ? CTY_OK : CTY_NONE);
+        }
     }
 
     func sendArmedCommand(_ enable: Bool)
@@ -130,6 +148,12 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
         if(cmd == command(VALIDATE, value: LocalSettings.settings.validationCode)) {
             validated = true
+        }else if(cmdStr == DEVICEID) {
+            deviceId = valStr
+        }else if(cmdStr == CTY_OK) {
+            continuity = true
+        }else if(cmdStr == CTY_NONE) {
+            continuity = false
         }
     }
 

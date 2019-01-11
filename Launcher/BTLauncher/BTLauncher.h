@@ -25,6 +25,8 @@
  * SOFTWARE.
  **********************************************************************************/
 
+#include <Arduino.h>
+
 //GPIO configuration
 #define BT_TX_PIN               3       //Software Serial TX Pin
 #define BT_RX_PI                4       //Software Serial RX ARMED_INDICATOR_PIN
@@ -32,3 +34,5 @@
 #define CONTINUTITY_CONTROL_PIN 6       //Relay to control continuity check
 #define FIRE_CONTROL_PIN        8       //Relay to control fire    
 #define ARM_CONTROL_PIN         9       //Relay to control arming
+
+#define CONTINUITY_READ_PIN     A0
