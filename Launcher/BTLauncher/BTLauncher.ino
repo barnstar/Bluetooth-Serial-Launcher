@@ -28,6 +28,16 @@
 #include "BTLauncher.h"
 #include <SoftwareSerial.h>
 
+//GPIO configuration
+const byte BT_TX_PIN = 3;
+const byte BT_RX_PIN = 4;
+const byte ARMED_INDICATOR_PIN = 7;
+const byte CONTINUTITY_CONTROL_PIN = 6;
+const byte FIRE_CONTROL_PIN = 8;
+const byte ARM_CONTROL_PIN = 9;
+
+//Serial commands
+//FIXME: Put these in a common header
 String kFireOn = String("FIRE_ON");
 String kFireOff = String("FIRE_OFF");
 String kArm = String("ARM_ON");
@@ -36,21 +46,33 @@ String kPing = String("PING");
 String kCTestOn = String("CTEST_ON");
 String kCTestOff = String("CTEST_OFF");
 
+//Basic command structure is :COMMAND|VALUE:
 const char cmdTerminator = ':';
+const char cmdValSeparator = '|';
+const size_t cmdLen = 16;
 
-SoftwareSerial BTSerial(3, 4);
+#pragma mark -
+
+SoftwareSerial BTSerial(BT_TX_PIN, BT_RX_PIN);
+
+//Buffers for our serial commands
+int cmdBufferIndex = 0;
+char cmdBuffer[cmdLen];
+char valueBuffer[cmdLen];
+bool readingCmd = false;
+bool readingVal = false;
+
+const int MAX_ARM_TIME = 5000;
+long armTime = 0;
 bool armed;
 
-const byte ARMED_INDICATOR_PIN = 7;
-const byte CONTINUTITY_READ_PIN = 5;
-const byte CONTINUTITY_TEST_PIN = 6;
-const byte FIRE_CONTROL_PIN = 8;
-const byte ARM_CONTROL_PIN = 9;
+const int MAX_FIRE_TIME_MS = 5000;
+long fireTime = 0;
 
-const size_t cmdLen = 16;
-int index = 0;
-char cmd[cmdLen];
-bool readingCmd = false;
+const int MAX_CONTINUITY_TIME_MS = 5000;
+long continuityTime = 0;
+
+bool isReady = false;
 
 void setup()
 {
@@ -59,86 +81,204 @@ void setup()
 
     Serial.println("Initialized");
 
+    //If using relays, ground the pins to keep the relay
+    //close (for the ones I'm using - YMMV)
+    pinMode(CONTINUTITY_CONTROL_PIN, INPUT);
+    pinMode(FIRE_CONTROL_PIN, INPUT);
+    pinMode(ARM_CONTROL_PIN, INPUT);
+
     pinMode(ARMED_INDICATOR_PIN, OUTPUT);
-    pinMode(FIRE_CONTROL_PIN, OUTPUT);
-    pinMode(ARM_CONTROL_PIN, OUTPUT);
-
-    pinMode(CONTINUTITY_READ_PIN, INPUT_PULLUP);
-    pinMode(CONTINUTITY_TEST_PIN, OUTPUT);
-
     digitalWrite(ARMED_INDICATOR_PIN, LOW);
-    digitalWrite(FIRE_CONTROL_PIN, LOW);
-    digitalWrite(ARM_CONTROL_PIN, LOW);
+
+    //Redudancy?
+    setArmed(false);
+    setFired(false);
+    setContinuityTestOn(false);
 }
 
 void loop()
 {
+    if (!isReady)
+    {
+        playReadyTone();
+        isReady = true;
+    }
     readCommand();
+
+    //Safety.  We don't want to keep any of these relays engaged for more than a few
+    //seconds
+    if (millis() - armTime > MAX_ARM_TIME)
+    {
+        setArmed(false);
+    }
+
+    if (millis() - fireTime > MAX_ARM_TIME)
+    {
+        setFired(false);
+    }
 }
 
 void readCommand()
 {
-
-    bool hasCommand = false;
     if (BTSerial.available())
     {
-        char val = BTSerial.read();
-        if (val == cmdTerminator && !readingCmd)
+        char c = BTSerial.read();
+        if (c == cmdTerminator && !readingCmd)
         {
-            index = 0;
+            cmdBufferIndex = 0;
             readingCmd = true;
-            memset(cmd, 0, cmdLen);
+            memset(cmdBuffer, 0, cmdLen);
             return;
         }
 
-        if (val == cmdTerminator && readingCmd)
+        if (c == cmdValSeparator && readingCmd)
         {
-            String command = String(cmd);
-            executeCommand(command);
+            cmdBufferIndex = 0;
+            readingCmd = false;
+            readingVal = true;
+            memset(valueBuffer, 0, cmdLen);
+            return;
+        }
+
+        if (c == cmdTerminator && (readingCmd || readingVal))
+        {
+            String command = String(cmdBuffer);
+            String value = String(valueBuffer);
+
+            executeCommand(command, value);
             readingCmd = false;
             return;
         }
 
-        if (index < cmdLen)
+        if (cmdBufferIndex < (cmdLen - 1))
         {
-            cmd[index] = val;
-            index++;
+            if (readingCmd)
+            {
+                cmdBuffer[cmdBufferIndex] = c;
+            }
+            else if (readingVal)
+            {
+                valueBuffer[cmdBufferIndex] = c;
+            }
+            cmdBufferIndex++;
         }
     }
 }
 
-void executeCommand(const String &command)
+void executeCommand(const String &command, const String &value)
 {
+    //The relay boards I'm using trigger when the "input" pin
+    //is grounded.  So to turn them off, we set the pin to an
+    //input (without a pullup resistor) and to turn them on
+    //And set them to an ouput and set the pin to low.
+    //Your setup may be different
+
     Serial.println("Command: " + command);
     if (command == kFireOn)
     {
-        digitalWrite(FIRE_CONTROL_PIN, HIGH);
+        //Redundancy
+        if (armed)
+        {
+            setFired(true);
+        }
     }
     else if (command == kFireOff)
     {
-        digitalWrite(FIRE_CONTROL_PIN, LOW);
+        setFired(false);
     }
     else if (command == kArm)
     {
-        armed = true;
-        digitalWrite(ARMED_INDICATOR_PIN, HIGH);
-        digitalWrite(ARM_CONTROL_PIN, HIGH);
+        setArmed(true);
     }
     else if (command == kDisarm)
     {
-        armed = false;
-        digitalWrite(ARMED_INDICATOR_PIN, LOW);
-        digitalWrite(ARM_CONTROL_PIN, LOW);
+        setArmed(false);
+    }
+    else if (command == kCTestOn)
+    {
+        setContinuityTestOn(true);
+    }
+    else if (command == kCTestOff)
+    {
+        setContinuityTestOn(false);
     }
     else if (command == kPing)
     {
         //Play a double beep to indicate all is well.
+        playPingTone();
+    }
+}
+
+void setContinuityTestOn(bool on)
+{
+    if (on)
+    {
+        continuityTime = millis();
+        pinMode(CONTINUTITY_CONTROL_PIN, OUTPUT);
+        digitalWrite(CONTINUTITY_CONTROL_PIN, LOW);
+    }
+    else
+    {
+        pinMode(CONTINUTITY_CONTROL_PIN, INPUT);
+        fireTime = 0;
+    }
+}
+
+void setFired(bool fire)
+{
+    if (fire)
+    {
+        if (armed)
+        {
+            fireTime = millis();
+            pinMode(FIRE_CONTROL_PIN, OUTPUT);
+            digitalWrite(FIRE_CONTROL_PIN, LOW);
+        }
+    }
+    else
+    {
+        pinMode(FIRE_CONTROL_PIN, INPUT);
+        fireTime = 0;
+    }
+}
+
+void setArmed(bool shouldArm)
+{
+    if (shouldArm)
+    {
+        armed = true;
+        armTime = millis();
         digitalWrite(ARMED_INDICATOR_PIN, HIGH);
-        delay(1000);
+        pinMode(ARM_CONTROL_PIN, OUTPUT);
+        digitalWrite(ARM_CONTROL_PIN, LOW);
+    }
+    else
+    {
+        armed = false;
+        digitalWrite(ARMED_INDICATOR_PIN, LOW);
+        pinMode(ARM_CONTROL_PIN, INPUT);
+        armTime = 0;
+    }
+}
+
+void playPingTone()
+{
+    digitalWrite(ARMED_INDICATOR_PIN, HIGH);
+    delay(400);
+    digitalWrite(ARMED_INDICATOR_PIN, LOW);
+    delay(100);
+    digitalWrite(ARMED_INDICATOR_PIN, HIGH);
+    delay(400);
+    digitalWrite(ARMED_INDICATOR_PIN, LOW);
+}
+
+void playReadyTone()
+{
+    for (int i = 0; i < 3; i++)
+    {
+        digitalWrite(ARMED_INDICATOR_PIN, HIGH);
+        delay(100);
         digitalWrite(ARMED_INDICATOR_PIN, LOW);
         delay(100);
-        digitalWrite(ARMED_INDICATOR_PIN, HIGH);
-        delay(1000);
-        digitalWrite(ARMED_INDICATOR_PIN, LOW);
     }
 }
