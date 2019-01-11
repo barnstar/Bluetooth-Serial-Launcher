@@ -27,29 +27,24 @@
 
 #include "BTLauncher.h"
 #include <SoftwareSerial.h>
-
-//GPIO configuration
-const byte BT_TX_PIN = 3;
-const byte BT_RX_PIN = 4;
-const byte ARMED_INDICATOR_PIN = 7;
-const byte CONTINUTITY_CONTROL_PIN = 6;
-const byte FIRE_CONTROL_PIN = 8;
-const byte ARM_CONTROL_PIN = 9;
+#include "LauncherProtocol.h"
 
 //Serial commands
-//FIXME: Put these in a common header
-String kFireOn = String("FIRE_ON");
-String kFireOff = String("FIRE_OFF");
-String kArm = String("ARM_ON");
-String kDisarm = String("ARM_OFF");
-String kPing = String("PING");
-String kCTestOn = String("CTEST_ON");
-String kCTestOff = String("CTEST_OFF");
+String kFireOn = String(FIRE_ON);
+String kFireOff = String(FIRE_OFF);
+String kArm = String(ARM_ON);
+String kDisarm = String(ARM_OFF);
+String kPing = String(PING);
+String kCTestOn = String(CTEST_ON);
+String kCTestOff = String(CTEST_OFF);
+
+String kValidate = String(VALIDATE);
+String kValidationCode = String(VCODE);
 
 //Basic command structure is :COMMAND|VALUE:
-const char cmdTerminator = ':';
-const char cmdValSeparator = '|';
-const size_t cmdLen = 16;
+const char cmdTerminator = CMD_TERM;
+const char cmdValSeparator = CMD_SEP;
+const size_t cmdLen = CMD_LEN_MAX;
 
 #pragma mark -
 
@@ -207,6 +202,26 @@ void executeCommand(const String &command, const String &value)
         //Play a double beep to indicate all is well.
         playPingTone();
     }
+    else if (command = VALIDATE)
+    {
+        if (value == VCODE)
+        {
+            String validateCmd = command(VALIDATE, VCODE);
+            //Return our validation code
+            BTSerial.println(validateCmd);
+            playPingTone();
+        }
+    }
+}
+
+String command(String const &cmd, String const &val)
+{
+    return CMD_TERM_S + cmd + CMD_SEP_S + val + CMD_TERM_S;
+}
+
+String command(String &cmd)
+{
+    return CMD_TERM_S + cmd + CMD_TERM_S;
 }
 
 void setContinuityTestOn(bool on)

@@ -4,7 +4,7 @@
  *
  * Launch your stuff with the bluetooths... With video!
  *
- * Copyright 2018, Jonathan Nobels
+ * Copyright 2019, Jonathan Nobels
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ class ConnectionViewController : UIViewController, UITableViewDelegate, UITableV
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        BluetoothSerial.shared().connectionDelegate = self;
+        BluetoothSerial.shared().connectionDelegate = self
         BluetoothSerial.shared().startScan()
     }
 
@@ -61,10 +61,10 @@ class ConnectionViewController : UIViewController, UITableViewDelegate, UITableV
         cell.nameLabel.text = peripheral.peripheral.name
         let rssi = peripheral.RSSI
         cell.RSSILabel.text = "\(rssi)"
-        let connected = BluetoothSerial.shared().connectedPeripheral == peripheral.peripheral;
-        cell.accessoryView?.isHidden = !connected;
+        let connected = BluetoothSerial.shared().connectedPeripheral == peripheral.peripheral
+        cell.accessoryType = connected ? .checkmark : .none
 
-        return cell;
+        return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -90,12 +90,13 @@ class ConnectionViewController : UIViewController, UITableViewDelegate, UITableV
     }
 
     func serialDidDisconnect(_ peripheral: CBPeripheral, error: NSError?) {
-        LaunchController.shared().connected = false;
+        LaunchController.shared().connected = false
         tableView.reloadData()
     }
 
     func serialDidConnect(_ peripheral: CBPeripheral) {
-        LaunchController.shared().connected = true;
+        LaunchController.shared().connected = true
+        LaunchController.shared().pingConnectedDevice()
         tableView.reloadData()
     }
 

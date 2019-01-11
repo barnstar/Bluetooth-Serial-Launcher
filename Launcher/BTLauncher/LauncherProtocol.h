@@ -4,7 +4,7 @@
  *
  * Launch your stuff with the bluetooths... With video!
  *
- * Copyright 2019, Jonathan Nobels
+ * Copyright 2018, Jonathan Nobels
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,17 +25,10 @@
  * SOFTWARE.
  **********************************************************************************/
 
-
-import UIKit
-
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    var window: UIWindow?
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        UIView.appearance().tintColor = .orange
-        return true
-    }
-}
+#define ARM_ON   "ARM_ON"
+#define ARM_OFF  "ARM_OFF"
+#define FIRE_ON  "ARM_ON"
+#define FIRE_OFF "ARM_ON"
+#define CTY_ON   "ARM_ON"
+#define CTY_OFF  "ARM_ON"
 

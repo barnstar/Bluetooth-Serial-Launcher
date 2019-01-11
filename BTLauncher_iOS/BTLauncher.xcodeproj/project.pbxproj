@@ -15,6 +15,8 @@
 		C202570521E7AF6500DE6E53 /* LaunchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570421E7AF6500DE6E53 /* LaunchController.swift */; };
 		C202570721E7BD1700DE6E53 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570621E7BD1700DE6E53 /* LaunchViewController.swift */; };
 		C202570921E7BD5000DE6E53 /* ConnectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */; };
+		C2FC4E5221E90F7D00865E10 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */; };
+		C2FC4E5421E9116200865E10 /* LocalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2FC4E5321E9116200865E10 /* LocalSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,10 @@
 		C202570421E7AF6500DE6E53 /* LaunchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchController.swift; sourceTree = "<group>"; };
 		C202570621E7BD1700DE6E53 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionViewController.swift; sourceTree = "<group>"; };
+		C2FC4E4C21E8DA7500865E10 /* LauncherProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LauncherProtocol.h; sourceTree = "<group>"; };
+		C2FC4E4E21E8DEAA00865E10 /* BTLauncher-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BTLauncher-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		C2FC4E5321E9116200865E10 /* LocalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +66,7 @@
 		C20256EF21E7AE6800DE6E53 /* BTLauncher */ = {
 			isa = PBXGroup;
 			children = (
+				C2FC4E4C21E8DA7500865E10 /* LauncherProtocol.h */,
 				C202570221E7AECE00DE6E53 /* BluetoothSerial.swift */,
 				C20256F021E7AE6800DE6E53 /* AppDelegate.swift */,
 				C202570421E7AF6500DE6E53 /* LaunchController.swift */,
@@ -69,6 +76,9 @@
 				C20256FC21E7AE6900DE6E53 /* Info.plist */,
 				C202570621E7BD1700DE6E53 /* LaunchViewController.swift */,
 				C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */,
+				C2FC4E4E21E8DEAA00865E10 /* BTLauncher-Bridging-Header.h */,
+				C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */,
+				C2FC4E5321E9116200865E10 /* LocalSettings.swift */,
 			);
 			path = BTLauncher;
 			sourceTree = "<group>";
@@ -146,9 +156,11 @@
 			files = (
 				C202570521E7AF6500DE6E53 /* LaunchController.swift in Sources */,
 				C20256F121E7AE6800DE6E53 /* AppDelegate.swift in Sources */,
+				C2FC4E5421E9116200865E10 /* LocalSettings.swift in Sources */,
 				C202570921E7BD5000DE6E53 /* ConnectionViewController.swift in Sources */,
 				C202570321E7AECE00DE6E53 /* BluetoothSerial.swift in Sources */,
 				C202570721E7BD1700DE6E53 /* LaunchViewController.swift in Sources */,
+				C2FC4E5221E90F7D00865E10 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,6 +243,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BTLauncher-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -285,6 +298,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BTLauncher-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -295,7 +309,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8MUG75JRMF;
+				DEVELOPMENT_TEAM = Z23B4V25G3;
 				INFOPLIST_FILE = BTLauncher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -313,7 +327,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8MUG75JRMF;
+				DEVELOPMENT_TEAM = Z23B4V25G3;
 				INFOPLIST_FILE = BTLauncher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

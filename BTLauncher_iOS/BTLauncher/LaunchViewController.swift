@@ -4,7 +4,7 @@
  *
  * Launch your stuff with the bluetooths... With video!
  *
- * Copyright 2018, Jonathan Nobels
+ * Copyright 2019, Jonathan Nobels
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,10 +32,10 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
 {
     @IBOutlet weak var viewFinderContainer: UIView!
     @IBOutlet weak var connectionStatusLabel: UILabel!
-    @IBOutlet weak var launcherStatusLabel: UILabel!
 
     @IBOutlet weak var armButton: UIButton!
     @IBOutlet weak var fireButton: UIButton!
+    @IBOutlet weak var ctyButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
     @IBOutlet weak var recordingLabel: UILabel!
 
@@ -47,8 +47,8 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     var observers = [NSKeyValueObservation]()
     var movieOutput = AVCaptureMovieFileOutput()
 
-    var recording : Bool = false;
-    var recordingReady : Bool = false;
+    var recording : Bool = false
+    var recordingReady : Bool = false
     var savingDialog : UIAlertController?
 
     override func viewDidLoad()
@@ -56,8 +56,17 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         self.connectionStatusLabel.text = "Not Connected"
         startObservers()
         LaunchController.shared().armed = false
-        stopButton.isHidden = true;
-        recordingLabel.isHidden = true;
+        stopButton.isHidden = true
+        recordingLabel.isHidden = true
+        fireButton.isHidden = true
+
+        //Don't want to poke ourselves on any sharp corners.
+        fireButton.clipsToBounds = true
+        fireButton.layer.cornerRadius = 5.0
+        armButton.clipsToBounds = true
+        armButton.layer.cornerRadius = 5.0
+        ctyButton.clipsToBounds = true
+        ctyButton.layer.cornerRadius = 5.0
 
         AVCaptureDevice.requestAccess(for: AVMediaType.video) { response in
             if response {
@@ -75,8 +84,10 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video),
               let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
          else {
-            NSLog("No camera device");
-            return;
+            recordingLabel.isHidden = false
+            recordingLabel.text = "Recording Disabled:\nNo Camera"
+            NSLog("No camera device")
+            return
         }
 
         do {
@@ -94,7 +105,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
                 videoPreviewLayer?.frame = viewFinderContainer.layer.bounds
                 viewFinderContainer.layer.addSublayer(videoPreviewLayer!)
                 captureSession.startRunning()
-                recordingReady = true;
+                recordingReady = true
             }
         } catch {
             print(error)
@@ -102,17 +113,24 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     }
 
     func setRecording(_ recording: Bool) {
+        if(nil == captureSession ||
+            nil == captureDevice ||
+            LocalSettings.settings.autoRecord == false)
+        {
+            return
+        }
+
         stopButton.isHidden = !recording
         recordingLabel.isHidden = !recording
         
         if(recording == self.recording) {
-            return;
+            return
         }
 
-        self.recording = recording;
+        self.recording = recording
 
         if(!recording) {
-            recordingReady  = false;
+            recordingReady  = false
             movieOutput.stopRecording()
             //savingDialog = UIAlertController.init(title: "Saving Video...", message: nil, preferredStyle: .alert)
             //self.present(savingDialog!, animated: true, completion: nil)
@@ -126,17 +144,17 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
 
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let d = savingDialog {
-            d.dismiss(animated: false, completion: nil);
+            d.dismiss(animated: false, completion: nil)
         }
         if(error == nil) {
             DispatchQueue.main.async {
                 let ac = UIAlertController.init(title: "Save", message: "Save Video", preferredStyle: .alert)
                 let saveAction = UIAlertAction.init(title: "Save", style: .default) { (action) in
                     UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
-                    self.recordingReady = true;
+                    self.recordingReady = true
                 }
                 let cancelAciton = UIAlertAction.init(title: "Cancel", style: .default) { _ in
-                    self.recording = true;
+                    self.recording = true
                 }
 
                 ac.addAction(saveAction)
@@ -146,44 +164,69 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         }
     }
 
+    func updateConnectionStatusLabel()
+    {
+        let connected = LaunchController.shared().connected
+        let validated = LaunchController.shared().validated
+        let vString = validated ? "Verified" : "Unverified"
+        if(connected) {
+            self.connectionStatusLabel.text = "Connected & " + vString
+        }else{
+            self.connectionStatusLabel.text = "Not Connected"
+
+        }
+    }
+
     func startObservers()
     {
         self.observers = [
             LaunchController.shared().observe(\LaunchController.connected, options: [.new]) {
-                controller, change in
-                let connected = controller.connected
-                self.connectionStatusLabel.text = connected ? "Connected" : "Not Connected"
+                [weak self] (_,_) in
+                self?.updateConnectionStatusLabel()
             },
 
-            LaunchController.shared().observe(\LaunchController.armed, options: [.new]) {
-                controller, change in
-                let connected = controller.armed
-                self.launcherStatusLabel.text = connected ? "Armed" : nil
-                self.launcherStatusLabel.isHidden = !controller.armed;
-            }
-        ];
+            LaunchController.shared().observe(\LaunchController.validated, options: [.new]) {
+                [weak self] (_,_) in
+                self?.updateConnectionStatusLabel()
+            },
+        ]
     }
 
     @IBAction func armTouchDown(_ sender: Any) {
         LaunchController.shared().armed = true
-        fireButton.isEnabled = true
+        fireButton.isHidden = false
+        ctyButton.isHidden = true
         setRecording(true)
     }
 
     @IBAction func armTouchCancel(_ sender: Any) {
         LaunchController.shared().armed = false
-        fireButton.isEnabled = false;
+        fireButton.isHidden = true
+        ctyButton.isHidden = false
     }
 
     @IBAction func fireTouchDown(_ sender: Any) {
-        LaunchController.shared().sendLaunchCommand(true)
+        LaunchController.shared().sendFireCommand(true)
     }
 
     @IBAction func fireTouchUp(_ sender: Any) {
-        LaunchController.shared().sendLaunchCommand(false)
+        LaunchController.shared().sendFireCommand(false)
     }
 
     @IBAction func stopPressed(_ sender: Any) {
         setRecording(false)
+    }
+
+    @IBAction func continuityOn(_ sender: Any) {
+        LaunchController.shared().sendContinuityCommand(true)
+    }
+
+
+    @IBAction func continuityOff(_ sender: Any) {
+        LaunchController.shared().sendContinuityCommand(false)
+    }
+
+    @IBAction func validatePressed(_ sender: Any) {
+        LaunchController.shared().sendValidationCommand()
     }
 }

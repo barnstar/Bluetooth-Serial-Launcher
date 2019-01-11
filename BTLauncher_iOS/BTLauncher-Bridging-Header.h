@@ -26,16 +26,10 @@
  **********************************************************************************/
 
 
-import UIKit
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+#ifndef BTLauncher_Bridging_Header_h
+#define BTLauncher_Bridging_Header_h
 
-    var window: UIWindow?
+#include "LauncherProtocol.h"
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        UIView.appearance().tintColor = .orange
-        return true
-    }
-}
-
+#endif /* BTLauncher_Bridging_Header_h */

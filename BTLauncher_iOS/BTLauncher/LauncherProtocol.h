@@ -25,17 +25,25 @@
  * SOFTWARE.
  **********************************************************************************/
 
+#define ARM_ON      "ARM_ON"
+#define ARM_OFF     "ARM_OFF"
+#define FIRE_ON     "FIRE_ON"
+#define FIRE_OFF    "FIRE_OFF"
+#define CTY_ON      "CTEST_ON"
+#define CTY_OFF     "CTEST_OFF"
+#define PING        "PING"
 
-import UIKit
+#define VALIDATE    "VALIDATE"
+#define VCODE       "2V55GTU"   //Use something unique here
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
+#define CMD_TERM    ':'
+#define CMD_SEP     '|'
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        UIView.appearance().tintColor = .orange
-        return true
-    }
-}
+
+//For Swift which doesn't translate chars to vars
+#define CMD_TERM_S  ":"
+#define CMD_SEP_S   "|"
+
+#define CMD_LEN_MAX  16
 

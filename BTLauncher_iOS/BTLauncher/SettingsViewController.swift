@@ -4,7 +4,7 @@
  *
  * Launch your stuff with the bluetooths... With video!
  *
- * Copyright 2018, Jonathan Nobels
+ * Copyright 2019, Jonathan Nobels
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,3 +24,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **********************************************************************************/
+
+
+
+import UIKit
+
+class SettingsViewController : UIViewController, UITextFieldDelegate
+{
+    @IBOutlet weak var validationCodeField: UITextField!
+    @IBOutlet weak var autoRecordSwitch: UISwitch!
+    
+    override func viewDidLoad() {
+        validationCodeField.text = LocalSettings.settings.validationCode
+        autoRecordSwitch.setOn(LocalSettings.settings.autoRecord, animated: false)
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        guard let code = textField.text else {
+            return
+        }
+
+        if(code.count > 4) {
+            LocalSettings.settings.validationCode = code
+        }else{
+            textField.text = LocalSettings.settings.validationCode
+        }
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+
+    @IBAction func autoRecordChanged(_ sender: UISwitch) {
+        LocalSettings.settings.autoRecord = sender.isOn;
+    }
+}
+

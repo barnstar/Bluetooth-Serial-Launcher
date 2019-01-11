@@ -4,7 +4,7 @@
  *
  * Launch your stuff with the bluetooths... With video!
  *
- * Copyright 2018, Jonathan Nobels
+ * Copyright 2019, Jonathan Nobels
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,28 +30,10 @@ import CoreBluetooth
 
 class LaunchController : NSObject, BluetoothSerialDelegate
 {
-    @objc dynamic var armed : Bool = false {
-        didSet {
-            if(armed) {
-                BluetoothSerial.shared().sendMessageToDevice(":ARM_ON:")
-            }   else  {
-                BluetoothSerial.shared().sendMessageToDevice(":ARM_OFF:")
-            }
-        }
-    }
-
-    @objc dynamic var connected : Bool = false {
-        didSet {
-            if(connected) {
-                BluetoothSerial.shared().sendMessageToDevice(":PING:")
-            }  
-        }
-    }
-
     private static let instance : LaunchController = {
         let instance = LaunchController()
-        instance.armed = false;
-        BluetoothSerial.shared().delegate = instance;
+        instance.armed = false
+        BluetoothSerial.shared().delegate = instance
         return instance
     }()
 
@@ -59,24 +41,120 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         return instance
     }
 
-    public func sendLaunchCommand(_ enable: Bool) {
-        if(armed && enable) {
-            NSLog("Launch Sent")
-            BluetoothSerial.shared().sendMessageToDevice(":FIRE_ON:")
-        }else if(!enable) {
-            BluetoothSerial.shared().sendMessageToDevice(":FIRE_OFF:")
-        }else{
-            NSLog("Not Armed");
+    //MARK: Obserable Properties
+
+    @objc dynamic var armed : Bool = false {
+        didSet {
+            sendArmedCommand(armed)
         }
     }
 
-    public func sendContinuityComman(_ enable: Bool) {
-        if(enable) {
-            NSLog("Continuity On Sent")
-            BluetoothSerial.shared().sendMessageToDevice(":CTEST_ON:")
+    @objc dynamic var connected : Bool = false {
+        didSet {
+            if(!connected) {
+                validated = false
+            }
+        }
+    }
+
+    @objc dynamic var validated : Bool = true //For testing
+
+
+    //MARK: Command Interface
+
+    func command(_ command:String, value:String?) -> String
+    {
+        var ret = CMD_TERM_S + command
+        if let value = value {
+            ret = ret + CMD_SEP_S + value
+        }
+        ret = ret + CMD_TERM_S
+        return ret
+    }
+
+
+    public func pingConnectedDevice()
+    {
+        if(connected) {
+            BluetoothSerial.shared().sendMessageToDevice(command(PING, value:nil))
+        }
+    }
+
+    public func sendValidationCommand()
+    {
+        let cmdStr = command(VALIDATE, value: LocalSettings.settings.validationCode)
+        BluetoothSerial.shared().sendMessageToDevice(cmdStr)
+    }
+
+    public func sendFireCommand(_ enable: Bool)
+    {
+        if(!validated) {
+            return
+        }
+
+        if(armed && enable) {
+            BluetoothSerial.shared().sendMessageToDevice(command(FIRE_ON, value:nil))
+        }else if(!enable) {
+            BluetoothSerial.shared().sendMessageToDevice(command(FIRE_OFF, value:nil))
         }else{
-            NSLog("Continuity Off Sent");
-            BluetoothSerial.shared().sendMessageToDevice(":CTEST_OFF:")
+            NSLog("Fire Command Ignored: Not Armed")
+        }
+    }
+
+    public func sendContinuityCommand(_ enable: Bool)
+    {
+        if(!validated) {
+            return
+        }
+
+        let cmdStr = command((enable ? CTY_ON : CTY_OFF), value:nil)
+        BluetoothSerial.shared().sendMessageToDevice(cmdStr)
+    }
+
+    func sendArmedCommand(_ enable: Bool)
+    {
+        if(!validated) {
+            return
+        }
+        
+        let cmdStr = command((enable ? ARM_ON : ARM_OFF), value:nil)
+        BluetoothSerial.shared().sendMessageToDevice(cmdStr)
+    }
+
+    func handleIncomingCommand(_ cmd:String)
+    {
+        //Separate the command and the value
+        let parts = cmd.components(separatedBy: CMD_SEP_S)
+        let cmdStr = parts[0]
+        let valStr : String? = parts.count == 2 ? parts[1] : nil
+
+        if(cmd == command(VALIDATE, value: LocalSettings.settings.validationCode)) {
+            validated = true
+        }
+    }
+
+    //MARK: BT Serial Delegate
+
+    var stringBuffer : String = ""
+    var cmdIncoming : Bool = false
+
+    func serialDidReceiveString(_ message: String)
+    {
+        if(message.prefix(1) == CMD_TERM_S) {
+            cmdIncoming = true
+        }
+
+        if(cmdIncoming) {
+            stringBuffer.append(message)
+        }
+
+        //No particularily robust if we're quickly sending multiple commands.
+        if(String(stringBuffer.last!) == CMD_TERM_S) {
+            cmdIncoming = false
+            //Trim the terminators
+            stringBuffer = stringBuffer.trimmingCharacters(in: CharacterSet.init(charactersIn: CMD_TERM_S))
+            handleIncomingCommand(stringBuffer)
+            stringBuffer = ""
         }
     }
 }
