@@ -14,9 +14,9 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     @objc dynamic var armed : Bool = false {
         didSet {
             if(armed) {
-                BluetoothSerial.shared().sendMessageToDevice("ARM_ON")
+                BluetoothSerial.shared().sendMessageToDevice(":ARM_ON:")
             }   else  {
-                BluetoothSerial.shared().sendMessageToDevice("ARM_OFF")
+                BluetoothSerial.shared().sendMessageToDevice(":ARM_OFF:")
             }
         }
     }
@@ -24,7 +24,7 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     @objc dynamic var connected : Bool = false {
         didSet {
             if(connected) {
-                BluetoothSerial.shared().sendMessageToDevice("PING")
+                BluetoothSerial.shared().sendMessageToDevice(":PING:")
             }  
         }
     }
@@ -43,9 +43,9 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     public func sendLaunchCommand(_ enable: Bool) {
         if(armed && enable) {
             NSLog("Launch Sent")
-            BluetoothSerial.shared().sendMessageToDevice("FIRE_ON")
+            BluetoothSerial.shared().sendMessageToDevice(":FIRE_ON:")
         }else if(!enable) {
-            BluetoothSerial.shared().sendMessageToDevice("FIRE_OFF")       
+            BluetoothSerial.shared().sendMessageToDevice(":FIRE_OFF:")
         }else{
             NSLog("Not Armed");
         }
@@ -54,10 +54,10 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     public func sendContinuityComman(_ enable: Bool) {
         if(enable) {
             NSLog("Continuity On Sent")
-            BluetoothSerial.shared().sendMessageToDevice("CTEST_ON")
+            BluetoothSerial.shared().sendMessageToDevice(":CTEST_ON:")
         }else{
             NSLog("Continuity Off Sent");
-            BluetoothSerial.shared().sendMessageToDevice("CTEST_OFF")
+            BluetoothSerial.shared().sendMessageToDevice(":CTEST_OFF:")
         }
     }
 }

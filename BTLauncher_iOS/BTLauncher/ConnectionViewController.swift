@@ -36,7 +36,7 @@ class ConnectionViewController : UIViewController, UITableViewDelegate, UITableV
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell : ConnectionCell = tableView.dequeueReusableCell(withIdentifier: "connCell") as! ConnectionCell
+        let cell : ConnectionCell = tableView.dequeueReusableCell(withIdentifier: "connCell", for:indexPath) as! ConnectionCell
         let peripheral = peripherals[indexPath.row]
         cell.nameLabel.text = peripheral.peripheral.name
         let rssi = peripheral.RSSI

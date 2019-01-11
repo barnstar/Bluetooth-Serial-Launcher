@@ -83,13 +83,15 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     }
 
     func setRecording(_ recording: Bool) {
+        stopButton.isHidden = !recording
+        recordingLabel.isHidden = !recording
+        
         if(recording == self.recording) {
             return;
         }
 
         self.recording = recording;
-        stopButton.isHidden = !recording
-        recordingLabel.isHidden = !recording
+
         if(!recording) {
             recordingReady  = false;
             movieOutput.stopRecording()
