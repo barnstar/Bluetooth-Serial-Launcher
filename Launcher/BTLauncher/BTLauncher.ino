@@ -35,8 +35,12 @@ String kFireOff = String(FIRE_OFF);
 String kArm = String(ARM_ON);
 String kDisarm = String(ARM_OFF);
 String kPing = String(PING);
-String kCTestOn = String(CTEST_ON);
-String kCTestOff = String(CTEST_OFF);
+String kCTestOn = String(CTY_ON);
+String kCTestOff = String(CTY_OFF);
+
+String kCtyOn = String(CTY_OK);
+String kCtyNone = String(CTY_NONE);
+
 
 String kValidate = String(VALIDATE);
 String kValidationCode = String(VCODE);
@@ -79,7 +83,7 @@ void setup()
 
     //If using relays, ground the pins to keep the relay
     //close (for the ones I'm using - YMMV)
-    pinMode(CONTINUTITY_CONTROL_PIN, INPUT);
+    pinMode(CONTINUTITY_CONTROL_PIN, OUTPUT);
     pinMode(FIRE_CONTROL_PIN, INPUT);
     pinMode(ARM_CONTROL_PIN, INPUT);
     pinMode(CONTINUITY_READ_PIN, INPUT);
@@ -118,13 +122,13 @@ void loop()
     //Read the voltage on the continuity pin.  
     int cty_val = analogRead(CONTINUITY_READ_PIN);
     if(cty_val > 512 && !continuity) {
-        String cmd = command(CTY_OK);
-        BTSerial.println(cmd)
-        continuity = true
+        String cmd = command(kCtyOn);
+        BTSerial.println(cmd);
+        continuity = true;
     }else if(cty_val < 128 && continuity) {
-        String cmd = command(CTY_NONE);
-        BTSerial.println(cmd)
-        continuity = false
+        String cmd = command(kCtyNone);
+        BTSerial.println(cmd);
+        continuity = false;
     }    
 }
 
@@ -133,11 +137,12 @@ void readCommand()
     if (BTSerial.available())
     {
         char c = BTSerial.read();
-        if (c == cmdTerminator && !readingCmd)
+        if (c == cmdTerminator && !readingCmd && !readingVal)
         {
             cmdBufferIndex = 0;
             readingCmd = true;
             memset(cmdBuffer, 0, cmdLen);
+            memset(valueBuffer, 0, cmdLen);
             return;
         }
 
@@ -146,17 +151,17 @@ void readCommand()
             cmdBufferIndex = 0;
             readingCmd = false;
             readingVal = true;
-            memset(valueBuffer, 0, cmdLen);
             return;
         }
 
         if (c == cmdTerminator && (readingCmd || readingVal))
         {
-            String command = String(cmdBuffer);
+            String cmd = String(cmdBuffer);
             String value = String(valueBuffer);
 
-            executeCommand(command, value);
+            executeCommand(cmd, value);
             readingCmd = false;
+            readingVal = false;
             return;
         }
 
@@ -175,10 +180,10 @@ void readCommand()
     }
 }
 
-void executeCommand(const String &command, const String &value)
+void executeCommand(const String &cmd, const String &value)
 {
-    Serial.println("Command: " + command);
-    if (command == kFireOn)
+    Serial.println("Command: " + cmd + "|" + value);
+    if (cmd == kFireOn)
     {
         //Redundancy
         if (armed)
@@ -186,36 +191,36 @@ void executeCommand(const String &command, const String &value)
             setFired(true);
         }
     }
-    else if (command == kFireOff)
+    else if (cmd == kFireOff)
     {
         setFired(false);
     }
-    else if (command == kArm)
+    else if (cmd == kArm)
     {
         setArmed(true);
     }
-    else if (command == kDisarm)
+    else if (cmd == kDisarm)
     {
         setArmed(false);
     }
-    else if (command == kCTestOn)
+    else if (cmd == kCTestOn)
     {
         setContinuityTestOn(true);
     }
-    else if (command == kCTestOff)
+    else if (cmd == kCTestOff)
     {
         setContinuityTestOn(false);
     }
-    else if (command == kPing)
+    else if (cmd == kPing)
     {
         //Play a double beep to indicate all is well.
         playPingTone();
     }
-    else if (command = VALIDATE)
+    else if (cmd == kValidate)
     {
-        if (value == VCODE)
+        if (value == kValidationCode)
         {
-            String validateCmd = command(VALIDATE, VCODE);
+            String validateCmd = commandVal(kValidate, kValidationCode);
             //Return our internal validation code
             BTSerial.println(validateCmd);
             playPingTone();
@@ -223,12 +228,12 @@ void executeCommand(const String &command, const String &value)
     }
 }
 
-String command(String const &cmd, String const &val)
+String commandVal(String const& cmd, String const& val)
 {
     return CMD_TERM_S + cmd + CMD_SEP_S + val + CMD_TERM_S;
 }
 
-String command(String &cmd)
+String command(String const& cmd)
 {
     return CMD_TERM_S + cmd + CMD_TERM_S;
 }
@@ -244,12 +249,11 @@ void setContinuityTestOn(bool on)
     if (on)
     {
         continuityTime = millis();
-        pinMode(CONTINUTITY_CONTROL_PIN, OUTPUT);
-        digitalWrite(CONTINUTITY_CONTROL_PIN, LOW);
+        digitalWrite(CONTINUTITY_CONTROL_PIN, HIGH);
     }
     else
     {
-        pinMode(CONTINUTITY_CONTROL_PIN, INPUT);
+        digitalWrite(CONTINUTITY_CONTROL_PIN, LOW);
         fireTime = 0;
     }
 }

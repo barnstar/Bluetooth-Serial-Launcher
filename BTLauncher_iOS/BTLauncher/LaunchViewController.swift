@@ -123,9 +123,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     }
 
     func setRecording(_ recording: Bool) {
-        if(nil == captureSession ||
-            nil == captureDevice ||
-            LocalSettings.settings.autoRecord == false)
+        if(LocalSettings.settings.autoRecord == false)
         {
             return
         }

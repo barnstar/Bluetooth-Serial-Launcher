@@ -34,7 +34,7 @@ class LocalSettings
 
     var autoRecord : Bool! {
         didSet {
-            UserDefaults.standard.set(validationCode, forKey: kVideoKey)
+            UserDefaults.standard.set(autoRecord, forKey: kVideoKey)
         }
     }
 

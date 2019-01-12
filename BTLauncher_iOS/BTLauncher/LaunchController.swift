@@ -145,8 +145,8 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         let parts = cmd.components(separatedBy: CMD_SEP_S)
         let cmdStr = parts[0]
         let valStr : String? = parts.count == 2 ? parts[1] : nil
-
-        if(cmd == command(VALIDATE, value: LocalSettings.settings.validationCode)) {
+        
+        if(cmdStr == VALIDATE && valStr == LocalSettings.settings.validationCode) {
             validated = true
         }else if(cmdStr == DEVICEID) {
             deviceId = valStr
@@ -164,12 +164,15 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
     func serialDidReceiveString(_ message: String)
     {
-        if(message.prefix(1) == CMD_TERM_S) {
+        let msg = message.trimmingCharacters(in: .newlines)
+        NSLog("Got Data " + msg)
+
+        if(msg.prefix(1) == CMD_TERM_S) {
             cmdIncoming = true
         }
 
         if(cmdIncoming) {
-            stringBuffer.append(message)
+            stringBuffer.append(msg)
         }
 
         //No particularily robust if we're quickly sending multiple commands.

@@ -4,7 +4,7 @@
  *
  * Launch your stuff with the bluetooths... With video!
  *
- * Copyright 2018, Jonathan Nobels
+ * Copyright 2019, Jonathan Nobels
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +25,29 @@
  * SOFTWARE.
  **********************************************************************************/
 
-#define ARM_ON   "ARM_ON"
-#define ARM_OFF  "ARM_OFF"
-#define FIRE_ON  "ARM_ON"
-#define FIRE_OFF "ARM_ON"
-#define CTY_ON   "ARM_ON"
-#define CTY_OFF  "ARM_ON"
+#define ARM_ON      "ARM_ON"
+#define ARM_OFF     "ARM_OFF"
+#define FIRE_ON     "FIRE_ON"
+#define FIRE_OFF    "FIRE_OFF"
+#define CTY_ON      "CTEST_ON"
+#define CTY_OFF     "CTEST_OFF"
+#define PING        "PING"
+
+#define VALIDATE    "VALIDATE"
+#define VCODE       "2V55GTU"   //Use something unique here
+
+#define DEVICEID    "DEVICEID"
+
+#define CTY_OK      "CTY_OK"
+#define CTY_NONE    "CTY_NONE"
+
+#define CMD_TERM    ':'
+#define CMD_SEP     '|'
+
+
+//For Swift which doesn't translate chars to vars
+#define CMD_TERM_S  ":"
+#define CMD_SEP_S   "|"
+
+#define CMD_LEN_MAX  16
 
