@@ -32,6 +32,8 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
 {
     @IBOutlet weak var viewFinderContainer: UIView!
     @IBOutlet weak var connectionStatusLabel: UILabel!
+    @IBOutlet weak var validationStatusLabel: UILabel!
+    @IBOutlet weak var signalLabel: UILabel!
 
     @IBOutlet weak var armButton: UIButton!
     @IBOutlet weak var fireButton: UIButton!
@@ -62,6 +64,8 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     {
         self.title = "Fire Control"
         self.connectionStatusLabel.text = "Not Connected"
+        self.validationStatusLabel.text = "Not Validated"
+        self.signalLabel.text = "No Signal"
 
         stopButton.isHidden = true
         recordingLabel.isHidden = true
@@ -87,7 +91,36 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         }
 
         startObservers()
-        updateConnectionStatusLabel()
+    }
+
+    func startObservers()
+    {
+        self.observers = [
+            LaunchController.shared().observe(\LaunchController.connected, options: [.new]) {
+                [weak self] (_,_) in
+                let connected = LaunchController.shared().connected
+                self?.connectionStatusLabel.text =  connected ? "Connected" : "Not Connected"
+                self?.connectionStatusLabel.textColor = connected ? .green : .red
+            },
+
+            LaunchController.shared().observe(\LaunchController.validated, options: [.new]) {
+                [weak self] (_,_) in
+                let validated = LaunchController.shared().validated
+                self?.validationStatusLabel.text = validated ? "Validated" : "Not Validated"
+                self?.validationStatusLabel.textColor = validated ? .green : .red
+            },
+
+            LaunchController.shared().observe(\LaunchController.continuity, options: [.new]) {
+                [weak self] (_,_) in
+                self?.continuityIndicator.isHidden = !LaunchController.shared().continuity;
+            },
+
+            LaunchController.shared().observe(\LaunchController.rssi, options: [.new]) {
+                [weak self] (_,_) in
+                let rssi = LaunchController.shared().rssi
+                self?.signalLabel.text = "Signal: \(rssi)"
+            }
+        ]
     }
 
     func startCamera()
@@ -173,47 +206,8 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         }
     }
 
-    func updateConnectionStatusLabel()
-    {
-        let connected = LaunchController.shared().connected
-        let validated = LaunchController.shared().validated
-        let vString = validated ? "Validated" : "Not Validated"
-        if(connected) {
-            self.connectionStatusLabel.text = "Connected & " + vString
-            self.connectionStatusLabel.textColor = validated ? .green : .red
-        }else{
-            self.connectionStatusLabel.text = ":: Not Connected ::"
-            self.connectionStatusLabel.textColor = .red
-        }
 
-        if(validated) {
-            //self.navigationItem.rightBarButtonItem = nil;
-        }else{
-            self.navigationItem.rightBarButtonItem = validateButton;
-        }
-    }
-
-    func startObservers()
-    {
-        self.observers = [
-            LaunchController.shared().observe(\LaunchController.connected, options: [.new]) {
-                [weak self] (_,_) in
-                self?.updateConnectionStatusLabel()
-            },
-
-            LaunchController.shared().observe(\LaunchController.validated, options: [.new]) {
-                [weak self] (_,_) in
-                self?.updateConnectionStatusLabel()
-            },
-
-            LaunchController.shared().observe(\LaunchController.continuity, options: [.new]) {
-                [weak self] (_,_) in
-                self?.continuityIndicator.isHidden = !LaunchController.shared().continuity;
-            },
-        ]
-    }
-
-    @IBAction func armTouchDown(_ sender: Any) {
+     @IBAction func armTouchDown(_ sender: Any) {
         LaunchController.shared().armed = true
         fireButton.isHidden = false
         ctyButton.isHidden = true
