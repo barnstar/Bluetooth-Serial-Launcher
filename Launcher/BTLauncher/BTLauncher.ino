@@ -41,9 +41,9 @@ String kCTestOff = String(CTY_OFF);
 String kCtyOn = String(CTY_OK);
 String kCtyNone = String(CTY_NONE);
 
-
 String kValidate = String(VALIDATE);
 String kValidationCode = String(VCODE);
+String kRequiresValidation = String(REQ_VALID);
 
 //Command structure is :COMMAND|VALUE:
 const char cmdTerminator = CMD_TERM;
@@ -73,6 +73,9 @@ long continuityTime = 0;
 
 bool isReady = false;
 bool continuity = false;
+bool ctyTestActive = false;
+
+bool validated = false;
 
 void setup()
 {
@@ -80,16 +83,17 @@ void setup()
     BTSerial.begin(9600);
 
     Serial.println("Initialized");
+    BTSerial.println("Initialized");
 
     //If using relays, ground the pins to keep the relay
     //close (for the ones I'm using - YMMV)
-    pinMode(CONTINUTITY_CONTROL_PIN, OUTPUT);
+    pinMode(CONTINUTITY_CONTROL_PIN, INPUT);
     pinMode(FIRE_CONTROL_PIN, INPUT);
     pinMode(ARM_CONTROL_PIN, INPUT);
-    pinMode(CONTINUITY_READ_PIN, INPUT);
+    pinMode(CONTINUITY_READ_PIN, INPUT_PULLUP);
 
-    pinMode(ARMED_INDICATOR_PIN, OUTPUT);
-    digitalWrite(ARMED_INDICATOR_PIN, LOW);
+    pinMode(BUZZER_PIN, OUTPUT);
+    digitalWrite(BUZZER_PIN, LOW);
 
     //Redudancy?
     setArmed(false);
@@ -103,8 +107,10 @@ void loop()
     {
         playReadyTone();
         isReady = true;
+        String cmd = command(kRequiresValidation);
+        BTSerial.println(cmd);
     }
-    
+
     readCommand();
 
     //Safety.  We don't want to keep any of these relays engaged for more than a few
@@ -119,17 +125,23 @@ void loop()
         setFired(false);
     }
 
-    //Read the voltage on the continuity pin.  
-    int cty_val = analogRead(CONTINUITY_READ_PIN);
-    if(cty_val > 512 && !continuity) {
-        String cmd = command(kCtyOn);
-        BTSerial.println(cmd);
-        continuity = true;
-    }else if(cty_val < 128 && continuity) {
-        String cmd = command(kCtyNone);
-        BTSerial.println(cmd);
-        continuity = false;
-    }    
+    if (ctyTestActive)
+    {
+        //Read the voltage on the continuity pin.
+        int cty_val = digitalRead(CONTINUITY_READ_PIN);
+        if (cty_val == LOW && !continuity)
+        {
+            String cmd = command(kCtyOn);
+            BTSerial.println(cmd);
+            continuity = true;
+        }
+        else if (cty_val == HIGH && continuity)
+        {
+            String cmd = command(kCtyNone);
+            BTSerial.println(cmd);
+            continuity = false;
+        }
+    }
 }
 
 void readCommand()
@@ -137,6 +149,7 @@ void readCommand()
     if (BTSerial.available())
     {
         char c = BTSerial.read();
+        Serial.print(c);
         if (c == cmdTerminator && !readingCmd && !readingVal)
         {
             cmdBufferIndex = 0;
@@ -224,16 +237,17 @@ void executeCommand(const String &cmd, const String &value)
             //Return our internal validation code
             BTSerial.println(validateCmd);
             playPingTone();
+            validated = true;
         }
     }
 }
 
-String commandVal(String const& cmd, String const& val)
+String commandVal(String const &cmd, String const &val)
 {
     return CMD_TERM_S + cmd + CMD_SEP_S + val + CMD_TERM_S;
 }
 
-String command(String const& cmd)
+String command(String const &cmd)
 {
     return CMD_TERM_S + cmd + CMD_TERM_S;
 }
@@ -246,20 +260,36 @@ String command(String const& cmd)
 
 void setContinuityTestOn(bool on)
 {
+    if (!validated)
+    {
+        return;
+    }
+
     if (on)
     {
+        ctyTestActive = true;
         continuityTime = millis();
-        digitalWrite(CONTINUTITY_CONTROL_PIN, HIGH);
+        pinMode(CONTINUTITY_CONTROL_PIN, OUTPUT);
+        digitalWrite(CONTINUTITY_CONTROL_PIN, LOW);
     }
     else
     {
-        digitalWrite(CONTINUTITY_CONTROL_PIN, LOW);
-        fireTime = 0;
+        ctyTestActive = false;
+        pinMode(CONTINUTITY_CONTROL_PIN, INPUT);
+        continuityTime = 0;
+        continuity = false;
+        String cmd = command(kCtyNone);
+        BTSerial.println(cmd);
     }
 }
 
 void setFired(bool fire)
 {
+    if (!validated)
+    {
+        return;
+    }
+
     if (fire)
     {
         if (armed)
@@ -278,18 +308,23 @@ void setFired(bool fire)
 
 void setArmed(bool shouldArm)
 {
+    if (!validated)
+    {
+        return;
+    }
+
     if (shouldArm)
     {
         armed = true;
         armTime = millis();
-        digitalWrite(ARMED_INDICATOR_PIN, HIGH);
+        digitalWrite(BUZZER_PIN, HIGH);
         pinMode(ARM_CONTROL_PIN, OUTPUT);
         digitalWrite(ARM_CONTROL_PIN, LOW);
     }
     else
     {
         armed = false;
-        digitalWrite(ARMED_INDICATOR_PIN, LOW);
+        digitalWrite(BUZZER_PIN, LOW);
         pinMode(ARM_CONTROL_PIN, INPUT);
         armTime = 0;
     }
@@ -297,22 +332,22 @@ void setArmed(bool shouldArm)
 
 void playPingTone()
 {
-    digitalWrite(ARMED_INDICATOR_PIN, HIGH);
+    digitalWrite(BUZZER_PIN, HIGH);
     delay(400);
-    digitalWrite(ARMED_INDICATOR_PIN, LOW);
+    digitalWrite(BUZZER_PIN, LOW);
     delay(100);
-    digitalWrite(ARMED_INDICATOR_PIN, HIGH);
+    digitalWrite(BUZZER_PIN, HIGH);
     delay(400);
-    digitalWrite(ARMED_INDICATOR_PIN, LOW);
+    digitalWrite(BUZZER_PIN, LOW);
 }
 
 void playReadyTone()
 {
     for (int i = 0; i < 3; i++)
     {
-        digitalWrite(ARMED_INDICATOR_PIN, HIGH);
+        digitalWrite(BUZZER_PIN, HIGH);
         delay(100);
-        digitalWrite(ARMED_INDICATOR_PIN, LOW);
+        digitalWrite(BUZZER_PIN, LOW);
         delay(100);
     }
 }

@@ -29,10 +29,14 @@
 
 //GPIO configuration
 #define BT_TX_PIN               3       //Software Serial TX Pin
-#define BT_RX_PIN               4       //Software Serial RX ARMED_INDICATOR_PIN
-#define ARMED_INDICATOR_PIN     7       //Piezo buzzer pin for arm tone
-#define CONTINUTITY_CONTROL_PIN 6       //Relay to control continuity check
+#define BT_RX_PIN               4       //Software Serial RX BUZZER_PIN
+
+#define BUZZER_PIN              6       //Piezo buzzer pin for arm tone
+#define POWER_ON_PIN            11      //Power on indicator
+
+//Relay Pins
+#define CONTINUTITY_CONTROL_PIN 7       //Relay to control continuity check
 #define FIRE_CONTROL_PIN        8       //Relay to control fire    
 #define ARM_CONTROL_PIN         9       //Relay to control arming
 
-#define CONTINUITY_READ_PIN     A0
+#define CONTINUITY_READ_PIN     12

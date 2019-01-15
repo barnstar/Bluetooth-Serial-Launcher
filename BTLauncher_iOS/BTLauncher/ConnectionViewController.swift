@@ -45,11 +45,12 @@ class ConnectionViewController : UIViewController, UITableViewDelegate, UITableV
         super.viewDidAppear(animated)
         self.title = "Connect"
         BluetoothSerial.shared().connectionDelegate = self
-        self.scanPressed(self);
     }
 
     var scanning : Bool = false;
     @IBAction func scanPressed(_ sender: Any) {
+        self.peripherals.removeAll()
+        tableView.reloadData()
         if(!scanning) {
             BluetoothSerial.shared().startScan()
             scanning = true;

@@ -33,6 +33,8 @@
 #define CTY_OFF     "CTEST_OFF"
 #define PING        "PING"
 
+#define REQ_VALID   "REQVALDIATE"
+
 #define VALIDATE    "VALIDATE"
 #define VCODE       "2V55GTU"   //Use something unique here
 

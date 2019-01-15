@@ -186,7 +186,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         }
 
         if(validated) {
-            self.navigationItem.rightBarButtonItem = nil;
+            //self.navigationItem.rightBarButtonItem = nil;
         }else{
             self.navigationItem.rightBarButtonItem = validateButton;
         }

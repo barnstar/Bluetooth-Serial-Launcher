@@ -154,6 +154,8 @@ class LaunchController : NSObject, BluetoothSerialDelegate
             continuity = true
         }else if(cmdStr == CTY_NONE) {
             continuity = false
+        }else if(cmdStr == REQ_VALID) {
+            validated = false;
         }
     }
 
@@ -176,7 +178,7 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         }
 
         //No particularily robust if we're quickly sending multiple commands.
-        if(String(stringBuffer.last!) == CMD_TERM_S) {
+        if(stringBuffer.count > 0 && String(stringBuffer.last!) == CMD_TERM_S) {
             cmdIncoming = false
             //Trim the terminators
             stringBuffer = stringBuffer.trimmingCharacters(in: CharacterSet.init(charactersIn: CMD_TERM_S))
