@@ -28,6 +28,7 @@
 #include "BTLauncher.h"
 #include <SoftwareSerial.h>
 #include "LauncherProtocol.h"
+#inlude "EEPROM.h"
 
 //Serial commands
 String kFireOn = String(FIRE_ON);
@@ -42,13 +43,21 @@ String kCtyOn = String(CTY_OK);
 String kCtyNone = String(CTY_NONE);
 
 String kValidate = String(VALIDATE);
-String kValidationCode = String(VCODE);
 String kRequiresValidation = String(REQ_VALID);
+String kVersion = String(VERSION);
+String kSetCode = String(SETCODE);
 
 //Command structure is :COMMAND|VALUE:
 const char cmdTerminator = CMD_TERM;
 const char cmdValSeparator = CMD_SEP;
 const size_t cmdLen = CMD_LEN_MAX;
+
+//No methods in this or it cant be used in the EEPROM calls
+struct PinCode
+{
+    char header[PIN_LEN] = PIN_VER;
+    char code[PIN_LEN + 1] = {'0', '0', '0', '0', 0};
+};
 
 #pragma mark -
 
@@ -61,7 +70,7 @@ char valueBuffer[cmdLen];
 bool readingCmd = false;
 bool readingVal = false;
 
-const int MAX_ARM_TIME = 5000;
+const int MAX_ARM_TIME_MS = 5000;
 long armTime = 0;
 bool armed;
 
@@ -107,6 +116,13 @@ void loop()
     {
         playReadyTone();
         isReady = true;
+
+        //Send the version
+        String vers = String(LAUNCHER_VERS);
+        String cmd = commandVal(kVersion, vers);
+        BTSerial.println(cmd);
+
+        //Send the validation required in case we reset while connected
         String cmd = command(kRequiresValidation);
         BTSerial.println(cmd);
     }
@@ -115,14 +131,19 @@ void loop()
 
     //Safety.  We don't want to keep any of these relays engaged for more than a few
     //seconds
-    if (millis() - armTime > MAX_ARM_TIME)
+    if (millis() - armTime > MAX_ARM_TIME_MS)
     {
         setArmed(false);
     }
 
-    if (millis() - fireTime > MAX_ARM_TIME)
+    if (millis() - fireTime > MAX_FIRE_TIME_MS)
     {
         setFired(false);
+    }
+
+    if (millis() - continuityTime > MAX_CONTINUITY_TIME_MS)
+    {
+        setContinuityTestOn(false);
     }
 
     if (ctyTestActive)
@@ -134,12 +155,14 @@ void loop()
             String cmd = command(kCtyOn);
             BTSerial.println(cmd);
             continuity = true;
+            digitalWrite(BUZZER_PIN, HIGH);
         }
         else if (cty_val == HIGH && continuity)
         {
             String cmd = command(kCtyNone);
             BTSerial.println(cmd);
             continuity = false;
+            digitalWrite(BUZZER_PIN, LOW);
         }
     }
 }
@@ -226,19 +249,30 @@ void executeCommand(const String &cmd, const String &value)
     }
     else if (cmd == kPing)
     {
-        //Play a double beep to indicate all is well.
         playPingTone();
     }
     else if (cmd == kValidate)
     {
-        if (value == kValidationCode)
+        PinCode pin = readPinCode();
+        if (comparePinCode(pin, value))
         {
-            String validateCmd = commandVal(kValidate, kValidationCode);
+            String pinStr = String(pin.code);
+            String validateCmd = commandVal(kValidate, pinStr);
             //Return our internal validation code
             BTSerial.println(validateCmd);
             playPingTone();
             validated = true;
         }
+    }
+    else if (cmd == kSetCode)
+    {
+        PinCode code;
+        value.toCharArray(code.code, PIN_LEN);
+        setPinCode(code);
+
+        //Echo back to indicate we've set the pin
+        String pinSetCmd = commandVal(cmd, value);
+        BTSerial.println(pinSetCmd);
     }
 }
 
@@ -350,4 +384,43 @@ void playReadyTone()
         digitalWrite(BUZZER_PIN, LOW);
         delay(100);
     }
+}
+
+#pragma mark - PinCode Support
+
+bool isValidPin(PinCode &p)
+{
+    PinCode emptyPin;
+    for (int i = 0; i < 4; i++)
+    {
+        if (emptyPin.header[i] != p.header[i])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool comparePinCode(PinCode &c, String const &pinStr)
+{
+    return pinStr == String(pin.code);
+}
+
+void setPinCode(PinCode &p)
+{
+    EEPROM.put(0, p);
+}
+
+PinCode readPinCode()
+{
+    PinCode pinCode;
+    EEPROM.get(0, pinCode);
+    if (!isValidPin(pinCode))
+    {
+        Serial.println("Setting default PIN code");
+        PinCode emptyPin;
+        setPinCode(emptyPin);
+        return emptyPin;
+    }
+    return pinCode;
 }

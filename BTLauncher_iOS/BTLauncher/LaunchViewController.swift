@@ -45,12 +45,13 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     @IBOutlet weak var recordingLabel: UILabel!
     @IBOutlet weak var continuityIndicator: UIView!
 
+    var observers = [NSKeyValueObservation]()
+
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     var captureDevice : AVCaptureDevice?
     var audioDevice : AVCaptureDevice?
 
-    var observers = [NSKeyValueObservation]()
     var movieOutput = AVCaptureMovieFileOutput()
 
     var recording : Bool = false

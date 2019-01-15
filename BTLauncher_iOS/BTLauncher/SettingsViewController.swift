@@ -33,11 +33,25 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
 {
     @IBOutlet weak var validationCodeField: UITextField!
     @IBOutlet weak var autoRecordSwitch: UISwitch!
-    
+    @IBOutlet weak var updateButton: UIButton!
+
+    var observers = [NSKeyValueObservation]()
+    var lastCode : String?
+
     override func viewDidLoad() {
         self.title = "Settings"
         validationCodeField.text = LocalSettings.settings.validationCode
         autoRecordSwitch.setOn(LocalSettings.settings.autoRecord, animated: false)
+        startObservers()
+    }
+
+    func startObservers() {
+        self.observers = [
+            LaunchController.shared().observe(\LaunchController.validated, options: [.new]) {
+                [weak self] (_,_) in
+                self?.updateButton.isHidden = !LaunchController.shared().validated
+            }
+        ]
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -45,11 +59,18 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
             return
         }
 
-        if(code.count > 4) {
+        if(code.count == PIN_LEN) {
             LocalSettings.settings.validationCode = code
         }else{
             textField.text = LocalSettings.settings.validationCode
         }
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if(range.location > PIN_LEN) {
+            return false;
+        }
+        return true;
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -59,6 +80,34 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
 
     @IBAction func autoRecordChanged(_ sender: UISwitch) {
         LocalSettings.settings.autoRecord = sender.isOn;
+    }
+
+    @IBAction func setCodePressed(_ sender: Any)
+    {
+        validationCodeField.resignFirstResponder()
+        
+        //Prevent button mashing
+        if let last = lastCode {
+            if(last == LocalSettings.settings.validationCode) {
+                return
+            }
+        }
+
+        let code = "New Code: " + LocalSettings.settings.validationCode
+        let ac = UIAlertController(title: "Update Validation Code?", message: code, preferredStyle: .alert)
+        let update = UIAlertAction(title: "Update", style: .destructive) { _ in
+            LaunchController.shared().sendSetValidationCodeCommand(LocalSettings.settings.validationCode) {
+                let ac = UIAlertController(title: "Code Updated", message: nil, preferredStyle: .alert)
+                let ok = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                ac.addAction(ok);
+                self.present(ac, animated: true, completion: nil)
+            }
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        ac.addAction(update)
+        ac.addAction(cancel)
+        self.present(ac, animated: true, completion: nil)
+        lastCode = LocalSettings.settings.validationCode
     }
 }
 

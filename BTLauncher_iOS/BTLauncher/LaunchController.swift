@@ -28,10 +28,13 @@
 import Foundation
 import CoreBluetooth
 
-let kEnableLoopbackTest = false
+let kEnableLoopbackTest = true
 
 class LaunchController : NSObject, BluetoothSerialDelegate
 {
+    var signalTimer : Timer!
+    var setCodeCallback : (()->Void)?
+
     private static let instance : LaunchController = {
         let instance = LaunchController()
         instance.armed = false
@@ -46,8 +49,9 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     //MARK: Obserable Properties
 
     @objc dynamic var continuity : Bool = false;
-
     @objc dynamic var deviceId : String?
+    @objc dynamic var deviceVersion : String?
+    @objc dynamic var rssi : Float = 0.0;
 
     @objc dynamic var armed : Bool = false {
         didSet {
@@ -59,6 +63,15 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         didSet {
             if(!connected) {
                 validated = false
+                if let timer = signalTimer {
+                    timer.invalidate()
+                    signalTimer = nil;
+                }
+            }else{
+                signalTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) {
+                    _ in
+                    BluetoothSerial.shared().readRSSI()
+                }
             }
         }
     }
@@ -88,6 +101,21 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         BluetoothSerial.shared().sendMessageToDevice(command(PING, value:nil))
     }
 
+    public func sendSetValidationCodeCommand(_ code: String, callback:@escaping ()->Void)
+    {
+        if(!validated) { return }
+
+        setCodeCallback = callback;
+        let cmdStr = command(SETCODE, value: code)
+        BluetoothSerial.shared().sendMessageToDevice(cmdStr)
+
+        if(kEnableLoopbackTest) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+                self.handleIncomingCommand(cmdStr)
+            }
+        }
+    }
+
     public func sendValidationCommand()
     {
         let cmdStr = command(VALIDATE, value: LocalSettings.settings.validationCode)
@@ -102,9 +130,7 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
     public func sendFireCommand(_ enable: Bool)
     {
-        if(!validated) {
-            return
-        }
+        if(!validated) { return }
 
         if(armed && enable) {
             BluetoothSerial.shared().sendMessageToDevice(command(FIRE_ON, value:nil))
@@ -117,9 +143,7 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
     public func sendContinuityCommand(_ enable: Bool)
     {
-        if(!validated) {
-            return
-        }
+        if(!validated) { return }
 
         let cmdStr = command((enable ? CTY_ON : CTY_OFF), value:nil)
         BluetoothSerial.shared().sendMessageToDevice(cmdStr)
@@ -131,18 +155,16 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
     func sendArmedCommand(_ enable: Bool)
     {
-        if(!validated) {
-            return
-        }
-        
+        if(!validated) { return }
+
         let cmdStr = command((enable ? ARM_ON : ARM_OFF), value:nil)
         BluetoothSerial.shared().sendMessageToDevice(cmdStr)
     }
 
     func handleIncomingCommand(_ cmd:String)
     {
-        //Separate the command and the value
-        let parts = cmd.components(separatedBy: CMD_SEP_S)
+        let stripped = cmd.trimmingCharacters(in: CharacterSet.init(charactersIn: CMD_TERM_S))
+        let parts = stripped.components(separatedBy: CMD_SEP_S)
         let cmdStr = parts[0]
         let valStr : String? = parts.count == 2 ? parts[1] : nil
         
@@ -155,7 +177,14 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         }else if(cmdStr == CTY_NONE) {
             continuity = false
         }else if(cmdStr == REQ_VALID) {
-            validated = false;
+            validated = false
+        }else if(cmdStr == VERSION) {
+            deviceVersion = valStr
+        }else if(cmdStr == SETCODE) {
+            if let cb = setCodeCallback {
+                cb();
+                setCodeCallback = nil;
+            }
         }
     }
 
@@ -180,10 +209,13 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         //No particularily robust if we're quickly sending multiple commands.
         if(stringBuffer.count > 0 && String(stringBuffer.last!) == CMD_TERM_S) {
             cmdIncoming = false
-            //Trim the terminators
-            stringBuffer = stringBuffer.trimmingCharacters(in: CharacterSet.init(charactersIn: CMD_TERM_S))
             handleIncomingCommand(stringBuffer)
             stringBuffer = ""
         }
+    }
+
+    func serialDidReadRSSI(_ rssi: NSNumber) 
+    {
+        self.rssi = rssi.floatValue
     }
 }

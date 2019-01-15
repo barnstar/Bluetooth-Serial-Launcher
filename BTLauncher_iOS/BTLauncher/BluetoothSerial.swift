@@ -38,6 +38,8 @@ protocol BluetoothSerialDelegate {
     
     /// Called when a message is received
     func serialDidReceiveData(_ data: Data)
+
+    func serialDidReadRSSI(_ rssi: NSNumber)
 }
 
 protocol BluetoothConnectionDelegate {
@@ -46,7 +48,6 @@ protocol BluetoothConnectionDelegate {
 
     /// Called when a peripheral disconnected
     func serialDidDisconnect(_ peripheral: CBPeripheral, error: NSError?)
-
 
     /// Called when a new peripheral is discovered while scanning. Also gives the RSSI (signal strength)
     func serialDidDiscoverPeripheral(_ peripheral: CBPeripheral, RSSI: NSNumber?)
@@ -70,6 +71,7 @@ extension BluetoothSerialDelegate
     func serialDidReceiveString(_ message: String) {}
     func serialDidReceiveBytes(_ bytes: [UInt8]) {}
     func serialDidReceiveData(_ data: Data) {}
+    func serialDidReadRSSI(_ rssi: NSNumber) {}
 }
 
 extension BluetoothConnectionDelegate 
@@ -312,5 +314,6 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
     
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
         connectionDelegate.serialDidReadRSSI(RSSI)
+        delegate.serialDidReadRSSI(RSSI)
     }
 }

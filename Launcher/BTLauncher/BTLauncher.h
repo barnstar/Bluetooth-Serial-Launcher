@@ -27,6 +27,8 @@
 
 #include <Arduino.h>
 
+#define LAUNCHER_VERS           1
+
 //GPIO configuration
 #define BT_TX_PIN               3       //Software Serial TX Pin
 #define BT_RX_PIN               4       //Software Serial RX BUZZER_PIN

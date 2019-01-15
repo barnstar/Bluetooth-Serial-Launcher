@@ -25,23 +25,27 @@
  * SOFTWARE.
  **********************************************************************************/
 
-#define ARM_ON      "ARM_ON"
-#define ARM_OFF     "ARM_OFF"
-#define FIRE_ON     "FIRE_ON"
-#define FIRE_OFF    "FIRE_OFF"
-#define CTY_ON      "CTEST_ON"
-#define CTY_OFF     "CTEST_OFF"
-#define PING        "PING"
+#define ARM_ON      "AO"
+#define ARM_OFF     "AF"
+#define FIRE_ON     "FO"
+#define FIRE_OFF    "FFF"
+#define CTY_ON      "CO"
+#define CTY_OFF     "CF"
+#define PING        "PI"
 
-#define REQ_VALID   "REQVALDIATE"
+#define REQ_VALID   "RV"
 
-#define VALIDATE    "VALIDATE"
-#define VCODE       "2V55GTU"   //Use something unique here
+#define VALIDATE    "VA"
+#define VCODE       "0000"
 
-#define DEVICEID    "DEVICEID"
+#define DEVICEID    "ID"
+#define VERSION     "VER"
 
-#define CTY_OK      "CTY_OK"
-#define CTY_NONE    "CTY_NONE"
+#define SETCODE     "SC"
+
+#define CTY_OK      "CY"
+#define CTY_NONE    "CX"
+
 
 #define CMD_TERM    ':'
 #define CMD_SEP     '|'
@@ -53,3 +57,5 @@
 
 #define CMD_LEN_MAX  16
 
+#define PIN_LEN 4
+#define PIN_VER {'v','1','0','0'}
