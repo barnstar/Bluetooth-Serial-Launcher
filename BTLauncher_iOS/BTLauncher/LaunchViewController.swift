@@ -70,7 +70,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         stopButton.isHidden = true
         recordingLabel.isHidden = true
         fireButton.isHidden = true
-        continuityIndicator.isHidden = true;
+        continuityIndicator.isHidden = true
 
         roundedViews.forEach { (button) in
             button.clipsToBounds = true
@@ -97,28 +97,28 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     {
         self.observers = [
             LaunchController.shared().observe(\LaunchController.connected, options: [.new]) {
-                [weak self] (_,_) in
+                [unowned self] (_,_) in
                 let connected = LaunchController.shared().connected
-                self?.connectionStatusLabel.text =  connected ? "Connected" : "Not Connected"
-                self?.connectionStatusLabel.textColor = connected ? .green : .red
+                self.connectionStatusLabel.text =  connected ? "Connected" : "Not Connected"
+                self.connectionStatusLabel.backgroundColor = connected ? .green : .red
             },
 
             LaunchController.shared().observe(\LaunchController.validated, options: [.new]) {
-                [weak self] (_,_) in
+                [unowned self] (_,_) in
                 let validated = LaunchController.shared().validated
-                self?.validationStatusLabel.text = validated ? "Validated" : "Not Validated"
-                self?.validationStatusLabel.textColor = validated ? .green : .red
+                self.validationStatusLabel.text = validated ? "Validated" : "Not Validated"
+                self.validationStatusLabel.backgroundColor = validated ? .green : .red
             },
 
             LaunchController.shared().observe(\LaunchController.continuity, options: [.new]) {
-                [weak self] (_,_) in
-                self?.continuityIndicator.isHidden = !LaunchController.shared().continuity;
+                [unowned self] (_,_) in
+                self.continuityIndicator.isHidden = !LaunchController.shared().continuity
             },
 
             LaunchController.shared().observe(\LaunchController.rssi, options: [.new]) {
-                [weak self] (_,_) in
+                [unowned self] (_,_) in
                 let rssi = LaunchController.shared().rssi
-                self?.signalLabel.text = "Signal: \(rssi)"
+                self.signalLabel.text = "Signal: \(rssi)"
             }
         ]
     }
@@ -156,7 +156,8 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         }
     }
 
-    func setRecording(_ recording: Bool) {
+    func setRecording(_ recording: Bool)
+    {
         if(LocalSettings.settings.autoRecord == false)
         {
             return
@@ -176,7 +177,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
             movieOutput.stopRecording()
             //savingDialog = UIAlertController.init(title: "Saving Video...", message: nil, preferredStyle: .alert)
             //self.present(savingDialog!, animated: true, completion: nil)
-        }else {
+        } else {
             let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
             let fileUrl = paths[0].appendingPathComponent("output.mov")
             try? FileManager.default.removeItem(at: fileUrl)
@@ -184,7 +185,11 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         }
     }
 
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+    func fileOutput(_ output: AVCaptureFileOutput,
+                    didFinishRecordingTo outputFileURL: URL,
+                    from connections: [AVCaptureConnection],
+                    error: Error?)
+    {
         if let d = savingDialog {
             d.dismiss(animated: false, completion: nil)
         }
@@ -207,19 +212,21 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     }
 
 
-     @IBAction func armTouchDown(_ sender: Any) {
+     @IBAction func armTouchDown(_ sender: Any)
+     {
         LaunchController.shared().armed = true
         fireButton.isHidden = false
         ctyButton.isHidden = true
-        pingButton.isHidden = true;
+        pingButton.isHidden = true
         setRecording(true)
     }
 
-    @IBAction func armTouchCancel(_ sender: Any) {
+    @IBAction func armTouchCancel(_ sender: Any)
+    {
         LaunchController.shared().armed = false
         fireButton.isHidden = true
         ctyButton.isHidden = false
-        pingButton.isHidden = false;
+        pingButton.isHidden = false
     }
 
     @IBAction func fireTouchDown(_ sender: Any) {
@@ -246,7 +253,6 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     @IBAction func validatePressed(_ sender: Any) {
         LaunchController.shared().sendValidationCommand()
     }
-
 
     @IBAction func pingPressed(_ sender: Any) {
         LaunchController.shared().pingConnectedDevice()

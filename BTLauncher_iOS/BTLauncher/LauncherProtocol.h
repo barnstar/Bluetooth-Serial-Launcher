@@ -25,10 +25,12 @@
  * SOFTWARE.
  **********************************************************************************/
 
+#define LAUNCHER_VERS           2
+
 #define ARM_ON      "AO"
 #define ARM_OFF     "AF"
 #define FIRE_ON     "FO"
-#define FIRE_OFF    "FFF"
+#define FIRE_OFF    "FF"
 #define CTY_ON      "CO"
 #define CTY_OFF     "CF"
 #define PING        "PI"

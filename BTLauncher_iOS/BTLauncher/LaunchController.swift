@@ -28,7 +28,7 @@
 import Foundation
 import CoreBluetooth
 
-let kEnableLoopbackTest = true
+let kEnableTestMode = false
 
 class LaunchController : NSObject, BluetoothSerialDelegate
 {
@@ -47,11 +47,11 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     }
 
     //MARK: Obserable Properties
-
-    @objc dynamic var continuity : Bool = false;
+    @objc dynamic var continuity : Bool = false
     @objc dynamic var deviceId : String?
     @objc dynamic var deviceVersion : String?
-    @objc dynamic var rssi : Float = 0.0;
+    @objc dynamic var rssi : Float = 0.0
+    @objc dynamic var validated : Bool = false
 
     @objc dynamic var armed : Bool = false {
         didSet {
@@ -65,7 +65,7 @@ class LaunchController : NSObject, BluetoothSerialDelegate
                 validated = false
                 if let timer = signalTimer {
                     timer.invalidate()
-                    signalTimer = nil;
+                    signalTimer = nil
                 }
             }else{
                 signalTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) {
@@ -76,16 +76,10 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         }
     }
 
-    @objc dynamic var validated : Bool = false {
-        didSet {
-            NSLog("Validated \(validated)")
-        }
-    }
-
 
     //MARK: Command Interface
 
-    func command(_ command:String, value:String?) -> String
+    func constructCommand(_ command:String, value:String?) -> String
     {
         var ret = CMD_TERM_S + command
         if let value = value {
@@ -98,18 +92,20 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
     public func pingConnectedDevice()
     {
-        BluetoothSerial.shared().sendMessageToDevice(command(PING, value:nil))
+        //Allow ping w/o validation
+        let cmdStr = constructCommand(PING, value:nil)
+        BluetoothSerial.shared().sendMessageToDevice(cmdStr)
     }
 
     public func sendSetValidationCodeCommand(_ code: String, callback:@escaping ()->Void)
     {
         if(!validated) { return }
 
-        setCodeCallback = callback;
-        let cmdStr = command(SETCODE, value: code)
+        setCodeCallback = callback
+        let cmdStr = constructCommand(SETCODE, value: code)
         BluetoothSerial.shared().sendMessageToDevice(cmdStr)
 
-        if(kEnableLoopbackTest) {
+        if(kEnableTestMode) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
                 self.handleIncomingCommand(cmdStr)
             }
@@ -118,10 +114,10 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
     public func sendValidationCommand()
     {
-        let cmdStr = command(VALIDATE, value: LocalSettings.settings.validationCode)
+        let cmdStr = constructCommand(VALIDATE, value: LocalSettings.settings.validationCode)
         BluetoothSerial.shared().sendMessageToDevice(cmdStr)
 
-        if(kEnableLoopbackTest) {
+        if(kEnableTestMode) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
                 self.handleIncomingCommand(cmdStr)
             }
@@ -133,9 +129,9 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         if(!validated) { return }
 
         if(armed && enable) {
-            BluetoothSerial.shared().sendMessageToDevice(command(FIRE_ON, value:nil))
+            BluetoothSerial.shared().sendMessageToDevice(constructCommand(FIRE_ON, value:nil))
         }else if(!enable) {
-            BluetoothSerial.shared().sendMessageToDevice(command(FIRE_OFF, value:nil))
+            BluetoothSerial.shared().sendMessageToDevice(constructCommand(FIRE_OFF, value:nil))
         }else{
             NSLog("Fire Command Ignored: Not Armed")
         }
@@ -145,11 +141,11 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     {
         if(!validated) { return }
 
-        let cmdStr = command((enable ? CTY_ON : CTY_OFF), value:nil)
+        let cmdStr = constructCommand((enable ? CTY_ON : CTY_OFF), value:nil)
         BluetoothSerial.shared().sendMessageToDevice(cmdStr)
 
-        if(kEnableLoopbackTest) {
-            handleIncomingCommand(enable ? CTY_OK : CTY_NONE);
+        if(kEnableTestMode) {
+            handleIncomingCommand(enable ? CTY_OK : CTY_NONE)
         }
     }
 
@@ -157,7 +153,7 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     {
         if(!validated) { return }
 
-        let cmdStr = command((enable ? ARM_ON : ARM_OFF), value:nil)
+        let cmdStr = constructCommand((enable ? ARM_ON : ARM_OFF), value:nil)
         BluetoothSerial.shared().sendMessageToDevice(cmdStr)
     }
 
@@ -182,8 +178,8 @@ class LaunchController : NSObject, BluetoothSerialDelegate
             deviceVersion = valStr
         }else if(cmdStr == SETCODE) {
             if let cb = setCodeCallback {
-                cb();
-                setCodeCallback = nil;
+                cb()
+                setCodeCallback = nil
             }
         }
     }

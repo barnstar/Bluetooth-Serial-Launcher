@@ -36,31 +36,37 @@ class ConnectionCell : UITableViewCell
 }
 
 
-class ConnectionViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, BluetoothConnectionDelegate
+class ConnectionViewController :
+    UIViewController,
+    UITableViewDelegate,
+    UITableViewDataSource,
+    BluetoothConnectionDelegate
 {
     var peripherals: [(peripheral: CBPeripheral, RSSI: Float)] = []
     @IBOutlet weak var tableView: UITableView!
 
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool)
+    {
         super.viewDidAppear(animated)
         self.title = "Connect"
         BluetoothSerial.shared().connectionDelegate = self
     }
 
-    var scanning : Bool = false;
-    @IBAction func scanPressed(_ sender: Any) {
+    var scanning : Bool = false
+    @IBAction func scanPressed(_ sender: Any)
+    {
         self.peripherals.removeAll()
         tableView.reloadData()
         if(!scanning) {
             BluetoothSerial.shared().startScan()
-            scanning = true;
+            scanning = true
             self.title = "Scanning..."
         }
 
         //Abort scan after 5 seconds
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
             BluetoothSerial.shared().stopScan()
-            self.scanning = false;
+            self.scanning = false
             self.title = "Connect"
         }
     }
@@ -69,24 +75,27 @@ class ConnectionViewController : UIViewController, UITableViewDelegate, UITableV
         return peripherals.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
         let cell : ConnectionCell = tableView.dequeueReusableCell(withIdentifier: "connCell", for:indexPath) as! ConnectionCell
         let peripheral = peripherals[indexPath.row]
         cell.nameLabel.text = peripheral.peripheral.name
         let rssi = peripheral.RSSI
-        cell.RSSILabel.text = "\(rssi)"
+        cell.RSSILabel.text = "\(rssi) dBm"
         let connected = BluetoothSerial.shared().connectedPeripheral == peripheral.peripheral
         cell.accessoryType = connected ? .checkmark : .none
 
         return cell
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
         let peripheral = peripherals[indexPath.row].peripheral
         BluetoothSerial.shared().connectToPeripheral(peripheral)
     }
 
-    func serialDidDiscoverPeripheral(_ peripheral: CBPeripheral, RSSI: NSNumber?) {
+    func serialDidDiscoverPeripheral(_ peripheral: CBPeripheral, RSSI: NSNumber?)
+    {
         // check whether it is a duplicate
         for exisiting in peripherals {
             if exisiting.peripheral.identifier == peripheral.identifier { return }
@@ -102,12 +111,14 @@ class ConnectionViewController : UIViewController, UITableViewDelegate, UITableV
     func serialDidChangeState() {
     }
 
-    func serialDidDisconnect(_ peripheral: CBPeripheral, error: NSError?) {
+    func serialDidDisconnect(_ peripheral: CBPeripheral, error: NSError?)
+    {
         LaunchController.shared().connected = false
         tableView.reloadData()
     }
 
-    func serialDidConnect(_ peripheral: CBPeripheral) {
+    func serialDidConnect(_ peripheral: CBPeripheral)
+    {
         LaunchController.shared().connected = true
         LaunchController.shared().sendValidationCommand()
         tableView.reloadData()

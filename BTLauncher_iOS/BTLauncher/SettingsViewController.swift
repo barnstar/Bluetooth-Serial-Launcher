@@ -48,8 +48,8 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
     func startObservers() {
         self.observers = [
             LaunchController.shared().observe(\LaunchController.validated, options: [.new]) {
-                [weak self] (_,_) in
-                self?.updateButton.isHidden = !LaunchController.shared().validated
+                [unowned self] (_,_) in
+                self.updateButton.isHidden = !LaunchController.shared().validated
             }
         ]
     }
@@ -67,10 +67,13 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if(range.location > PIN_LEN) {
-            return false;
+        if let oldVal = textField.text {
+            if let r = Range(range, in: oldVal) {
+                let newVal = oldVal.replacingCharacters(in: r, with: string)
+                return newVal.count <= 4
+            }
         }
-        return true;
+        return false
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -79,7 +82,7 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
     }
 
     @IBAction func autoRecordChanged(_ sender: UISwitch) {
-        LocalSettings.settings.autoRecord = sender.isOn;
+        LocalSettings.settings.autoRecord = sender.isOn
     }
 
     @IBAction func setCodePressed(_ sender: Any)
@@ -99,7 +102,7 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
             LaunchController.shared().sendSetValidationCodeCommand(LocalSettings.settings.validationCode) {
                 let ac = UIAlertController(title: "Code Updated", message: nil, preferredStyle: .alert)
                 let ok = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                ac.addAction(ok);
+                ac.addAction(ok)
                 self.present(ac, animated: true, completion: nil)
             }
         }

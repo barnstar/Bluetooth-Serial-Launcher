@@ -15,7 +15,6 @@
 		C202570521E7AF6500DE6E53 /* LaunchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570421E7AF6500DE6E53 /* LaunchController.swift */; };
 		C202570721E7BD1700DE6E53 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570621E7BD1700DE6E53 /* LaunchViewController.swift */; };
 		C202570921E7BD5000DE6E53 /* ConnectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */; };
-		C2503C3221EE69EB00D8F7D8 /* BTLauncher.ino in Resources */ = {isa = PBXBuildFile; fileRef = C2503C2F21EE69EB00D8F7D8 /* BTLauncher.ino */; };
 		C2FC4E5221E90F7D00865E10 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */; };
 		C2FC4E5421E9116200865E10 /* LocalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2FC4E5321E9116200865E10 /* LocalSettings.swift */; };
 /* End PBXBuildFile section */
@@ -31,9 +30,9 @@
 		C202570421E7AF6500DE6E53 /* LaunchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchController.swift; sourceTree = "<group>"; };
 		C202570621E7BD1700DE6E53 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionViewController.swift; sourceTree = "<group>"; };
-		C2503C2F21EE69EB00D8F7D8 /* BTLauncher.ino */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BTLauncher.ino; path = ../../Launcher/BTLauncher/BTLauncher.ino; sourceTree = "<group>"; };
 		C2503C3021EE69EB00D8F7D8 /* BTLauncher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BTLauncher.h; path = ../../Launcher/BTLauncher/BTLauncher.h; sourceTree = "<group>"; };
 		C2503C3121EE69EB00D8F7D8 /* LauncherProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LauncherProtocol.h; path = ../../Launcher/BTLauncher/LauncherProtocol.h; sourceTree = "<group>"; };
+		C2ABB63621EFB40B00DF3F1C /* BTLauncher.ino */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BTLauncher.ino; path = ../../Launcher/BTLauncher/BTLauncher.ino; sourceTree = "<group>"; };
 		C2FC4E4C21E8DA7500865E10 /* LauncherProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LauncherProtocol.h; sourceTree = "<group>"; };
 		C2FC4E4E21E8DEAA00865E10 /* BTLauncher-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BTLauncher-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -71,19 +70,19 @@
 		C20256EF21E7AE6800DE6E53 /* BTLauncher */ = {
 			isa = PBXGroup;
 			children = (
+				C2FC4E4E21E8DEAA00865E10 /* BTLauncher-Bridging-Header.h */,
 				C2FC4E4C21E8DA7500865E10 /* LauncherProtocol.h */,
 				C202570221E7AECE00DE6E53 /* BluetoothSerial.swift */,
 				C20256F021E7AE6800DE6E53 /* AppDelegate.swift */,
+				C2FC4E5321E9116200865E10 /* LocalSettings.swift */,
 				C202570421E7AF6500DE6E53 /* LaunchController.swift */,
+				C202570621E7BD1700DE6E53 /* LaunchViewController.swift */,
+				C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */,
+				C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */,
 				C20256F421E7AE6800DE6E53 /* Main.storyboard */,
 				C20256F721E7AE6900DE6E53 /* Assets.xcassets */,
 				C20256F921E7AE6900DE6E53 /* LaunchScreen.storyboard */,
 				C20256FC21E7AE6900DE6E53 /* Info.plist */,
-				C202570621E7BD1700DE6E53 /* LaunchViewController.swift */,
-				C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */,
-				C2FC4E4E21E8DEAA00865E10 /* BTLauncher-Bridging-Header.h */,
-				C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */,
-				C2FC4E5321E9116200865E10 /* LocalSettings.swift */,
 			);
 			path = BTLauncher;
 			sourceTree = "<group>";
@@ -91,8 +90,8 @@
 		C2503C2E21EE69D300D8F7D8 /* Arduino */ = {
 			isa = PBXGroup;
 			children = (
+				C2ABB63621EFB40B00DF3F1C /* BTLauncher.ino */,
 				C2503C3021EE69EB00D8F7D8 /* BTLauncher.h */,
-				C2503C2F21EE69EB00D8F7D8 /* BTLauncher.ino */,
 				C2503C3121EE69EB00D8F7D8 /* LauncherProtocol.h */,
 			);
 			path = Arduino;
@@ -130,6 +129,7 @@
 				TargetAttributes = {
 					C20256EC21E7AE6800DE6E53 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
 					};
 				};
 			};
@@ -158,7 +158,6 @@
 			files = (
 				C20256FB21E7AE6900DE6E53 /* LaunchScreen.storyboard in Resources */,
 				C20256F821E7AE6900DE6E53 /* Assets.xcassets in Resources */,
-				C2503C3221EE69EB00D8F7D8 /* BTLauncher.ino in Resources */,
 				C20256F621E7AE6800DE6E53 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,8 +323,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8MUG75JRMF;
+				DEVELOPMENT_TEAM = Z23B4V25G3;
 				INFOPLIST_FILE = BTLauncher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -333,6 +333,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.barnstar.BTLauncher.BTLauncher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -342,8 +343,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8MUG75JRMF;
+				DEVELOPMENT_TEAM = Z23B4V25G3;
 				INFOPLIST_FILE = BTLauncher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

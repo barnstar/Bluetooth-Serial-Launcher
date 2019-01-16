@@ -18,20 +18,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_large" translatesAutoresizingMaskIntoConstraints="NO" id="qFr-Pc-dKd">
-                                <rect key="frame" x="87.5" y="233.5" width="200" height="200"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash" translatesAutoresizingMaskIntoConstraints="NO" id="qFr-Pc-dKd">
+                                <rect key="frame" x="10" y="164" width="339" height="339"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="200" id="5Yr-ae-xmb"/>
-                                    <constraint firstAttribute="width" constant="200" id="AUb-HD-FC4"/>
+                                    <constraint firstAttribute="width" secondItem="qFr-Pc-dKd" secondAttribute="height" multiplier="1:1" id="Ue7-c3-BwL"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="qFr-Pc-dKd" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Ytp-MU-nMg"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="qFr-Pc-dKd" secondAttribute="trailing" constant="10" id="CL5-tu-QGa"/>
                             <constraint firstItem="qFr-Pc-dKd" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="mL1-ad-gGG"/>
+                            <constraint firstItem="qFr-Pc-dKd" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="10" id="zxi-S3-9HN"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -42,6 +42,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="launch_large" width="96" height="96"/>
+        <image name="splash" width="600" height="587.4000244140625"/>
     </resources>
 </document>

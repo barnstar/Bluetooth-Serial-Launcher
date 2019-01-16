@@ -25,31 +25,32 @@
  * SOFTWARE.
  **********************************************************************************/
 
+#define LAUNCHER_VERS           2
 
-#define ARM_ON      "ARM_ON"
-#define ARM_OFF     "ARM_OFF"
-#define FIRE_ON     "FIRE_ON"
-#define FIRE_OFF    "FIRE_OFF"
-#define CTY_ON      "CTEST_ON"
-#define CTY_OFF     "CTEST_OFF"
-#define PING        "PING"
+#define ARM_ON      "AO"
+#define ARM_OFF     "AF"
+#define FIRE_ON     "FO"
+#define FIRE_OFF    "FF"
+#define CTY_ON      "CO"
+#define CTY_OFF     "CF"
+#define PING        "PI"
 
-#define REQ_VALID   "REQVALDIATE"
+#define REQ_VALID   "RV"
 
-#define VALIDATE    "VALIDATE"
+#define VALIDATE    "VA"
 #define VCODE       "0000"
 
-#define DEVICEID    "DEVICEID"
-#define VERSION     "VERSION"
+#define DEVICEID    "ID"
+#define VERSION     "VER"
 
-#define SETCODE     "SETCODE"
+#define SETCODE     "SC"
 
-#define CTY_OK      "CTY_OK"
-#define CTY_NONE    "CTY_NONE"
+#define CTY_OK      "CY"
+#define CTY_NONE    "CX"
+
 
 #define CMD_TERM    ':'
 #define CMD_SEP     '|'
-
 
 //For Swift which doesn't translate chars to vars
 #define CMD_TERM_S  ":"
@@ -59,4 +60,3 @@
 
 #define PIN_LEN 4
 #define PIN_VER {'v','1','0','0'}
-
