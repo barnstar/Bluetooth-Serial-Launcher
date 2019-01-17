@@ -28,7 +28,7 @@
 #include "BTLauncher.h"
 #include <SoftwareSerial.h>
 #include "LauncherProtocol.h"
-#inlude "EEPROM.h"
+#include "EEPROM.h"
 
 //Serial commands
 String kFireOn = String(FIRE_ON);
@@ -56,7 +56,7 @@ const size_t cmdLen = CMD_LEN_MAX;
 struct PinCode
 {
     char header[PIN_LEN] = PIN_VER;
-    char code[PIN_LEN + 1] = {'0', '0', '0', '0', 0};
+    char code[PIN_LEN] = {'0', '0', '0', '0'};
 };
 
 #pragma mark -
@@ -108,6 +108,9 @@ void setup()
     setArmed(false);
     setFired(false);
     setContinuityTestOn(false);
+
+    PinCode emptyPin;
+    setPinCode(emptyPin);
 }
 
 void loop()
@@ -123,8 +126,12 @@ void loop()
         BTSerial.println(cmd);
 
         //Send the validation required in case we reset while connected
-        String cmd = command(kRequiresValidation);
-        BTSerial.println(cmd);
+        String cmdRet = command(kRequiresValidation);
+        BTSerial.println(cmdRet);
+
+        PinCode p = readPinCode();
+        String pStr = pinToString(p);
+        Serial.println(pStr);
     }
 
     readCommand();
@@ -256,10 +263,12 @@ void executeCommand(const String &cmd, const String &value)
         PinCode pin = readPinCode();
         if (comparePinCode(pin, value))
         {
-            String pinStr = String(pin.code);
-            String validateCmd = commandVal(kValidate, pinStr);
+            String pinStr = pinToString(pin);
+            Serial.println("Sending:" + pinStr);
+            String validateCmd = commandVal(kValidate, value);
             //Return our internal validation code
             BTSerial.println(validateCmd);
+            Serial.println("Sent:" + validateCmd);
             playPingTone();
             validated = true;
         }
@@ -388,7 +397,7 @@ void playReadyTone()
 
 #pragma mark - PinCode Support
 
-bool isValidPin(PinCode &p)
+bool isValidPin(PinCode p)
 {
     PinCode emptyPin;
     for (int i = 0; i < 4; i++)
@@ -401,12 +410,28 @@ bool isValidPin(PinCode &p)
     return true;
 }
 
-bool comparePinCode(PinCode &c, String const &pinStr)
+bool comparePinCode(PinCode &pin, String pinStr)
 {
-    return pinStr == String(pin.code);
+    Serial.println("Comparing:" + pinStr);
+    for(int i = 0;i<PIN_LEN;i++) {
+        if(pin.code[i] != pinStr.charAt(i)) {
+            Serial.println("Code mismatch");
+            return false;
+        }
+    }
+    Serial.println("Code match");
+    return true;
 }
 
-void setPinCode(PinCode &p)
+String pinToString(PinCode &p)
+{
+    char codeStr[PIN_LEN + 1];
+    codeStr[PIN_LEN] = '\0';
+    memcpy(codeStr, p.code, PIN_LEN);
+    return String(codeStr);
+}
+
+void setPinCode(PinCode p)
 {
     EEPROM.put(0, p);
 }
