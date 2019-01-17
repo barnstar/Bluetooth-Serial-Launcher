@@ -53,11 +53,11 @@ const char cmdValSeparator = CMD_SEP;
 const size_t cmdLen = CMD_LEN_MAX;
 
 //No methods in this or it cant be used in the EEPROM calls
-struct PinCode
+typedef struct
 {
-    char header[PIN_LEN] = PIN_VER;
-    char code[PIN_LEN] = {'0', '0', '0', '0'};
-};
+    uint8_t header[PIN_LEN] = PIN_VER;
+    uint8_t code[PIN_LEN] = {'0', '0', '0', '0'};
+} PinCode;
 
 #pragma mark -
 
@@ -86,13 +86,18 @@ bool ctyTestActive = false;
 
 bool validated = false;
 
+void log(String msg)
+{
+    Serial.println(msg);
+    BTSerial.println(msg);
+}
+
 void setup()
 {
     Serial.begin(9600);
     BTSerial.begin(9600);
 
-    Serial.println("Initialized");
-    BTSerial.println("Initialized");
+    log("Initialized");
 
     //If using relays, ground the pins to keep the relay
     //close (for the ones I'm using - YMMV)
@@ -104,13 +109,13 @@ void setup()
     pinMode(BUZZER_PIN, OUTPUT);
     digitalWrite(BUZZER_PIN, LOW);
 
-    //Redudancy?
+    //Redundancy?
     setArmed(false);
     setFired(false);
     setContinuityTestOn(false);
 
-    PinCode emptyPin;
-    setPinCode(emptyPin);
+    //PinCode emptyPin;
+    //setPinCode(emptyPin);
 }
 
 void loop()
@@ -176,7 +181,7 @@ void loop()
 
 void readCommand()
 {
-    if (BTSerial.available())
+    while (BTSerial.available())
     {
         char c = BTSerial.read();
         Serial.print(c);
@@ -201,7 +206,7 @@ void readCommand()
         {
             String cmd = String(cmdBuffer);
             String value = String(valueBuffer);
-
+            Serial.print("\n");
             executeCommand(cmd, value);
             readingCmd = false;
             readingVal = false;
@@ -225,7 +230,7 @@ void readCommand()
 
 void executeCommand(const String &cmd, const String &value)
 {
-    Serial.println("Command: " + cmd + "|" + value);
+    log("Cmd Recv: " + cmd + "|" + value);
     if (cmd == kFireOn)
     {
         //Redundancy
@@ -257,21 +262,27 @@ void executeCommand(const String &cmd, const String &value)
     else if (cmd == kPing)
     {
         playPingTone();
+        BTSerial.println(kPing);
     }
     else if (cmd == kValidate)
     {
+        validated = true;
+        String validateCmd = commandVal(kValidate, value);
+        BTSerial.println(validateCmd);
+
+        /*
         PinCode pin = readPinCode();
         if (comparePinCode(pin, value))
         {
             String pinStr = pinToString(pin);
             Serial.println("Sending:" + pinStr);
-            String validateCmd = commandVal(kValidate, value);
+            String validateCmd = commandVal(kValidate, pinStr);
             //Return our internal validation code
             BTSerial.println(validateCmd);
             Serial.println("Sent:" + validateCmd);
             playPingTone();
             validated = true;
-        }
+        }*/
     }
     else if (cmd == kSetCode)
     {
@@ -412,14 +423,21 @@ bool isValidPin(PinCode p)
 
 bool comparePinCode(PinCode &pin, String pinStr)
 {
-    Serial.println("Comparing:" + pinStr);
-    for(int i = 0;i<PIN_LEN;i++) {
-        if(pin.code[i] != pinStr.charAt(i)) {
-            Serial.println("Code mismatch");
+    if (pinStr.length() != 4)
+    {
+        return false;
+    }
+
+    log("Comparing:" + pinStr);
+    for (int i = 0; i < PIN_LEN; i++)
+    {
+        if (pin.code[i] != pinStr.charAt(i))
+        {
+            log("Code mismatch");
             return false;
         }
     }
-    Serial.println("Code match");
+    log("Code match");
     return true;
 }
 
@@ -442,7 +460,7 @@ PinCode readPinCode()
     EEPROM.get(0, pinCode);
     if (!isValidPin(pinCode))
     {
-        Serial.println("Setting default PIN code");
+        log("Setting default PIN code");
         PinCode emptyPin;
         setPinCode(emptyPin);
         return emptyPin;

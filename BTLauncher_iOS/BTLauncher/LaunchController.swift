@@ -1,4 +1,3 @@
-
 /*********************************************************************************
  * BT Video Launcher
  *
@@ -30,10 +29,17 @@ import CoreBluetooth
 
 let kEnableTestMode = false
 
+
+protocol TerminalDelegate {
+    func appendString(_ string: String);
+}
+
+
 class LaunchController : NSObject, BluetoothSerialDelegate
 {
     var signalTimer : Timer!
     var setCodeCallback : (()->Void)?
+    var terminalDelegate : TerminalDelegate?
 
     private static let instance : LaunchController = {
         let instance = LaunchController()
@@ -94,7 +100,7 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     {
         //Allow ping w/o validation
         let cmdStr = constructCommand(PING, value:nil)
-        BluetoothSerial.shared().sendMessageToDevice(cmdStr)
+        sendCommand(cmdStr)
     }
 
     public func sendSetValidationCodeCommand(_ code: String, callback:@escaping ()->Void)
@@ -103,11 +109,11 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
         setCodeCallback = callback
         let cmdStr = constructCommand(SETCODE, value: code)
-        BluetoothSerial.shared().sendMessageToDevice(cmdStr)
+        sendCommand(cmdStr)
 
         if(kEnableTestMode) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
-                self.handleIncomingCommand(cmdStr)
+                self.serialDidReceiveString(cmdStr)
             }
         }
     }
@@ -115,11 +121,11 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     public func sendValidationCommand()
     {
         let cmdStr = constructCommand(VALIDATE, value: LocalSettings.settings.validationCode)
-        BluetoothSerial.shared().sendMessageToDevice(cmdStr)
+        sendCommand(cmdStr)
 
         if(kEnableTestMode) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
-                self.handleIncomingCommand(cmdStr)
+                self.serialDidReceiveString(cmdStr)
             }
         }
     }
@@ -129,9 +135,9 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         if(!validated) { return }
 
         if(armed && enable) {
-            BluetoothSerial.shared().sendMessageToDevice(constructCommand(FIRE_ON, value:nil))
+            sendCommand(constructCommand(FIRE_ON, value:nil))
         }else if(!enable) {
-            BluetoothSerial.shared().sendMessageToDevice(constructCommand(FIRE_OFF, value:nil))
+            sendCommand(constructCommand(FIRE_OFF, value:nil))
         }else{
             NSLog("Fire Command Ignored: Not Armed")
         }
@@ -142,10 +148,11 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         if(!validated) { return }
 
         let cmdStr = constructCommand((enable ? CTY_ON : CTY_OFF), value:nil)
-        BluetoothSerial.shared().sendMessageToDevice(cmdStr)
+        sendCommand(cmdStr)
 
         if(kEnableTestMode) {
-            handleIncomingCommand(enable ? CTY_OK : CTY_NONE)
+            let retStr = constructCommand((enable ? CTY_OK : CTY_NONE), value:nil)
+            serialDidReceiveString(retStr)
         }
     }
 
@@ -154,7 +161,7 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         if(!validated) { return }
 
         let cmdStr = constructCommand((enable ? ARM_ON : ARM_OFF), value:nil)
-        BluetoothSerial.shared().sendMessageToDevice(cmdStr)
+        sendCommand(cmdStr)
     }
 
     func handleIncomingCommand(_ cmd:String)
@@ -181,6 +188,8 @@ class LaunchController : NSObject, BluetoothSerialDelegate
                 cb()
                 setCodeCallback = nil
             }
+        }else if(cmdStr == PING) {
+            NSLog("Ping returned");
         }
     }
 
@@ -192,7 +201,9 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     func serialDidReceiveString(_ message: String)
     {
         let msg = message.trimmingCharacters(in: .newlines)
-        NSLog("Got Data " + msg)
+        if let delegate = terminalDelegate {
+            delegate.appendString("-> \(message)\n")
+        }
 
         if(msg.prefix(1) == CMD_TERM_S) {
             cmdIncoming = true
@@ -214,4 +225,12 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     {
         self.rssi = rssi.floatValue
     }
+
+    func sendCommand(_ command: String) {
+        BluetoothSerial.shared().sendMessageToDevice(command);
+        if let delegate = terminalDelegate {
+            delegate.appendString("<- \(command)\n")
+        }
+    }
+
 }

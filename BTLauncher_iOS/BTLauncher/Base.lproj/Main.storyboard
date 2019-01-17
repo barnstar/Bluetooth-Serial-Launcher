@@ -298,6 +298,83 @@
             </objects>
             <point key="canvasLocation" x="864.79999999999995" y="895.50224887556226"/>
         </scene>
+        <!--Terminal View Controller-->
+        <scene sceneID="P4l-Sq-fqE">
+            <objects>
+                <viewController id="wRi-w7-CMJ" customClass="TerminalViewController" customModule="BTLauncher" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6vV-FW-kF7">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="onDrag" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cki-ec-rAf">
+                                <rect key="frame" x="0.0" y="64" width="375" height="516"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="7KF-J5-JaG" appends="YES" id="JBH-QE-OFT"/>
+                                </connections>
+                            </textView>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="db2-0p-uvA">
+                                <rect key="frame" x="10" y="584" width="285" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="send" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="wRi-w7-CMJ" id="jvF-M6-9PK"/>
+                                </connections>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="100" horizontalCompressionResistancePriority="200" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eX0-Y7-AN3">
+                                <rect key="frame" x="305" y="584" width="60" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="SSX-4l-yeQ"/>
+                                </constraints>
+                                <state key="normal" title="Send">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="sendPressed:" destination="wRi-w7-CMJ" eventType="touchUpInside" id="hb5-HF-lLg"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.83741801979999997" green="0.83743780850000005" blue="0.83742713930000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="xHB-A6-0Ha" firstAttribute="bottom" secondItem="db2-0p-uvA" secondAttribute="bottom" constant="4" id="6Cd-rQ-kRl"/>
+                            <constraint firstItem="Cki-ec-rAf" firstAttribute="trailing" secondItem="xHB-A6-0Ha" secondAttribute="trailing" id="9B0-3f-xwm"/>
+                            <constraint firstItem="xHB-A6-0Ha" firstAttribute="trailing" secondItem="eX0-Y7-AN3" secondAttribute="trailing" constant="10" id="Eq6-qy-4Xq"/>
+                            <constraint firstItem="eX0-Y7-AN3" firstAttribute="leading" secondItem="db2-0p-uvA" secondAttribute="trailing" constant="10" id="GUj-4J-FRc"/>
+                            <constraint firstItem="eX0-Y7-AN3" firstAttribute="centerY" secondItem="db2-0p-uvA" secondAttribute="centerY" id="Ogu-fL-WFW"/>
+                            <constraint firstItem="Cki-ec-rAf" firstAttribute="top" secondItem="xHB-A6-0Ha" secondAttribute="top" id="dvd-69-bEL"/>
+                            <constraint firstItem="db2-0p-uvA" firstAttribute="top" secondItem="Cki-ec-rAf" secondAttribute="bottom" constant="4" id="ent-8B-oBQ"/>
+                            <constraint firstItem="Cki-ec-rAf" firstAttribute="leading" secondItem="xHB-A6-0Ha" secondAttribute="leading" id="igE-GK-UZl"/>
+                            <constraint firstItem="db2-0p-uvA" firstAttribute="leading" secondItem="xHB-A6-0Ha" secondAttribute="leading" constant="10" id="tiA-un-cCf"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="xHB-A6-0Ha"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="346-C7-tzJ">
+                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="YdR-yK-oVc">
+                            <connections>
+                                <action selector="clearPressed:" destination="wRi-w7-CMJ" id="0Zk-Rv-brL"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="keyboardHeightLayoutConstraint" destination="6Cd-rQ-kRl" id="HFg-pt-Ghf"/>
+                        <outlet property="sendField" destination="db2-0p-uvA" id="Rt8-ZA-qw7"/>
+                        <outlet property="terminalTextView" destination="Cki-ec-rAf" id="Wxn-mb-MDD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LOp-b6-Xm5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="7KF-J5-JaG">
+                    <connections>
+                        <action selector="tap:" destination="wRi-w7-CMJ" id="l7U-ph-2aT"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="864.79999999999995" y="1585.4572713643179"/>
+        </scene>
         <!--Device Scanner-->
         <scene sceneID="Ru7-dF-rWx">
             <objects>
@@ -388,6 +465,7 @@
                         <segue destination="cl4-ZU-HDT" kind="relationship" relationship="viewControllers" id="0fP-yC-1bu"/>
                         <segue destination="747-KD-ijP" kind="relationship" relationship="viewControllers" id="qtW-hM-gpQ"/>
                         <segue destination="Z8o-pL-4UX" kind="relationship" relationship="viewControllers" id="0jf-84-q56"/>
+                        <segue destination="IvZ-zr-WtI" kind="relationship" relationship="viewControllers" id="yAq-DT-HX4"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uNH-0K-qMx" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -451,12 +529,32 @@
             </objects>
             <point key="canvasLocation" x="-74" y="896"/>
         </scene>
+        <!--Terminal-->
+        <scene sceneID="aCN-S8-6Gr">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="IvZ-zr-WtI" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Terminal" image="terminal" id="mTD-aa-Kp4"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YZc-Fe-5ew">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="wRi-w7-CMJ" kind="relationship" relationship="rootViewController" id="YxN-TR-9xh"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Pad-es-LlJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-74" y="1586"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Stop" width="48" height="48"/>
         <image name="connection" width="36" height="36"/>
         <image name="launch" width="36" height="36"/>
         <image name="settings" width="48" height="48"/>
+        <image name="terminal" width="36" height="36"/>
     </resources>
     <color key="tintColor" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

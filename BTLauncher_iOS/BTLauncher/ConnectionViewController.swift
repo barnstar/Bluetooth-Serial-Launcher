@@ -1,4 +1,3 @@
-
 /*********************************************************************************
  * BT Video Launcher
  *
@@ -120,7 +119,6 @@ class ConnectionViewController :
     func serialDidConnect(_ peripheral: CBPeripheral)
     {
         LaunchController.shared().connected = true
-        LaunchController.shared().sendValidationCommand()
         tableView.reloadData()
     }
 
