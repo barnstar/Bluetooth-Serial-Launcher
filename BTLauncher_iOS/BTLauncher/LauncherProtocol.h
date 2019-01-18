@@ -25,7 +25,7 @@
  * SOFTWARE.
  **********************************************************************************/
 
-#define LAUNCHER_VERS           2
+#define LAUNCHER_VERS 3
 
 #define ARM_ON      "AO"
 #define ARM_OFF     "AF"
@@ -48,12 +48,13 @@
 #define CTY_OK      "CY"
 #define CTY_NONE    "CX"
 
+#define BAT_LEV     "BL"
 
 #define CMD_TERM    ':'
 #define CMD_SEP     '|'
 
 
-//For Swift which doesn't translate chars to vars
+//For Swift which doesn't translate chars to constants
 #define CMD_TERM_S  ":"
 #define CMD_SEP_S   "|"
 

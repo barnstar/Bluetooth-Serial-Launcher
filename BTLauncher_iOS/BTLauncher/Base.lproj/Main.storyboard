@@ -46,7 +46,7 @@
                                 <rect key="frame" x="10" y="68" width="355" height="15.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connected" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YsD-Ef-lIe">
-                                        <rect key="frame" x="0.0" y="0.0" width="115" height="15.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="85" height="15.5"/>
                                         <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -55,7 +55,7 @@
                                         <size key="shadowOffset" width="1" height="-1"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Validated" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ks1-VZ-Ibw">
-                                        <rect key="frame" x="120" y="0.0" width="115" height="15.5"/>
+                                        <rect key="frame" x="90" y="0.0" width="85" height="15.5"/>
                                         <color key="backgroundColor" red="0.30840110780000002" green="0.5618229508" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -64,8 +64,17 @@
                                         <size key="shadowOffset" width="1" height="-1"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Signal" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lyA-5C-tzM">
-                                        <rect key="frame" x="240" y="0.0" width="115" height="15.5"/>
+                                        <rect key="frame" x="180" y="0.0" width="85" height="15.5"/>
                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                        <color key="shadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <size key="shadowOffset" width="1" height="-1"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Voltage" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X9R-to-HYY">
+                                        <rect key="frame" x="270" y="0.0" width="85" height="15.5"/>
+                                        <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -208,6 +217,7 @@
                         <outlet property="validateButton" destination="ekd-qX-JW0" id="rol-wa-V9o"/>
                         <outlet property="validationStatusLabel" destination="ks1-VZ-Ibw" id="NRS-pn-Xhf"/>
                         <outlet property="viewFinderContainer" destination="82p-Yo-GFq" id="Xaq-Hl-bPh"/>
+                        <outlet property="voltageLabel" destination="X9R-to-HYY" id="J8G-gd-yjr"/>
                         <outletCollection property="roundedViews" destination="wcf-h2-Urv" collectionClass="NSMutableArray" id="WCO-J0-GM2"/>
                         <outletCollection property="roundedViews" destination="4sf-Jv-GHw" collectionClass="NSMutableArray" id="AmN-sH-tLP"/>
                         <outletCollection property="roundedViews" destination="sTi-Ad-1RS" collectionClass="NSMutableArray" id="q9V-W9-fIV"/>

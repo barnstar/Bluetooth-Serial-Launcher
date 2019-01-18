@@ -44,7 +44,7 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
         startObservers()
     }
 
-    func startObservers() {
+    private func startObservers() {
         self.observers = [
             LaunchController.shared().observe(\LaunchController.validated, options: [.new]) {
                 [unowned self] (_,_) in

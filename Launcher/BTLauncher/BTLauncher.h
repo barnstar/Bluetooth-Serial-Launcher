@@ -27,12 +27,14 @@
 
 #include <Arduino.h>
 
+#define BAUD_RATE               9600
+
 //GPIO configuration
 #define BT_TX_PIN               3       //Software Serial TX
 #define BT_RX_PIN               4       //Software Serial RX
 
 #define BUZZER_PIN              10      //Piezo buzzer pin for arm tone
-#define POWER_ON_PIN            11      //Power on indicator
+#define RESET_PIN               11      
 
 //Relay Pins
 #define CONTINUTITY_CONTROL_PIN 7       //Relay to control continuity check
@@ -40,3 +42,9 @@
 #define ARM_CONTROL_PIN         5       //Relay to control arming
 
 #define CONTINUITY_READ_PIN     12      //Indicates continuity when grounded
+
+#define BAT_VOLTAGE_PIN         A0
+
+#define MAX_ARM_TIME_MS         8000
+#define MAX_CONTINUITY_TIME_MS  5000
+#define MAX_FIRE_TIME_MS        5000

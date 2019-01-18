@@ -51,13 +51,13 @@ class LocalSettings
         }
     }
 
-    var autoRecord : Bool! {
+    public var autoRecord : Bool! {
         didSet {
             UserDefaults.standard.set(autoRecord, forKey: kVideoKey)
         }
     }
 
-    var validationCode : String! {
+    public var validationCode : String! {
         didSet {
             UserDefaults.standard.set(validationCode, forKey: kValidationCodeKey)
         }

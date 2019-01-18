@@ -31,9 +31,9 @@ class TerminalViewController : UIViewController, UITextFieldDelegate, TerminalDe
 {
     @IBOutlet weak var terminalTextView: UITextView!
     @IBOutlet weak var sendField: UITextField!
-    var observers = [NSKeyValueObservation]()
-
     @IBOutlet var keyboardHeightLayoutConstraint: NSLayoutConstraint!
+
+    private var observers = [NSKeyValueObservation]()
 
     override func viewDidLoad()
     {
@@ -49,6 +49,8 @@ class TerminalViewController : UIViewController, UITextFieldDelegate, TerminalDe
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+
+    //MARK:- Actions
 
     @IBAction func sendPressed(_ sender: Any) {
         if let sendText = sendField.text {
@@ -98,7 +100,7 @@ class TerminalViewController : UIViewController, UITextFieldDelegate, TerminalDe
         }
     }
 
-    func scrollToBottom()
+    private func scrollToBottom()
     {
         let size = self.terminalTextView.contentSize.height
         let height = self.terminalTextView.bounds.size.height

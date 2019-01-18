@@ -46,6 +46,7 @@ String kValidate = String(VALIDATE);
 String kRequiresValidation = String(REQ_VALID);
 String kVersion = String(VERSION);
 String kSetCode = String(SETCODE);
+String kBattLev = String(BAT_LEV);
 
 //Command structure is :COMMAND|VALUE:
 const char cmdTerminator = CMD_TERM;
@@ -70,20 +71,16 @@ char valueBuffer[cmdLen];
 bool readingCmd = false;
 bool readingVal = false;
 
-const int MAX_ARM_TIME_MS = 5000;
+//Start time for relay arming
 long armTime = 0;
-bool armed;
-
-const int MAX_FIRE_TIME_MS = 5000;
 long fireTime = 0;
-
-const int MAX_CONTINUITY_TIME_MS = 5000;
 long continuityTime = 0;
 
+//State vars
 bool isReady = false;
+bool armed = false;
 bool continuity = false;
 bool ctyTestActive = false;
-
 bool validated = false;
 
 void log(String msg)
@@ -92,12 +89,13 @@ void log(String msg)
     BTSerial.println(msg);
 }
 
+
 void setup()
 {
-    Serial.begin(9600);
-    BTSerial.begin(9600);
+    Serial.begin(BAUD_RATE);
+    BTSerial.begin(BAUD_RATE);
 
-    log("Initialized");
+    log(F("Initialized"));
 
     //If using relays, ground the pins to keep the relay
     //close (for the ones I'm using - YMMV)
@@ -105,6 +103,7 @@ void setup()
     pinMode(FIRE_CONTROL_PIN, INPUT);
     pinMode(ARM_CONTROL_PIN, INPUT);
     pinMode(CONTINUITY_READ_PIN, INPUT_PULLUP);
+    pinMode(RESET_PIN, INPUT_PULLUP);
 
     pinMode(BUZZER_PIN, OUTPUT);
     digitalWrite(BUZZER_PIN, LOW);
@@ -114,8 +113,12 @@ void setup()
     setFired(false);
     setContinuityTestOn(false);
 
-    //PinCode emptyPin;
-    //setPinCode(emptyPin);
+    int reset = digitalRead(RESET_PIN);
+    if(reset == LOW) {}
+        log(F("Code reset to 0000"));
+        PinCode emptyPin;
+        setPinCode(emptyPin);
+    }
 }
 
 void loop()
@@ -143,17 +146,17 @@ void loop()
 
     //Safety.  We don't want to keep any of these relays engaged for more than a few
     //seconds
-    if (millis() - armTime > MAX_ARM_TIME_MS)
+    if (armTime && (millis() - armTime > MAX_ARM_TIME_MS)
     {
         setArmed(false);
     }
 
-    if (millis() - fireTime > MAX_FIRE_TIME_MS)
+    if (fireTime && (millis() - fireTime > MAX_FIRE_TIME_MS))
     {
         setFired(false);
     }
 
-    if (millis() - continuityTime > MAX_CONTINUITY_TIME_MS)
+    if (continuityTime && (millis() - continuityTime > MAX_CONTINUITY_TIME_MS))
     {
         setContinuityTestOn(false);
     }
@@ -266,11 +269,6 @@ void executeCommand(const String &cmd, const String &value)
     }
     else if (cmd == kValidate)
     {
-        validated = true;
-        String validateCmd = commandVal(kValidate, value);
-        BTSerial.println(validateCmd);
-
-        /*
         PinCode pin = readPinCode();
         if (comparePinCode(pin, value))
         {
@@ -282,17 +280,28 @@ void executeCommand(const String &cmd, const String &value)
             Serial.println("Sent:" + validateCmd);
             playPingTone();
             validated = true;
-        }*/
+        }
     }
     else if (cmd == kSetCode)
     {
         PinCode code;
-        value.toCharArray(code.code, PIN_LEN);
+        char temp[PIN_LEN + 1];
+        //toCharArray and getBytes both append a null terminator
+        value.toCharArray(temp, PIN_LEN + 1); 
+        memcpy(code.code, temp, PIN_LEN); //Copy the first 4 chars
         setPinCode(code);
 
         //Echo back to indicate we've set the pin
-        String pinSetCmd = commandVal(cmd, value);
+        String pinSetCmd = commandVal(kSetCode, value);
         BTSerial.println(pinSetCmd);
+    }
+    else if (cmd == kBattLev) 
+    {
+        //Return the battery voltage
+        float voltage = batteryVoltage();
+        String vStr = String(voltage);
+        String vCmd = commandVal(kBattLev, vStr);
+        BTSerial.println(vCmd);
     }
 }
 
@@ -316,6 +325,7 @@ void setContinuityTestOn(bool on)
 {
     if (!validated)
     {
+        ctyTestActive = false;
         return;
     }
 
@@ -406,6 +416,14 @@ void playReadyTone()
     }
 }
 
+float batteryVoltage()
+{
+    int val = analogRead(BAT_VOLTAGE_PIN);
+    //Map 0->1024 to 0->5
+    float v = ((float)val * 5.0 / 1024.0) ;
+    return v;
+}
+
 #pragma mark - PinCode Support
 
 bool isValidPin(PinCode p)
@@ -428,16 +446,17 @@ bool comparePinCode(PinCode &pin, String pinStr)
         return false;
     }
 
-    log("Comparing:" + pinStr);
+    log(F("Comparing:"));
+    log(pinStr);
     for (int i = 0; i < PIN_LEN; i++)
     {
         if (pin.code[i] != pinStr.charAt(i))
         {
-            log("Code mismatch");
+            log(F("Code mismatch"));
             return false;
         }
     }
-    log("Code match");
+    log(F("Code match");
     return true;
 }
 
@@ -460,7 +479,7 @@ PinCode readPinCode()
     EEPROM.get(0, pinCode);
     if (!isValidPin(pinCode))
     {
-        log("Setting default PIN code");
+        log(F("Setting default PIN code"));
         PinCode emptyPin;
         setPinCode(emptyPin);
         return emptyPin;

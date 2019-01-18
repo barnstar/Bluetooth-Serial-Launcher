@@ -22,6 +22,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ * 
+ * Modified from: https://github.com/hoiberg/HM10-BluetoothSerial-iOS
  **********************************************************************************/
 
 import UIKit
@@ -155,14 +157,16 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
         }
     }
     
-    func sendBytesToDevice(_ bytes: [UInt8]) {
+    func sendBytesToDevice(_ bytes: [UInt8]) 
+    {
         guard isReady else { return }
         
         let data = Data(bytes: UnsafePointer<UInt8>(bytes), count: bytes.count)
         connectedPeripheral!.writeValue(data, for: writeCharacteristic!, type: writeType)
     }
     
-    func sendDataToDevice(_ data: Data) {
+    func sendDataToDevice(_ data: Data) 
+    {
         guard isReady else { return }
         
         connectedPeripheral!.writeValue(data, for: writeCharacteristic!, type: writeType)
@@ -233,7 +237,8 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
     
     func peripheral(_ peripheral: CBPeripheral,
                     didDiscoverCharacteristicsFor service: CBService,
-                    error: Error?) {
+                    error: Error?)
+                     {
         for characteristic in service.characteristics! {
             if characteristic.uuid == characteristicUUID {
                 peripheral.setNotifyValue(true, for: characteristic)

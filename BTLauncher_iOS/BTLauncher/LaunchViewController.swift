@@ -33,7 +33,8 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     @IBOutlet weak var connectionStatusLabel: UILabel!
     @IBOutlet weak var validationStatusLabel: UILabel!
     @IBOutlet weak var signalLabel: UILabel!
-
+    @IBOutlet weak var voltageLabel: UILabel!
+    
     @IBOutlet weak var armButton: UIButton!
     @IBOutlet weak var fireButton: UIButton!
     @IBOutlet weak var ctyButton: UIButton!
@@ -46,18 +47,18 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     @IBOutlet weak var recordingLabel: UILabel!
     @IBOutlet weak var continuityIndicator: UIView!
 
-    var observers = [NSKeyValueObservation]()
+    private var observers = [NSKeyValueObservation]()
 
-    var captureSession: AVCaptureSession?
-    var videoPreviewLayer: AVCaptureVideoPreviewLayer?
-    var captureDevice : AVCaptureDevice?
-    var audioDevice : AVCaptureDevice?
+    private var captureSession: AVCaptureSession?
+    private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
+    private var captureDevice : AVCaptureDevice?
+    private var audioDevice : AVCaptureDevice?
 
-    var movieOutput = AVCaptureMovieFileOutput()
+    private var movieOutput = AVCaptureMovieFileOutput()
 
-    var recording : Bool = false
-    var recordingReady : Bool = false
-    var savingDialog : UIAlertController?
+    private var recording : Bool = false
+    private var recordingReady : Bool = false
+    private var savingDialog : UIAlertController?
 
     override func viewDidLoad()
     {
@@ -92,8 +93,14 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         startObservers()
     }
 
-    func startObservers()
+    private func startObservers()
     {
+        let rssi = LaunchController.shared().rssi
+        self.signalLabel.text = "Signal: \(rssi)"
+
+        let batteryLevel = LaunchController.shared().batteryLevel
+        self.voltageLabel.text = "Batt: \(batteryLevel)v"
+
         self.observers = [
             LaunchController.shared().observe(\LaunchController.connected, options: [.new]) {
                 [unowned self] (_,_) in
@@ -118,11 +125,17 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
                 [unowned self] (_,_) in
                 let rssi = LaunchController.shared().rssi
                 self.signalLabel.text = "Signal: \(rssi)"
+            },
+
+            LaunchController.shared().observe(\LaunchController.batteryLevel, options: [.new]) {
+                [unowned self] (_,_) in
+                let batteryLevel = LaunchController.shared().batteryLevel
+                self.voltageLabel.text = "Batt: \(batteryLevel)v"
             }
         ]
     }
 
-    func startCamera()
+    private func startCamera()
     {
         guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video),
               let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
@@ -155,7 +168,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         }
     }
 
-    func setRecording(_ recording: Bool)
+    private func setRecording(_ recording: Bool)
     {
         if(LocalSettings.settings.autoRecord == false)
         {
@@ -180,7 +193,8 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
             let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
             let fileUrl = paths[0].appendingPathComponent("output.mov")
             try? FileManager.default.removeItem(at: fileUrl)
-            movieOutput.startRecording(to: fileUrl, recordingDelegate: self as AVCaptureFileOutputRecordingDelegate)
+            movieOutput.startRecording(to: fileUrl,
+                                       recordingDelegate: self as AVCaptureFileOutputRecordingDelegate)
         }
     }
 
@@ -243,7 +257,6 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     @IBAction func continuityOn(_ sender: Any) {
         LaunchController.shared().sendContinuityCommand(true)
     }
-
 
     @IBAction func continuityOff(_ sender: Any) {
         LaunchController.shared().sendContinuityCommand(false)

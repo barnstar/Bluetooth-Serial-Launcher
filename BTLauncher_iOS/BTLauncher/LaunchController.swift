@@ -35,10 +35,12 @@ protocol TerminalDelegate {
 }
 
 
-class LaunchController : NSObject, BluetoothSerialDelegate
+final class LaunchController : NSObject, BluetoothSerialDelegate
 {
-    var signalTimer : Timer!
-    var setCodeCallback : (()->Void)?
+    private var signalTimer : Timer!
+    private var voltageTimer : Timer!
+    private var setCodeCallback : (()->Void)?
+
     var terminalDelegate : TerminalDelegate?
 
     private static let instance : LaunchController = {
@@ -58,6 +60,7 @@ class LaunchController : NSObject, BluetoothSerialDelegate
     @objc dynamic var deviceVersion : String?
     @objc dynamic var rssi : Float = 0.0
     @objc dynamic var validated : Bool = false
+    @objc dynamic var batteryLevel : Float = 0.0
 
     @objc dynamic var armed : Bool = false {
         didSet {
@@ -73,11 +76,20 @@ class LaunchController : NSObject, BluetoothSerialDelegate
                     timer.invalidate()
                     signalTimer = nil
                 }
+                if let timer = voltageTimer {
+                    timer.invalidate()
+                    voltageTimer = nil;
+                }
             }else{
                 signalTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) {
                     _ in
                     BluetoothSerial.shared().readRSSI()
                 }
+                voltageTimer = Timer.scheduledTimer(withTimeInterval: 90.0, repeats: true) {
+                    [unowned self] _ in
+                    self.sendCheckVoltage()
+                }
+                sendCheckVoltage()
             }
         }
     }
@@ -85,7 +97,7 @@ class LaunchController : NSObject, BluetoothSerialDelegate
 
     //MARK: Command Interface
 
-    func constructCommand(_ command:String, value:String?) -> String
+    private func constructCommand(_ command:String, value:String?) -> String
     {
         var ret = CMD_TERM_S + command
         if let value = value {
@@ -156,7 +168,7 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         }
     }
 
-    func sendArmedCommand(_ enable: Bool)
+    public func sendArmedCommand(_ enable: Bool)
     {
         if(!validated) { return }
 
@@ -164,7 +176,20 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         sendCommand(cmdStr)
     }
 
-    func handleIncomingCommand(_ cmd:String)
+    public func sendCheckVoltage()
+    {
+        let cmdStr = constructCommand(BAT_LEV, value:nil)
+        sendCommand(cmdStr)
+
+        if(kEnableTestMode) {
+            let retStr = constructCommand(BAT_LEV, value:"3.30")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+                self.serialDidReceiveString(retStr)
+            }
+        }
+    }
+
+    private func handleIncomingCommand(_ cmd:String)
     {
         let stripped = cmd.trimmingCharacters(in: CharacterSet.init(charactersIn: CMD_TERM_S))
         let parts = stripped.components(separatedBy: CMD_SEP_S)
@@ -190,13 +215,18 @@ class LaunchController : NSObject, BluetoothSerialDelegate
             }
         }else if(cmdStr == PING) {
             NSLog("Ping returned");
+        }else if(cmdStr == BAT_LEV) {
+            if let valStr = valStr {
+                batteryLevel = Float(valStr) ?? 0.0
+            }
         }
     }
 
+
     //MARK: BT Serial Delegate
 
-    var stringBuffer : String = ""
-    var cmdIncoming : Bool = false
+    private var stringBuffer : String = ""
+    private var cmdIncoming : Bool = false
 
     func serialDidReceiveString(_ message: String)
     {
@@ -226,7 +256,8 @@ class LaunchController : NSObject, BluetoothSerialDelegate
         self.rssi = rssi.floatValue
     }
 
-    func sendCommand(_ command: String) {
+    public func sendCommand(_ command: String)
+    {
         BluetoothSerial.shared().sendMessageToDevice(command);
         if let delegate = terminalDelegate {
             delegate.appendString("<- \(command)\n")
