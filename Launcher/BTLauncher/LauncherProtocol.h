@@ -48,7 +48,8 @@
 #define CTY_OK      "CY"
 #define CTY_NONE    "CX"
 
-#define BAT_LEV     "BL"
+#define LV_BAT_LEV    "LVL"
+#define HV_BAT_LEV    "HVL"
 
 #define CMD_TERM    ':'
 #define CMD_SEP     '|'

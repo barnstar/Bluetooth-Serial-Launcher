@@ -43,7 +43,8 @@
 
 #define CONTINUITY_READ_PIN     12      //Indicates continuity when grounded
 
-#define BAT_VOLTAGE_PIN         A0
+#define LV_BAT_VOLTAGE_PIN      A0
+#define HV_BAT_VOLTAGE_PIN      A2
 
 #define MAX_ARM_TIME_MS         8000
 #define MAX_CONTINUITY_TIME_MS  5000

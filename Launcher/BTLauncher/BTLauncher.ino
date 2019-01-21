@@ -46,7 +46,8 @@ String kValidate = String(VALIDATE);
 String kRequiresValidation = String(REQ_VALID);
 String kVersion = String(VERSION);
 String kSetCode = String(SETCODE);
-String kBattLev = String(BAT_LEV);
+String kLVBattLev = String(LV_BAT_LEV);
+String kHVBattLev = String(HV_BAT_LEV);
 
 //Command structure is :COMMAND|VALUE:
 const char cmdTerminator = CMD_TERM;
@@ -295,12 +296,20 @@ void executeCommand(const String &cmd, const String &value)
         String pinSetCmd = commandVal(kSetCode, value);
         BTSerial.println(pinSetCmd);
     }
-    else if (cmd == kBattLev) 
+    else if (cmd == kLVBattLev)
     {
         //Return the battery voltage
         float voltage = batteryVoltage();
         String vStr = String(voltage);
-        String vCmd = commandVal(kBattLev, vStr);
+        String vCmd = commandVal(kLVBattLev, vStr);
+        BTSerial.println(vCmd);
+    }
+    else if (cmd == kHVBattLev)
+    {
+        //Return the battery voltage
+        float voltage = launcherBatteryVoltage();
+        String vStr = String(voltage);
+        String vCmd = commandVal(kHVBattLev, vStr);
         BTSerial.println(vCmd);
     }
 }
@@ -418,9 +427,18 @@ void playReadyTone()
 
 float batteryVoltage()
 {
-    int val = analogRead(BAT_VOLTAGE_PIN);
+    int val = analogRead(LV_BAT_VOLTAGE_PIN);
     //Map 0->1024 to 0->5
     float v = ((float)val * 5.0 / 1024.0) ;
+    return v;
+}
+
+float launcherBatteryVoltage()
+{
+    int val = analogRead(HV_BAT_VOLTAGE_PIN);
+    //Map 0->1024 to 0->5
+    //HV is on a 3:1 divider so multiply by 3 to get the actual voltage
+    float v = ((float)val * 5.0 / 1024.0) * 3.0;
     return v;
 }
 

@@ -61,6 +61,7 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
     @objc dynamic var rssi : Float = 0.0
     @objc dynamic var validated : Bool = false
     @objc dynamic var batteryLevel : Float = 0.0
+    @objc dynamic var hvBatteryLevel : Float = 0.0
 
     @objc dynamic var armed : Bool = false {
         didSet {
@@ -178,15 +179,28 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
 
     public func sendCheckVoltage()
     {
-        let cmdStr = constructCommand(BAT_LEV, value:nil)
-        sendCommand(cmdStr)
+        //Low voltage (arduino battery)
+        let cmdStrLv = constructCommand(LV_BAT_LEV, value:nil)
+        sendCommand(cmdStrLv)
 
         if(kEnableTestMode) {
-            let retStr = constructCommand(BAT_LEV, value:"3.30")
+            let retStr = constructCommand(LV_BAT_LEV, value:"3.30")
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
                 self.serialDidReceiveString(retStr)
             }
         }
+
+        //High voltage (main battery)
+        let cmdStrHv = constructCommand(HV_BAT_LEV, value:nil)
+        sendCommand(cmdStrHv)
+
+        if(kEnableTestMode) {
+            let retStr = constructCommand(HV_BAT_LEV, value:"12.0")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+                self.serialDidReceiveString(retStr)
+            }
+        }
+
     }
 
     private func handleIncomingCommand(_ cmd:String)
@@ -215,11 +229,16 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
             }
         }else if(cmdStr == PING) {
             NSLog("Ping returned");
-        }else if(cmdStr == BAT_LEV) {
+        }else if(cmdStr == LV_BAT_LEV) {
             if let valStr = valStr {
                 batteryLevel = Float(valStr) ?? 0.0
             }
+        }else if(cmdStr == HV_BAT_LEV) {
+            if let valStr = valStr {
+                hvBatteryLevel = Float(valStr) ?? 0.0
+            }
         }
+
     }
 
 

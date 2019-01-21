@@ -34,7 +34,8 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     @IBOutlet weak var validationStatusLabel: UILabel!
     @IBOutlet weak var signalLabel: UILabel!
     @IBOutlet weak var voltageLabel: UILabel!
-    
+    @IBOutlet weak var highVoltageLabel: UILabel!
+
     @IBOutlet weak var armButton: UIButton!
     @IBOutlet weak var fireButton: UIButton!
     @IBOutlet weak var ctyButton: UIButton!
@@ -67,6 +68,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         self.validationStatusLabel.text = "Not Validated"
         self.signalLabel.text = "No Signal"
 
+        self.armButton.isEnabled = LaunchController.shared().validated;
         stopButton.isHidden = true
         recordingLabel.isHidden = true
         fireButton.isHidden = true
@@ -99,7 +101,10 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         self.signalLabel.text = "Signal: \(rssi)"
 
         let batteryLevel = LaunchController.shared().batteryLevel
-        self.voltageLabel.text = "Batt: \(batteryLevel)v"
+        self.voltageLabel.text = "LV Batt: \(batteryLevel)v"
+
+        let hvBatteryLevel = LaunchController.shared().hvBatteryLevel
+        self.highVoltageLabel.text = "HV Batt: \(hvBatteryLevel)v"
 
         self.observers = [
             LaunchController.shared().observe(\LaunchController.connected, options: [.new]) {
@@ -114,6 +119,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
                 let validated = LaunchController.shared().validated
                 self.validationStatusLabel.text = validated ? "Validated" : "Not Validated"
                 self.validationStatusLabel.backgroundColor = validated ? .green : .red
+                self.armButton.isEnabled = validated;
             },
 
             LaunchController.shared().observe(\LaunchController.continuity, options: [.new]) {
@@ -130,7 +136,13 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
             LaunchController.shared().observe(\LaunchController.batteryLevel, options: [.new]) {
                 [unowned self] (_,_) in
                 let batteryLevel = LaunchController.shared().batteryLevel
-                self.voltageLabel.text = "Batt: \(batteryLevel)v"
+                self.voltageLabel.text = "LV Batt: \(batteryLevel)v"
+            },
+
+            LaunchController.shared().observe(\LaunchController.hvBatteryLevel, options: [.new]) {
+                [unowned self] (_,_) in
+                let batteryLevel = LaunchController.shared().hvBatteryLevel
+                self.highVoltageLabel.text = "HV Batt: \(batteryLevel)v"
             }
         ]
     }
@@ -227,11 +239,13 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
 
      @IBAction func armTouchDown(_ sender: Any)
      {
-        LaunchController.shared().armed = true
-        fireButton.isHidden = false
-        ctyButton.isHidden = true
-        pingButton.isHidden = true
-        setRecording(true)
+        if(LaunchController.shared().connected && LaunchController.shared().validated) {
+            LaunchController.shared().armed = true
+            fireButton.isHidden = false
+            ctyButton.isHidden = true
+            pingButton.isHidden = true
+            setRecording(true)
+        }
     }
 
     @IBAction func armTouchCancel(_ sender: Any)
