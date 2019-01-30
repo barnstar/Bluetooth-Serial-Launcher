@@ -189,6 +189,14 @@
                                     <action selector="fireTouchUp:" destination="1ab-li-zD3" eventType="touchCancel" id="reZ-u7-RDe"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DTm-Am-m7E">
+                                <rect key="frame" x="106" y="189" width="163" height="289.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="240"/>
+                                <color key="textColor" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <size key="shadowOffset" width="3" height="3"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -204,6 +212,8 @@
                             <constraint firstItem="jIc-CZ-Mfh" firstAttribute="centerX" secondItem="9JL-UR-c5h" secondAttribute="centerX" id="Qe7-cS-WGP"/>
                             <constraint firstItem="wcf-h2-Urv" firstAttribute="centerX" secondItem="Ppv-ln-Srf" secondAttribute="centerX" id="TMi-M2-Cdc"/>
                             <constraint firstItem="82p-Yo-GFq" firstAttribute="leading" secondItem="buq-Xr-9ou" secondAttribute="leading" constant="20" id="XWf-BM-ftS"/>
+                            <constraint firstItem="DTm-Am-m7E" firstAttribute="centerY" secondItem="9JL-UR-c5h" secondAttribute="centerY" id="ZBU-dR-Hhx"/>
+                            <constraint firstItem="DTm-Am-m7E" firstAttribute="centerX" secondItem="9JL-UR-c5h" secondAttribute="centerX" id="ZI9-Bt-Ma1"/>
                             <constraint firstItem="wcf-h2-Urv" firstAttribute="top" secondItem="Ppv-ln-Srf" secondAttribute="bottom" constant="36" id="a86-yu-A2T"/>
                             <constraint firstItem="lNH-Sc-Dsb" firstAttribute="leading" secondItem="buq-Xr-9ou" secondAttribute="leading" constant="10" id="a9M-h6-37C"/>
                             <constraint firstItem="buq-Xr-9ou" firstAttribute="trailing" secondItem="82p-Yo-GFq" secondAttribute="trailing" constant="20" id="arX-WV-oqC"/>
@@ -228,6 +238,7 @@
                         <outlet property="armButton" destination="4sf-Jv-GHw" id="oj8-hs-sKW"/>
                         <outlet property="connectionStatusLabel" destination="lba-eC-fJR" id="Wxl-a4-d1E"/>
                         <outlet property="continuityIndicator" destination="Ppv-ln-Srf" id="CBR-65-E8B"/>
+                        <outlet property="countdownLabel" destination="DTm-Am-m7E" id="xys-4t-xC2"/>
                         <outlet property="ctyButton" destination="wcf-h2-Urv" id="ujd-Xr-lbD"/>
                         <outlet property="fireButton" destination="sTi-Ad-1RS" id="iK0-yy-Qof"/>
                         <outlet property="highVoltageLabel" destination="lyA-5C-tzM" id="d9k-8D-sxJ"/>

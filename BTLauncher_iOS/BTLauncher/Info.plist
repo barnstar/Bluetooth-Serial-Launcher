@@ -23,11 +23,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>So we can use the camera dummy</string>
+	<string>So we can use the camera</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>So we can record the screaming</string>
+	<string>So we can record the sound of victory!!</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>So we can save the recording</string>
+	<string>So we can save the recordingl</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>So we can save the recording</string>
 	<key>UILaunchStoryboardName</key>

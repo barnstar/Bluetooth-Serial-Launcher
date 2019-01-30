@@ -46,6 +46,10 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
     private static let instance : LaunchController = {
         let instance = LaunchController()
         instance.armed = false
+        if(kEnableTestMode) {
+            instance.connected = true;
+            instance.validated = true;
+        }
         BluetoothSerial.shared().delegate = instance
         return instance
     }()

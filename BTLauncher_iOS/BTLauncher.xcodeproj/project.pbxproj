@@ -16,6 +16,7 @@
 		C202570721E7BD1700DE6E53 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570621E7BD1700DE6E53 /* LaunchViewController.swift */; };
 		C202570921E7BD5000DE6E53 /* ConnectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */; };
 		C20CBB5821F0C370000516F8 /* TerminalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20CBB5721F0C370000516F8 /* TerminalViewController.swift */; };
+		C22ECC8E22020DCA00D0536B /* Countdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22ECC8D22020DCA00D0536B /* Countdown.swift */; };
 		C2FC4E5221E90F7D00865E10 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */; };
 		C2FC4E5421E9116200865E10 /* LocalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2FC4E5321E9116200865E10 /* LocalSettings.swift */; };
 /* End PBXBuildFile section */
@@ -32,6 +33,7 @@
 		C202570621E7BD1700DE6E53 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionViewController.swift; sourceTree = "<group>"; };
 		C20CBB5721F0C370000516F8 /* TerminalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalViewController.swift; sourceTree = "<group>"; };
+		C22ECC8D22020DCA00D0536B /* Countdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Countdown.swift; sourceTree = "<group>"; };
 		C2503C3021EE69EB00D8F7D8 /* BTLauncher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BTLauncher.h; path = ../../Launcher/BTLauncher/BTLauncher.h; sourceTree = "<group>"; };
 		C2503C3121EE69EB00D8F7D8 /* LauncherProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LauncherProtocol.h; path = ../../Launcher/BTLauncher/LauncherProtocol.h; sourceTree = "<group>"; };
 		C2ABB63621EFB40B00DF3F1C /* BTLauncher.ino */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BTLauncher.ino; path = ../../Launcher/BTLauncher/BTLauncher.ino; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 				C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */,
 				C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */,
 				C20CBB5721F0C370000516F8 /* TerminalViewController.swift */,
+				C22ECC8D22020DCA00D0536B /* Countdown.swift */,
 				C20256F421E7AE6800DE6E53 /* Main.storyboard */,
 				C20256F721E7AE6900DE6E53 /* Assets.xcassets */,
 				C20256F921E7AE6900DE6E53 /* LaunchScreen.storyboard */,
@@ -177,6 +180,7 @@
 				C20CBB5821F0C370000516F8 /* TerminalViewController.swift in Sources */,
 				C2FC4E5421E9116200865E10 /* LocalSettings.swift in Sources */,
 				C202570921E7BD5000DE6E53 /* ConnectionViewController.swift in Sources */,
+				C22ECC8E22020DCA00D0536B /* Countdown.swift in Sources */,
 				C202570321E7AECE00DE6E53 /* BluetoothSerial.swift in Sources */,
 				C202570721E7BD1700DE6E53 /* LaunchViewController.swift in Sources */,
 				C2FC4E5221E90F7D00865E10 /* SettingsViewController.swift in Sources */,

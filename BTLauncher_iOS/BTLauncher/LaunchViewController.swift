@@ -27,7 +27,7 @@
 import UIKit
 import AVFoundation
 
-class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDelegate
+class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDelegate, CountdownDelegate
 {
     @IBOutlet weak var viewFinderContainer: UIView!
     @IBOutlet weak var connectionStatusLabel: UILabel!
@@ -47,6 +47,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
 
     @IBOutlet weak var recordingLabel: UILabel!
     @IBOutlet weak var continuityIndicator: UIView!
+    @IBOutlet weak var countdownLabel: UILabel!
 
     private var observers = [NSKeyValueObservation]()
 
@@ -60,6 +61,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
     private var recording : Bool = false
     private var recordingReady : Bool = false
     private var savingDialog : UIAlertController?
+    private let countDown = Countdown()
 
     override func viewDidLoad()
     {
@@ -67,6 +69,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         self.connectionStatusLabel.text = "Not Connected"
         self.validationStatusLabel.text = "Not Validated"
         self.signalLabel.text = "No Signal"
+        self.countdownLabel.alpha = 0.0;
 
         self.armButton.isEnabled = LaunchController.shared().validated;
         stopButton.isHidden = true
@@ -93,56 +96,68 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         }
 
         startObservers()
+        countDown.delegate = self;
     }
 
     private func startObservers()
     {
-        let rssi = LaunchController.shared().rssi
-        self.signalLabel.text = "Signal: \(rssi)"
+        let updateSignal = {
+            let rssi = LaunchController.shared().rssi
+            self.signalLabel.text = "Signal: \(rssi)"
+        }
 
-        let batteryLevel = LaunchController.shared().batteryLevel
-        self.voltageLabel.text = "LV Batt: \(batteryLevel)v"
+        let updateLVLabel = {
+            let batteryLevel = LaunchController.shared().batteryLevel
+            self.voltageLabel.text = "LV Batt: \(batteryLevel)v"
+        }
 
-        let hvBatteryLevel = LaunchController.shared().hvBatteryLevel
-        self.highVoltageLabel.text = "HV Batt: \(hvBatteryLevel)v"
+        let updateHVLabel = {
+            let hvBatteryLevel = LaunchController.shared().hvBatteryLevel
+            self.highVoltageLabel.text = "HV Batt: \(hvBatteryLevel)v"
+        }
 
-        self.observers = [
-            LaunchController.shared().observe(\LaunchController.connected, options: [.new]) {
-                [unowned self] (_,_) in
-                let connected = LaunchController.shared().connected
-                self.connectionStatusLabel.text =  connected ? "Connected" : "Not Connected"
-                self.connectionStatusLabel.backgroundColor = connected ? .green : .red
+        let updateConnectedLabel = {
+            let connected = LaunchController.shared().connected
+            self.connectionStatusLabel.text =  connected ? "Connected" : "Not Connected"
+            self.connectionStatusLabel.backgroundColor = connected ? .green : .red
+        }
+
+        let updateValidatedLabel = {
+            let validated = LaunchController.shared().validated
+            self.armButton.isEnabled = validated;
+            self.validationStatusLabel.text =  validated ? "Validated" : "Not Validated"
+            self.validationStatusLabel.backgroundColor = validated ? .green : .red
+        }
+
+        let updateContinutityView = {
+            self.continuityIndicator.isHidden = !LaunchController.shared().continuity
+        }
+
+        updateSignal()
+        updateLVLabel()
+        updateHVLabel()
+        updateConnectedLabel()
+        updateValidatedLabel()
+        updateContinutityView()
+
+         self.observers = [
+            LaunchController.shared().observe(\LaunchController.connected, options: [.new]) { (_,_) in
+                updateConnectedLabel()
             },
-
-            LaunchController.shared().observe(\LaunchController.validated, options: [.new]) {
-                [unowned self] (_,_) in
-                let validated = LaunchController.shared().validated
-                self.validationStatusLabel.text = validated ? "Validated" : "Not Validated"
-                self.validationStatusLabel.backgroundColor = validated ? .green : .red
-                self.armButton.isEnabled = validated;
+            LaunchController.shared().observe(\LaunchController.validated, options: [.new]) { (_,_) in
+                updateValidatedLabel()
             },
-
-            LaunchController.shared().observe(\LaunchController.continuity, options: [.new]) {
-                [unowned self] (_,_) in
-                self.continuityIndicator.isHidden = !LaunchController.shared().continuity
+            LaunchController.shared().observe(\LaunchController.continuity, options: [.new]) { (_,_) in
+                updateContinutityView()
             },
-
-            LaunchController.shared().observe(\LaunchController.rssi, options: [.new]) {
-                [unowned self] (_,_) in
-                let rssi = LaunchController.shared().rssi
-                self.signalLabel.text = "Signal: \(rssi)"
+            LaunchController.shared().observe(\LaunchController.rssi, options: [.new]) { (_,_) in
+                updateSignal()
             },
-
-            LaunchController.shared().observe(\LaunchController.batteryLevel, options: [.new]) {
-                [unowned self] (_,_) in
-                let batteryLevel = LaunchController.shared().batteryLevel
-                self.voltageLabel.text = "LV Batt: \(batteryLevel)v"
+            LaunchController.shared().observe(\LaunchController.batteryLevel, options: [.new]) { (_,_) in
+                updateLVLabel()
             },
-
-            LaunchController.shared().observe(\LaunchController.hvBatteryLevel, options: [.new]) {
-                [unowned self] (_,_) in
-                let batteryLevel = LaunchController.shared().hvBatteryLevel
-                self.highVoltageLabel.text = "HV Batt: \(batteryLevel)v"
+            LaunchController.shared().observe(\LaunchController.hvBatteryLevel, options: [.new]) { (_,_) in
+                updateHVLabel()
             }
         ]
     }
@@ -245,6 +260,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
             ctyButton.isHidden = true
             pingButton.isHidden = true
             setRecording(true)
+            countDown.startCountdown(5, speedMS: 800)
         }
     }
 
@@ -254,10 +270,12 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         fireButton.isHidden = true
         ctyButton.isHidden = false
         pingButton.isHidden = false
+        countDown.stopCountdown()
     }
 
     @IBAction func fireTouchDown(_ sender: Any) {
         LaunchController.shared().sendFireCommand(true)
+        countDown.stopCountdown()
     }
 
     @IBAction func fireTouchUp(_ sender: Any) {
@@ -282,5 +300,22 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
 
     @IBAction func pingPressed(_ sender: Any) {
         LaunchController.shared().pingConnectedDevice()
+    }
+
+    func countdownChanged(_ value: Int)
+    {
+        if(value == 0) {
+            self.countdownLabel.alpha = 0;
+            return;
+        }
+
+        self.countdownLabel.text = "\(value)"
+        self.countdownLabel.alpha = 1.0
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4){
+            UIView.animate(withDuration: 0.4) {
+                self.countdownLabel.alpha = 0.0
+            }
+        }
     }
 }

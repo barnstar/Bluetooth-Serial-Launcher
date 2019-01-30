@@ -41,6 +41,8 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
         self.title = "Settings"
         validationCodeField.text = LocalSettings.settings.validationCode
         autoRecordSwitch.setOn(LocalSettings.settings.autoRecord, animated: false)
+        self.updateButton.isHidden = !LaunchController.shared().validated
+
         startObservers()
     }
 

@@ -25,7 +25,7 @@
  * SOFTWARE.
  **********************************************************************************/
 
-#define LAUNCHER_VERS 3
+#define LAUNCHER_VERS 4
 
 #define ARM_ON      "AO"
 #define ARM_OFF     "AF"
