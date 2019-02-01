@@ -202,6 +202,13 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
             return
         }
 
+        //No camera
+        if nil == AVCaptureDevice.default(for: AVMediaType.video) ||
+           nil == AVCaptureDevice.default(for: AVMediaType.audio)
+        {
+                return
+        }
+
         stopButton.isHidden = !recording
         recordingLabel.isHidden = !recording
         
@@ -260,7 +267,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
             ctyButton.isHidden = true
             pingButton.isHidden = true
             setRecording(true)
-            countDown.startCountdown(5, speedMS: 800)
+            countDown.startCountdown(5, speedMS: 1000)
         }
     }
 
@@ -310,10 +317,12 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         }
 
         self.countdownLabel.text = "\(value)"
-        self.countdownLabel.alpha = 1.0
+        self.countdownLabel.alpha = 0.0
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4){
-            UIView.animate(withDuration: 0.4) {
+        UIView.animate(withDuration: 0.1, animations: {
+            self.countdownLabel.alpha = 1.0
+        }) { (done) in
+            UIView.animate(withDuration: 0.7) {
                 self.countdownLabel.alpha = 0.0
             }
         }

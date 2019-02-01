@@ -34,7 +34,7 @@ class Countdown : NSObject, AVSpeechSynthesizerDelegate
         currentValue = value
         startingValue = value
         let utterance = AVSpeechUtterance(string: "Tee Minus")
-        utterance.rate = 0.5
+        utterance.rate = 0.6
         synthesizer.speak(utterance)
 
         cdTimer = Timer.scheduledTimer(withTimeInterval: speedMS*0.001, repeats: true) {
@@ -62,7 +62,7 @@ class Countdown : NSObject, AVSpeechSynthesizerDelegate
 
         if(self.currentValue == 0){
             let utterance = AVSpeechUtterance(string: "Ignihshun!")
-            utterance.rate = 0.5
+            utterance.rate = 0.6
             synthesizer.speak(utterance)
         }
         self.currentValue = 0

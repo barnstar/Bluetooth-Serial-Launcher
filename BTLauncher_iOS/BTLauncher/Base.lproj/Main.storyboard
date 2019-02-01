@@ -285,19 +285,31 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UpN-Cf-ux5">
-                                <rect key="frame" x="316" y="215" width="51" height="31"/>
+                                <rect key="frame" x="316" y="338" width="51" height="31"/>
                                 <connections>
                                     <action selector="autoRecordChanged:" destination="osa-lg-4zd" eventType="valueChanged" id="tP9-uT-Xr9"/>
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Auto Record Video" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FBg-hL-P6r">
-                                <rect key="frame" x="16" y="220" width="272" height="21"/>
+                                <rect key="frame" x="16" y="343" width="272" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UIA-aE-DoC">
+                                <rect key="frame" x="316" y="372" width="51" height="31"/>
+                                <connections>
+                                    <action selector="armBuzzerChanged:" destination="osa-lg-4zd" eventType="valueChanged" id="ye6-hO-cJy"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable Arm Buzzer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EiU-gC-w5G">
+                                <rect key="frame" x="16" y="377" width="272" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UmO-Rc-8kW">
-                                <rect key="frame" x="37.5" y="271" width="300" height="34"/>
+                                <rect key="frame" x="37.5" y="210" width="300" height="34"/>
                                 <color key="backgroundColor" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="7QT-ET-W2y"/>
@@ -313,19 +325,24 @@
                         </subviews>
                         <color key="backgroundColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="UIA-aE-DoC" firstAttribute="leading" secondItem="EiU-gC-w5G" secondAttribute="trailing" constant="28" id="3dy-ki-6ql"/>
+                            <constraint firstItem="FBg-hL-P6r" firstAttribute="top" secondItem="UmO-Rc-8kW" secondAttribute="bottom" constant="99" id="408-2E-wss"/>
+                            <constraint firstItem="ugA-Cp-tkP" firstAttribute="trailing" secondItem="UIA-aE-DoC" secondAttribute="trailing" constant="10" id="4hL-8m-dBu"/>
                             <constraint firstItem="UmO-Rc-8kW" firstAttribute="centerX" secondItem="BwQ-qa-XCZ" secondAttribute="centerX" id="5ma-ht-LEu"/>
                             <constraint firstItem="ugA-Cp-tkP" firstAttribute="trailing" secondItem="UpN-Cf-ux5" secondAttribute="trailing" constant="10" id="6Ej-u6-QEI"/>
                             <constraint firstItem="ugA-Cp-tkP" firstAttribute="trailing" secondItem="PV5-3x-Pp2" secondAttribute="trailing" constant="16" id="Cdf-Eg-ufi"/>
                             <constraint firstItem="PV5-3x-Pp2" firstAttribute="top" secondItem="rSq-vR-os4" secondAttribute="bottom" constant="8" id="Dho-bD-RBe"/>
+                            <constraint firstItem="EiU-gC-w5G" firstAttribute="top" secondItem="FBg-hL-P6r" secondAttribute="bottom" constant="13" id="IXv-5y-36n"/>
                             <constraint firstItem="UpN-Cf-ux5" firstAttribute="leading" secondItem="FBg-hL-P6r" secondAttribute="trailing" constant="28" id="ImH-ez-fm1"/>
-                            <constraint firstItem="UmO-Rc-8kW" firstAttribute="top" secondItem="FBg-hL-P6r" secondAttribute="bottom" constant="30" id="Jaf-MC-ZrM"/>
                             <constraint firstItem="FBg-hL-P6r" firstAttribute="leading" secondItem="ugA-Cp-tkP" secondAttribute="leading" constant="16" id="Ki5-Zq-iCK"/>
                             <constraint firstItem="UpN-Cf-ux5" firstAttribute="centerY" secondItem="FBg-hL-P6r" secondAttribute="centerY" id="LZ4-Jb-25I"/>
                             <constraint firstItem="rSq-vR-os4" firstAttribute="top" secondItem="ugA-Cp-tkP" secondAttribute="top" constant="22" id="S6O-fh-mLP"/>
                             <constraint firstItem="PV5-3x-Pp2" firstAttribute="leading" secondItem="ugA-Cp-tkP" secondAttribute="leading" constant="16" id="UOv-dv-Nuz"/>
                             <constraint firstItem="rSq-vR-os4" firstAttribute="leading" secondItem="ugA-Cp-tkP" secondAttribute="leading" constant="40" id="bXM-dk-W0I"/>
-                            <constraint firstItem="FBg-hL-P6r" firstAttribute="top" secondItem="PV5-3x-Pp2" secondAttribute="bottom" constant="32" id="exP-e4-yGe"/>
                             <constraint firstItem="ugA-Cp-tkP" firstAttribute="trailing" secondItem="rSq-vR-os4" secondAttribute="trailing" constant="40" id="gXA-kP-vcz"/>
+                            <constraint firstItem="EiU-gC-w5G" firstAttribute="leading" secondItem="ugA-Cp-tkP" secondAttribute="leading" constant="16" id="hx3-BL-9u9"/>
+                            <constraint firstItem="UIA-aE-DoC" firstAttribute="centerY" secondItem="EiU-gC-w5G" secondAttribute="centerY" id="tOV-sp-jG6"/>
+                            <constraint firstItem="UmO-Rc-8kW" firstAttribute="top" secondItem="PV5-3x-Pp2" secondAttribute="bottom" constant="22" id="yYP-9S-vy4"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ugA-Cp-tkP"/>
                     </view>

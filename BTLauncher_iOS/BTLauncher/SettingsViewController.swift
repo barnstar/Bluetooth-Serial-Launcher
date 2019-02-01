@@ -86,6 +86,10 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
         LocalSettings.settings.autoRecord = sender.isOn
     }
 
+    @IBAction func armBuzzerChanged(_ sender: UISwitch) {
+        LaunchController.shared().sendArmBuzzerEnabledCommand(sender.isOn)
+    }
+
     @IBAction func setCodePressed(_ sender: Any)
     {
         validationCodeField.resignFirstResponder()

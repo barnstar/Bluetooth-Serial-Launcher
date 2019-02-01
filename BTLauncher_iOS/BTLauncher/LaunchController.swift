@@ -173,6 +173,12 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
         }
     }
 
+    public func sendArmBuzzerEnabledCommand(_ enable: Bool)
+    {
+        let cmdStr = constructCommand(ARM_BUZZ_EN, value:enable ? "1" : "0")
+        sendCommand(cmdStr)
+    }
+
     public func sendArmedCommand(_ enable: Bool)
     {
         if(!validated) { return }

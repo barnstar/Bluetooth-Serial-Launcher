@@ -27,29 +27,31 @@
 
 #define LAUNCHER_VERS 4
 
-#define ARM_ON      "AO"
-#define ARM_OFF     "AF"
-#define FIRE_ON     "FO"
-#define FIRE_OFF    "FF"
-#define CTY_ON      "CO"
-#define CTY_OFF     "CF"
-#define PING        "PI"
+#define ARM_ON      "AO"        //Arm enable
+#define ARM_OFF     "AF"        //Arm disable
+#define FIRE_ON     "FO"        //Fire enable
+#define FIRE_OFF    "FF"        //Fire disable
+#define CTY_ON      "CO"        //Continuity enable
+#define CTY_OFF     "CF"        //Continuity disable
+#define PING        "PI"        //Ping
 
-#define REQ_VALID   "RV"
+#define ARM_BUZZ_EN "ABE"       //Enable or disable the armed buzzer.  Arg 0 or 1
 
-#define VALIDATE    "VA"
-#define VCODE       "0000"
+#define REQ_VALID   "RV"        //Validation required (launcher->controller)
 
-#define DEVICEID    "ID"
-#define VERSION     "VER"
+#define VALIDATE    "VA"        //Validate.  Arg is the 4 digit code
+#define VCODE       "0000"      //Default code
 
-#define SETCODE     "SC"
+#define DEVICEID    "ID"        //Device ID.  Arg is the ID
+#define VERSION     "VER"       //Version.  Arg is the version
 
-#define CTY_OK      "CY"
-#define CTY_NONE    "CX"
+#define SETCODE     "SC"        //Set the pin code.  Arg is the 4 digit code
 
-#define LV_BAT_LEV    "LVL"
-#define HV_BAT_LEV    "HVL"
+#define CTY_OK      "CY"        //Continuity check OK
+#define CTY_NONE    "CX"        //Continuity check no continuity
+
+#define LV_BAT_LEV  "BL"        //Lipo Battery level.  Arg is the voltage reading
+#define HV_BAT_LEV  "HVBL"      //Main (launch) battery level.  Arg is the voltage reading
 
 #define CMD_TERM    ':'
 #define CMD_SEP     '|'

@@ -48,6 +48,7 @@ String kVersion = String(VERSION);
 String kSetCode = String(SETCODE);
 String kLVBattLev = String(LV_BAT_LEV);
 String kHVBattLev = String(HV_BAT_LEV);
+String kArmBuzzerEn = String(ARM_BUZZ_EN);
 
 //Command structure is :COMMAND|VALUE:
 const char cmdTerminator = CMD_TERM;
@@ -83,6 +84,7 @@ bool armed = false;
 bool continuity = false;
 bool ctyTestActive = false;
 bool validated = false;
+bool armBuzzerEnabled = true;
 
 void log(String msg)
 {
@@ -312,6 +314,10 @@ void executeCommand(const String &cmd, const String &value)
         String vCmd = commandVal(kHVBattLev, vStr);
         BTSerial.println(vCmd);
     }
+    else if (cmd == kArmBuzzerEn)
+    {
+        armBuzzerEnabled = (vstr != String("0"));
+    }
 }
 
 String commandVal(String const &cmd, String const &val)
@@ -390,7 +396,9 @@ void setArmed(bool shouldArm)
     {
         armed = true;
         armTime = millis();
-        digitalWrite(BUZZER_PIN, HIGH);
+        if(armBuzzerEnabled) {
+            digitalWrite(BUZZER_PIN, HIGH);ƒƒƒ
+        }
         pinMode(ARM_CONTROL_PIN, OUTPUT);
         digitalWrite(ARM_CONTROL_PIN, LOW);
     }
