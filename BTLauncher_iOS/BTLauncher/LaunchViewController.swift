@@ -65,7 +65,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
 
     override func viewDidLoad()
     {
-        self.title = "Fire Control"
+        self.title = "Launch Control"
         self.connectionStatusLabel.text = "Not Connected"
         self.validationStatusLabel.text = "Not Validated"
         self.signalLabel.text = "No Signal"
@@ -83,7 +83,7 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
         }
 
         continuityIndicator.clipsToBounds = true
-        continuityIndicator.layer.cornerRadius = 24
+        continuityIndicator.layer.cornerRadius = 5.0
 
         AVCaptureDevice.requestAccess(for: AVMediaType.video) { response in
             if response {
@@ -267,7 +267,9 @@ class LaunchViewController : UIViewController, AVCaptureFileOutputRecordingDeleg
             ctyButton.isHidden = true
             pingButton.isHidden = true
             setRecording(true)
-            countDown.startCountdown(5, speedMS: 1000)
+            if(LocalSettings.settings.autoCountdown) {
+                countDown.startCountdown(5, speedMS: 1000)
+            }
         }
     }
 

@@ -32,6 +32,7 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
 {
     @IBOutlet weak var validationCodeField: UITextField!
     @IBOutlet weak var autoRecordSwitch: UISwitch!
+    @IBOutlet weak var autoCountdownSwitch: UISwitch!
     @IBOutlet weak var updateButton: UIButton!
 
     var observers = [NSKeyValueObservation]()
@@ -88,6 +89,10 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
 
     @IBAction func armBuzzerChanged(_ sender: UISwitch) {
         LaunchController.shared().sendArmBuzzerEnabledCommand(sender.isOn)
+    }
+
+    @IBAction func autoCountdownChanged(_ sender: UISwitch) {
+        LocalSettings.settings.autoCountdown = sender.isOn
     }
 
     @IBAction func setCodePressed(_ sender: Any)

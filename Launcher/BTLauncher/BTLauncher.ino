@@ -55,7 +55,6 @@ const char cmdTerminator = CMD_TERM;
 const char cmdValSeparator = CMD_SEP;
 const size_t cmdLen = CMD_LEN_MAX;
 
-//No methods in this or it cant be used in the EEPROM calls
 typedef struct
 {
     uint8_t header[PIN_LEN] = PIN_VER;
@@ -330,11 +329,12 @@ String command(String const &cmd)
     return CMD_TERM_S + cmd + CMD_TERM_S;
 }
 
-//The relay boards I'm using trigger when the "input" pin
-//is grounded.  So to turn them off, we set the pin to an
+//This code works correctly only for relay boards which
+//trigger when the "input" pin is grounded.
+//To turn a relay off, we set the pin to an
 //input (without a pullup resistor) and to turn them on
 //And set them to an ouput and set the pin to low.
-//Your setup may be different.
+
 
 void setContinuityTestOn(bool on)
 {

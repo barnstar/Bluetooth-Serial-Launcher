@@ -272,7 +272,7 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
             stringBuffer.append(msg)
         }
 
-        //No particularily robust if we're quickly sending multiple commands.
+        //Not particularily robust if we're quickly sending multiple commands.
         if(stringBuffer.count > 0 && String(stringBuffer.last!) == CMD_TERM_S) {
             cmdIncoming = false
             handleIncomingCommand(stringBuffer)
