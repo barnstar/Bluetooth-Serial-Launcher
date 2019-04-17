@@ -40,11 +40,14 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
 
     override func viewDidLoad() {
         self.title = "Settings"
+        startObservers()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         validationCodeField.text = LocalSettings.settings.validationCode
         autoRecordSwitch.setOn(LocalSettings.settings.autoRecord, animated: false)
         self.updateButton.isHidden = !LaunchController.shared().validated
-
-        startObservers()
     }
 
     private func startObservers() {

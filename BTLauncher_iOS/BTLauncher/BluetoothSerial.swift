@@ -127,6 +127,7 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
     
     func connectToPeripheral(_ peripheral: CBPeripheral)
     {
+        disconnect()
         pendingPeripheral = peripheral
         centralManager.connect(peripheral, options: nil)
     }
@@ -137,8 +138,11 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
         if let p = connectedPeripheral {
             centralManager.cancelPeripheralConnection(p)
         } else if let p = pendingPeripheral {
-            centralManager.cancelPeripheralConnection(p) //TODO: Test whether its neccesary to set p to nil
+            centralManager.cancelPeripheralConnection(p) 
         }
+
+        pendingPeripheral = nil
+        connectedPeripheral = nil
     }
     
     func readRSSI()
