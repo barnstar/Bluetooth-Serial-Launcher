@@ -42,6 +42,7 @@
 #define ARM_CONTROL_PIN         5       //Relay to control arming
 
 #define CONTINUITY_READ_PIN     12      //Indicates continuity when grounded
+#define SYSTEM_ARMED_PIN        8       //Indicates the armed switch is set when grounded
 
 #define LV_BAT_VOLTAGE_PIN      A0
 #define HV_BAT_VOLTAGE_PIN      A2

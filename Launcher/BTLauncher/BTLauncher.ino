@@ -218,19 +218,38 @@ void readCommand()
             return;
         }
 
-        if (cmdBufferIndex < (cmdLen - 1))
+        if (readingCmd)
         {
-            if (readingCmd)
-            {
-                cmdBuffer[cmdBufferIndex] = c;
-            }
-            else if (readingVal)
-            {
-                valueBuffer[cmdBufferIndex] = c;
-            }
+            cmdBuffer[cmdBufferIndex] = c;
             cmdBufferIndex++;
         }
+        else if (readingVal)
+        {
+            valueBuffer[cmdBufferIndex] = c;
+            cmdBufferIndex++;
+        }else{
+            //We recieved a char, but it's nothing relevant.  We're likely
+            //getting garabge over the serial interface so flush and reset it.
+            flushAndReset();
+            return;
+        }
     }
+}
+
+void flushAndReset()
+{
+    while (BTSerial.available())
+    {
+        (void)BTSerial.read();
+    }
+    readingCmd = false;
+    readingVal = false;
+    cmdBufferIndex = 0;
+
+    setArmed(false);
+    setFired(false);
+    setContinuityTestOn(false);
+    playResetTone();
 }
 
 void executeCommand(const String &cmd, const String &value)
@@ -410,6 +429,14 @@ void setArmed(bool shouldArm)
         armTime = 0;
     }
 }
+
+void playResetTone()
+{
+    digitalWrite(BUZZER_PIN, HIGH);
+    delay(800);
+    digitalWrite(BUZZER_PIN, LOW);
+}
+
 
 void playPingTone()
 {

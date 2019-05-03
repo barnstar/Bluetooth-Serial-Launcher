@@ -38,7 +38,6 @@ protocol TerminalDelegate {
 final class LaunchController : NSObject, BluetoothSerialDelegate
 {
     private var signalTimer : Timer!
-    private var voltageTimer : Timer!
     private var setCodeCallback : (()->Void)?
 
     var terminalDelegate : TerminalDelegate?
@@ -90,11 +89,6 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
                     _ in
                     BluetoothSerial.shared().readRSSI()
                 }
-                voltageTimer = Timer.scheduledTimer(withTimeInterval: 90.0, repeats: true) {
-                    [unowned self] _ in
-                    self.sendCheckVoltage()
-                }
-                sendCheckVoltage()
             }
         }
     }
@@ -222,6 +216,7 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
         
         if(cmdStr == VALIDATE && valStr == LocalSettings.settings.validationCode) {
             validated = true
+            sendCheckVoltage()
         }else if(cmdStr == DEVICEID) {
             deviceId = valStr
         }else if(cmdStr == CTY_OK) {
@@ -238,7 +233,8 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
                 setCodeCallback = nil
             }
         }else if(cmdStr == PING) {
-            NSLog("Ping returned");
+            NSLog("Ping returned")
+            sendCheckVoltage()
         }else if(cmdStr == LV_BAT_LEV) {
             if let valStr = valStr {
                 batteryLevel = Float(valStr) ?? 0.0
