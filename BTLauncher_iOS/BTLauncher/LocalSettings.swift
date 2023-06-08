@@ -35,38 +35,12 @@ class LocalSettings
     }()
 
     private let kValidationCodeKey = "ValidationCode"
-    private let kVideoKey = "RecordVideo"
-    private let kAutoCountdown = "Countdown"
 
     init() {
         validationCode = UserDefaults.standard.value(forKey: kValidationCodeKey) as? String
         if(nil == validationCode) {
             //Set to the hard coded value.
             validationCode = VCODE
-        }
-
-        autoRecord = UserDefaults.standard.value(forKey: kVideoKey) as? Bool
-        if(nil == autoRecord) {
-            //Set to the hard coded value.
-            autoRecord = true
-        }
-
-        autoCountdown = UserDefaults.standard.value(forKey: kAutoCountdown) as? Bool
-        if(nil == autoCountdown) {
-            //Set to the hard coded value.
-            autoCountdown = true
-        }
-    }
-
-    public var autoRecord : Bool! {
-        didSet {
-            UserDefaults.standard.set(autoRecord, forKey: kVideoKey)
-        }
-    }
-
-    public var autoCountdown : Bool! {
-        didSet {
-            UserDefaults.standard.set(autoCountdown, forKey: kAutoCountdown)
         }
     }
 

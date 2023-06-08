@@ -27,15 +27,14 @@
 
 
 import UIKit
+import Combine
 
 class SettingsViewController : UIViewController, UITextFieldDelegate
 {
     @IBOutlet weak var validationCodeField: UITextField!
-    @IBOutlet weak var autoRecordSwitch: UISwitch!
-    @IBOutlet weak var autoCountdownSwitch: UISwitch!
     @IBOutlet weak var updateButton: UIButton!
 
-    var observers = [NSKeyValueObservation]()
+    var subscribers = [AnyCancellable]()
     var lastCode : String?
 
     override func viewDidLoad() {
@@ -46,17 +45,15 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         validationCodeField.text = LocalSettings.settings.validationCode
-        autoRecordSwitch.setOn(LocalSettings.settings.autoRecord, animated: false)
         self.updateButton.isHidden = !LaunchController.shared().validated
     }
 
     private func startObservers() {
-        self.observers = [
-            LaunchController.shared().observe(\LaunchController.validated, options: [.new]) {
-                [unowned self] (_,_) in
-                self.updateButton.isHidden = !LaunchController.shared().validated
-            }
-        ]
+        subscribers.removeAll()
+        LaunchController.shared().$validated
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.isHidden, on: updateButton)
+            .store(in: &subscribers)
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -86,16 +83,8 @@ class SettingsViewController : UIViewController, UITextFieldDelegate
         return true
     }
 
-    @IBAction func autoRecordChanged(_ sender: UISwitch) {
-        LocalSettings.settings.autoRecord = sender.isOn
-    }
-
     @IBAction func armBuzzerChanged(_ sender: UISwitch) {
         LaunchController.shared().sendArmBuzzerEnabledCommand(sender.isOn)
-    }
-
-    @IBAction func autoCountdownChanged(_ sender: UISwitch) {
-        LocalSettings.settings.autoCountdown = sender.isOn
     }
 
     @IBAction func setCodePressed(_ sender: Any)

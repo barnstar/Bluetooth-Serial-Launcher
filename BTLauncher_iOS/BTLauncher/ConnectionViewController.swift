@@ -27,6 +27,7 @@
 
 import UIKit
 import CoreBluetooth
+import Combine
 
 class ConnectionCell : UITableViewCell
 {
@@ -38,50 +39,68 @@ class ConnectionCell : UITableViewCell
 class ConnectionViewController :
     UIViewController,
     UITableViewDelegate,
-    UITableViewDataSource,
-    BluetoothConnectionDelegate
+    UITableViewDataSource
 {
-    var peripherals: [(peripheral: CBPeripheral, RSSI: Float)] = []
+    
     @IBOutlet weak var tableView: UITableView!
+
+    var subcribers = [AnyCancellable]()
+    var controller = LaunchController.shared().btConnections
 
     override func viewDidAppear(_ animated: Bool)
     {
         super.viewDidAppear(animated)
-        self.title = "Connect"
-        BluetoothSerial.shared().connectionDelegate = self
+        
+        subcribers.removeAll()
+        controller.$peripherals
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.tableView.reloadData()
+            }.store(in: &subcribers)
+        
+        controller.$scanning
+            .receive(on: DispatchQueue.main)
+            .sink{ scanning in
+                self.title = scanning ? "Scanning..." : "Connect"
+            }.store(in: &subcribers)
+        
+        controller.$connected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self ] _ in
+                self?.tableView.reloadData()
+            }.store(in: &subcribers)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            if false == self?.controller.scanning,
+               false == self?.controller.connected {
+                self?.controller.startScan()
+            }
+        }
     }
 
-    var scanning : Bool = false
     @IBAction func scanPressed(_ sender: Any)
     {
-        self.peripherals.removeAll()
-        tableView.reloadData()
-        if(!scanning) {
-            BluetoothSerial.shared().startScan()
-            scanning = true
-            self.title = "Scanning..."
-        }
-
-        //Abort scan after 5 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            BluetoothSerial.shared().stopScan()
-            self.scanning = false
-            self.title = "Connect"
+        switch controller.scanning {
+        case false: controller.startScan()
+        case true: controller.stopScan()
         }
     }
 
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return peripherals.count
+        let controller = LaunchController.shared().btConnections
+        return controller.peripherals.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell : ConnectionCell = tableView.dequeueReusableCell(withIdentifier: "connCell", for:indexPath) as! ConnectionCell
-        let peripheral = peripherals[indexPath.row]
+        
+        let peripheral = controller.peripherals[indexPath.row]
+        
         cell.nameLabel.text = peripheral.peripheral.name
-        let rssi = peripheral.RSSI
-        cell.RSSILabel.text = "\(rssi) dBm"
-        let connected = BluetoothSerial.shared().connectedPeripheral == peripheral.peripheral
+        cell.RSSILabel.text = "\(peripheral.RSSI) dBm"
+        let connected = controller.btSerial.connectedPeripheral == peripheral.peripheral
         cell.accessoryType = connected ? .checkmark : .none
 
         return cell
@@ -89,37 +108,9 @@ class ConnectionViewController :
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        let peripheral = peripherals[indexPath.row].peripheral
-        BluetoothSerial.shared().connectToPeripheral(peripheral)
+        controller.stopScan()
+        let peripheral = controller.peripherals[indexPath.row].peripheral
+        controller.connectToPeripheral(peripheral)
     }
-
-    func serialDidDiscoverPeripheral(_ peripheral: CBPeripheral, RSSI: NSNumber?)
-    {
-        // check whether it is a duplicate
-        for exisiting in peripherals {
-            if exisiting.peripheral.identifier == peripheral.identifier { return }
-        }
-
-        // add to the array, next sort & reload
-        let theRSSI = RSSI?.floatValue ?? 0.0
-        peripherals.append((peripheral: peripheral, RSSI: theRSSI))
-        peripherals.sort { $0.RSSI < $1.RSSI }
-        tableView.reloadData()
-    }
-
-    func serialDidChangeState() {
-    }
-
-    func serialDidDisconnect(_ peripheral: CBPeripheral, error: NSError?)
-    {
-        LaunchController.shared().connected = false
-        tableView.reloadData()
-    }
-
-    func serialDidConnect(_ peripheral: CBPeripheral)
-    {
-        LaunchController.shared().connected = true
-        tableView.reloadData()
-    }
-
 }
+

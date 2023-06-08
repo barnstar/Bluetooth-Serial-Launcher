@@ -67,22 +67,17 @@ extension BluetoothConnectionDelegate
 
 final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate 
 {
-    private static let serial : BluetoothSerial = {
-        let instance = BluetoothSerial()
-        instance.centralManager = CBCentralManager(delegate: instance, queue: nil)
-        return instance
-    }()
-
-    class func shared() -> BluetoothSerial {
-        return serial
-    }
-
-    var delegate: BluetoothSerialDelegate!
-    var connectionDelegate : BluetoothConnectionDelegate!
+    var delegate: BluetoothSerialDelegate?
+    var connectionDelegate : BluetoothConnectionDelegate?
     var centralManager: CBCentralManager!
     var pendingPeripheral: CBPeripheral?
     var connectedPeripheral: CBPeripheral?
     weak var writeCharacteristic: CBCharacteristic?
+    
+    override init() {
+        super.init()
+        self.centralManager = CBCentralManager(delegate: self, queue: nil)
+    }
     
     var isReady: Bool {
         get {
@@ -113,11 +108,15 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
     func startScan()
     {
         guard centralManager.state == .poweredOn else { return }
-        
-        centralManager.scanForPeripherals(withServices: [serviceUUID], options: nil)
-        let peripherals = centralManager.retrieveConnectedPeripherals(withServices: [serviceUUID])
-        for peripheral in peripherals {
-            connectionDelegate.serialDidDiscoverPeripheral(peripheral, RSSI: nil)
+        Task {
+            centralManager.scanForPeripherals(withServices: [serviceUUID], options: nil)
+            let peripherals = centralManager.retrieveConnectedPeripherals(withServices: [serviceUUID])
+            await MainActor.run {
+                peripherals.forEach { perhipheral in
+                    self.connectionDelegate?.serialDidDiscoverPeripheral(perhipheral,
+                                                                         RSSI: perhipheral.rssi)
+                }
+            }
         }
     }
     
@@ -137,7 +136,9 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
     {
         if let p = connectedPeripheral {
             centralManager.cancelPeripheralConnection(p)
-        } else if let p = pendingPeripheral {
+        }
+        
+        if let p = pendingPeripheral {
             centralManager.cancelPeripheralConnection(p) 
         }
 
@@ -165,7 +166,7 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
     {
         guard isReady else { return }
         
-        let data = Data(bytes: UnsafePointer<UInt8>(bytes), count: bytes.count)
+        let data = Data(bytes: bytes, count: bytes.count)
         connectedPeripheral!.writeValue(data, for: writeCharacteristic!, type: writeType)
     }
     
@@ -183,7 +184,7 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
                         didDiscover peripheral: CBPeripheral,
                         advertisementData: [String : Any], rssi RSSI: NSNumber)
     {
-        connectionDelegate.serialDidDiscoverPeripheral(peripheral, RSSI: RSSI)
+        connectionDelegate?.serialDidDiscoverPeripheral(peripheral, RSSI: RSSI)
     }
     
     func centralManager(_ central: CBCentralManager,
@@ -192,7 +193,7 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
         peripheral.delegate = self
         pendingPeripheral = nil
         connectedPeripheral = peripheral
-        connectionDelegate.serialDidConnect(peripheral)
+        connectionDelegate?.serialDidConnect(peripheral)
 
         // Okay, the peripheral is connected but we're not ready yet!
         // First get the 0xFFE0 service
@@ -210,7 +211,7 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
     {
         connectedPeripheral = nil
         pendingPeripheral = nil
-        connectionDelegate.serialDidDisconnect(peripheral, error: error as NSError?)
+        connectionDelegate?.serialDidDisconnect(peripheral, error: error as NSError?)
     }
     
     func centralManager(_ central: CBCentralManager,
@@ -218,14 +219,14 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
         CBPeripheral, error: Error?)
     {
         pendingPeripheral = nil
-        connectionDelegate.serialDidFailToConnect(peripheral, error: error as NSError?)
+        connectionDelegate?.serialDidFailToConnect(peripheral, error: error as NSError?)
     }
     
     func centralManagerDidUpdateState(_ central: CBCentralManager)
     {
         connectedPeripheral = nil
         pendingPeripheral = nil
-        connectionDelegate.serialDidChangeState()
+        connectionDelegate?.serialDidChangeState()
     }
     
     
@@ -248,7 +249,7 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
                 peripheral.setNotifyValue(true, for: characteristic)
                 writeCharacteristic = characteristic
                 writeType = characteristic.properties.contains(.write) ? .withResponse : .withoutResponse
-                delegate.serialIsReady(peripheral)
+                delegate?.serialIsReady(peripheral)
             }
         }
     }
@@ -261,9 +262,7 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
         guard data != nil else { return }
 
         if let str = String(data: data!, encoding: String.Encoding.utf8) {
-            delegate.serialDidReceiveString(str)
-        } else {
-            //print("Received an invalid string!") uncomment for debugging
+            delegate?.serialDidReceiveString(str)
         }
     }
     
@@ -271,7 +270,7 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
                     didReadRSSI RSSI:
         NSNumber, error: Error?)
     {
-        connectionDelegate.serialDidReadRSSI(RSSI)
-        delegate.serialDidReadRSSI(RSSI)
+        connectionDelegate?.serialDidReadRSSI(RSSI)
+        delegate?.serialDidReadRSSI(RSSI)
     }
 }

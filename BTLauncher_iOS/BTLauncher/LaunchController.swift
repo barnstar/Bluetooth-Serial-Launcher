@@ -26,9 +26,9 @@
 
 import Foundation
 import CoreBluetooth
+import Combine
 
 let kEnableTestMode = false
-
 
 protocol TerminalDelegate {
     func appendString(_ string: String);
@@ -37,61 +37,71 @@ protocol TerminalDelegate {
 
 final class LaunchController : NSObject, BluetoothSerialDelegate
 {
-    private var signalTimer : Timer!
+    private var signalTimer : AnyCancellable?
+    private var voltageTimer : AnyCancellable?
+
     private var setCodeCallback : (()->Void)?
-
-    var terminalDelegate : TerminalDelegate?
-
+    
+    let btSerial: BluetoothSerial
+    let btController: BTController
+    let btConnections: BTConnections
+    
+    var subsciberes = [AnyCancellable]()
+    
     private static let instance : LaunchController = {
-        let instance = LaunchController()
-        instance.armed = false
-        if(kEnableTestMode) {
-            instance.connected = true;
-            instance.validated = true;
-        }
-        BluetoothSerial.shared().delegate = instance
-        return instance
+        LaunchController(BluetoothSerial())
     }()
 
     class func shared() -> LaunchController {
-        return instance
+        instance
+    }
+    
+    init(_ serial: BluetoothSerial) {
+        self.armed = false
+        if(kEnableTestMode) {
+            validated = true
+        }
+        
+        self.btSerial = serial
+        self.btController = BTController(self.btSerial)
+        self.btConnections = BTConnections(self.btSerial)
+        self.btSerial.delegate = btController
+        self.btSerial.connectionDelegate = btConnections
+        super.init()
+
+         btController.$command
+            .filter { nil != $0 }
+            .sink { [weak self] value in
+                self?.handleIncomingCommand(value!)
+            }.store(in: &subsciberes)
+        
+        btConnections.$connected
+            .sink { [weak self] connected in
+                switch connected{
+                case false:
+                    self?.validated = false
+                    self?.signalTimer?.cancel()
+                case true:
+                    self?.signalTimer = Timer.publish(every: 2.0, on: .main, in: .default)
+                        .autoconnect()
+                        .sink { _ in
+                            self?.btController.readRSSI()
+                        }
+                    
+                }
+                
+            }.store(in: &subsciberes)
     }
 
     //MARK: Obserable Properties
-    @objc dynamic var continuity : Bool = false
-    @objc dynamic var deviceId : String?
-    @objc dynamic var deviceVersion : String?
-    @objc dynamic var rssi : Float = 0.0
-    @objc dynamic var validated : Bool = false
-    @objc dynamic var batteryLevel : Float = 0.0
-    @objc dynamic var hvBatteryLevel : Float = 0.0
-
-    @objc dynamic var armed : Bool = false {
-        didSet {
-            sendArmedCommand(armed)
-        }
-    }
-
-    @objc dynamic var connected : Bool = false {
-        didSet {
-            if(!connected) {
-                validated = false
-                if let timer = signalTimer {
-                    timer.invalidate()
-                    signalTimer = nil
-                }
-                if let timer = voltageTimer {
-                    timer.invalidate()
-                    voltageTimer = nil;
-                }
-            }else{
-                signalTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) {
-                    _ in
-                    BluetoothSerial.shared().readRSSI()
-                }
-            }
-        }
-    }
+   @Published var continuity : Bool = false
+   @Published var deviceId : String?
+   @Published var deviceVersion : String?
+   @Published var rssi : Float = 0.0
+   @Published var validated : Bool = false
+   @Published var batteryLevel : Float = 0.0
+   @Published var hvBatteryLevel : Float = 0.0
+   @Published var armed : Bool = false
 
 
     //MARK: Command Interface
@@ -106,21 +116,25 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
         return ret
     }
 
+    func setArmed(_ val: Bool) {
+        armed = val
+        sendArmedCommand(armed)
+    }
 
     public func pingConnectedDevice()
     {
         //Allow ping w/o validation
         let cmdStr = constructCommand(PING, value:nil)
-        sendCommand(cmdStr)
+        btController.sendCommand(cmdStr)
     }
 
     public func sendSetValidationCodeCommand(_ code: String, callback:@escaping ()->Void)
     {
-        if(!validated) { return }
+        guard validated else { return }
 
         setCodeCallback = callback
         let cmdStr = constructCommand(SETCODE, value: code)
-        sendCommand(cmdStr)
+        btController.sendCommand(cmdStr)
 
         if(kEnableTestMode) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
@@ -132,7 +146,7 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
     public func sendValidationCommand()
     {
         let cmdStr = constructCommand(VALIDATE, value: LocalSettings.settings.validationCode)
-        sendCommand(cmdStr)
+        btController.sendCommand(cmdStr)
 
         if(kEnableTestMode) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
@@ -143,23 +157,25 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
 
     public func sendFireCommand(_ enable: Bool)
     {
-        if(!validated) { return }
+        guard validated else { return }
 
-        if(armed && enable) {
-            sendCommand(constructCommand(FIRE_ON, value:nil))
-        }else if(!enable) {
-            sendCommand(constructCommand(FIRE_OFF, value:nil))
-        }else{
-            NSLog("Fire Command Ignored: Not Armed")
+        switch (armed, enable) {
+        case (true, true):
+            btController.sendCommand(constructCommand(FIRE_ON, value:nil))
+        case (_, false):
+            btController.sendCommand(constructCommand(FIRE_OFF, value:nil))
+        case (false, true):
+            break
         }
+
     }
 
     public func sendContinuityCommand(_ enable: Bool)
     {
-        if(!validated) { return }
+        guard validated else { return }
 
         let cmdStr = constructCommand((enable ? CTY_ON : CTY_OFF), value:nil)
-        sendCommand(cmdStr)
+        btController.sendCommand(cmdStr)
 
         if(kEnableTestMode) {
             let retStr = constructCommand((enable ? CTY_OK : CTY_NONE), value:nil)
@@ -170,22 +186,22 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
     public func sendArmBuzzerEnabledCommand(_ enable: Bool)
     {
         let cmdStr = constructCommand(ARM_BUZZ_EN, value:enable ? "1" : "0")
-        sendCommand(cmdStr)
+        btController.sendCommand(cmdStr)
     }
 
     public func sendArmedCommand(_ enable: Bool)
     {
-        if(!validated) { return }
+        guard validated else { return }
 
         let cmdStr = constructCommand((enable ? ARM_ON : ARM_OFF), value:nil)
-        sendCommand(cmdStr)
+        btController.sendCommand(cmdStr)
     }
 
     public func sendCheckVoltage()
     {
         //Low voltage (arduino battery)
         let cmdStrLv = constructCommand(LV_BAT_LEV, value:nil)
-        sendCommand(cmdStrLv)
+        btController.sendCommand(cmdStrLv)
 
         if(kEnableTestMode) {
             let retStr = constructCommand(LV_BAT_LEV, value:"3.30")
@@ -196,7 +212,7 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
 
         //High voltage (main battery)
         let cmdStrHv = constructCommand(HV_BAT_LEV, value:nil)
-        sendCommand(cmdStrHv)
+        btController.sendCommand(cmdStrHv)
 
         if(kEnableTestMode) {
             let retStr = constructCommand(HV_BAT_LEV, value:"12.0")
@@ -214,79 +230,174 @@ final class LaunchController : NSObject, BluetoothSerialDelegate
         let cmdStr = parts[0]
         let valStr : String? = parts.count == 2 ? parts[1] : nil
         
-        if(cmdStr == VALIDATE && valStr == LocalSettings.settings.validationCode) {
+        
+        switch (cmdStr, valStr) {
+        case (VALIDATE, LocalSettings.settings.validationCode):
             validated = true
-            sendCheckVoltage()
-        }else if(cmdStr == DEVICEID) {
+        case (DEVICEID, _):
             deviceId = valStr
-        }else if(cmdStr == CTY_OK) {
+        case (CTY_OK, _):
             continuity = true
-        }else if(cmdStr == CTY_NONE) {
+        case (CTY_NONE, _):
             continuity = false
-        }else if(cmdStr == REQ_VALID) {
+        case (REQ_VALID, _):
             validated = false
-        }else if(cmdStr == VERSION) {
+        case (VERSION, _):
             deviceVersion = valStr
-        }else if(cmdStr == SETCODE) {
+        case (SETCODE, _):
             if let cb = setCodeCallback {
                 cb()
                 setCodeCallback = nil
             }
-        }else if(cmdStr == PING) {
-            NSLog("Ping returned")
+        case (PING, _):
             sendCheckVoltage()
-        }else if(cmdStr == LV_BAT_LEV) {
-            if let valStr = valStr {
-                batteryLevel = Float(valStr) ?? 0.0
-            }
-        }else if(cmdStr == HV_BAT_LEV) {
-            if let valStr = valStr {
-                hvBatteryLevel = Float(valStr) ?? 0.0
-            }
+        case (LV_BAT_LEV, .some(let valStr)):
+            batteryLevel = Float(valStr) ?? 0.0
+        case (HV_BAT_LEV, .some(let valStr)):
+            hvBatteryLevel = Float(valStr) ?? 0.0
+        default:
+            break
         }
 
     }
+}
 
+class BTController: NSObject, BluetoothSerialDelegate {
 
-    //MARK: BT Serial Delegate
+    private var responseBuffer : String = ""
+    private var reading : Bool = false
 
-    private var stringBuffer : String = ""
-    private var cmdIncoming : Bool = false
+    var terminal : TerminalDelegate?
+    var btSerial : BluetoothSerial!
 
+    @Published var signalLevel: Double = 0
+    @Published var command: String?
+    
+    init(_ serial: BluetoothSerial) {
+        self.btSerial = serial
+    }
+    
     func serialDidReceiveString(_ message: String)
     {
-        let msg = message.trimmingCharacters(in: .newlines)
-        if let delegate = terminalDelegate {
-            delegate.appendString("-> \(message)\n")
-        }
+        var msg = message
+                    .trimmingCharacters(in: .newlines)
+                    .replacingOccurrences(of: "\n", with: "")
+                    .replacingOccurrences(of: "\r", with: "")
+         
+        
+        NSLog(">>> \(msg)")
+        terminal?.appendString("-> \(msg)\n")
 
+        //First character is a command terminator, put us in reading mode
         if(msg.prefix(1) == CMD_TERM_S) {
-            cmdIncoming = true
+            responseBuffer = ""
+            reading = true
         }
 
-        if(cmdIncoming) {
-            stringBuffer.append(msg)
+        // Disacard any leading junk characters up to the command terminator
+        // There's a bug where some responses will not be enclosed in the terminators
+        if false == reading && msg.prefix(1) != CMD_TERM_S {
+            if let idx = msg.firstIndex(of: ":") {
+                let junk = msg.prefix(upTo: idx)
+                msg = String(msg.suffix(from: idx))
+                responseBuffer = ""
+                reading = true
+            }
         }
 
-        //Not particularily robust if we're quickly sending multiple commands.
-        if(stringBuffer.count > 0 && String(stringBuffer.last!) == CMD_TERM_S) {
-            cmdIncoming = false
-            handleIncomingCommand(stringBuffer)
-            stringBuffer = ""
+        if(reading) {
+            responseBuffer.append(msg)
+        }
+
+        //Read until the last character in the buffer is a terminator
+        if(responseBuffer.count > 0 && String(responseBuffer.last!) == CMD_TERM_S) {
+            NSLog("Parsing response buffer \(responseBuffer)")
+            let commands = responseBuffer.components(separatedBy: ":").filter{ $0.count > 1 }
+            reading = false
+            responseBuffer = ""
+            
+            //publish Each of the commands
+            commands.forEach { cmd in
+                NSLog("Publishing response \(cmd)")
+                //This will publish each command in sequence
+                self.command = cmd
+            }
         }
     }
 
-    func serialDidReadRSSI(_ rssi: NSNumber) 
-    {
-        self.rssi = rssi.floatValue
+    func serialDidReadRSSI(_ rssi: NSNumber)  {
+        self.signalLevel = rssi.doubleValue
+    }
+    
+    func readRSSI() {
+        btSerial.readRSSI()
     }
 
     public func sendCommand(_ command: String)
     {
-        BluetoothSerial.shared().sendMessageToDevice(command);
-        if let delegate = terminalDelegate {
+        btSerial.sendMessageToDevice(command);
+        NSLog("<<< \(command)")
+        if let delegate = terminal {
             delegate.appendString("<- \(command)\n")
         }
+    }
+
+}
+
+
+class BTConnections: BluetoothConnectionDelegate
+{
+    @Published var peripherals: [(peripheral: CBPeripheral, RSSI: Float)] = []
+    @Published var connected =  false
+    @Published var scanning =  false
+
+    var btSerial: BluetoothSerial!
+
+    init(_ serial: BluetoothSerial) {
+        btSerial = serial
+    }
+    
+    func startScan() {
+        scanning = true
+        peripherals.removeAll()
+        btSerial.startScan()
+    }
+    
+    func stopScan() {
+        scanning = false
+        btSerial.stopScan()
+    }
+
+    func serialDidDiscoverPeripheral(_ peripheral: CBPeripheral, RSSI: NSNumber?)
+    {
+        // check whether it is a duplicate
+        for exisiting in peripherals {
+            if exisiting.peripheral.identifier == peripheral.identifier { return }
+        }
+
+        // add to the array, next sort & reload
+        let theRSSI = RSSI?.floatValue ?? 0.0
+        peripherals.append((peripheral: peripheral, RSSI: theRSSI))
+        peripherals.sort { $0.RSSI < $1.RSSI }
+    }
+
+    func serialDidChangeState() {
+    }
+    
+    
+    func connectToPeripheral(_ peripheral: CBPeripheral) {
+        btSerial.connectToPeripheral(peripheral)
+    }
+
+
+    func serialDidDisconnect(_ peripheral: CBPeripheral, error: NSError?)
+    {
+        connected = false
+    }
+
+    func serialDidConnect(_ peripheral: CBPeripheral)
+    {
+        connected = true
     }
 
 }

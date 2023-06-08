@@ -33,8 +33,6 @@ class TerminalViewController : UIViewController, UITextFieldDelegate, TerminalDe
     @IBOutlet weak var sendField: UITextField!
     @IBOutlet var keyboardHeightLayoutConstraint: NSLayoutConstraint!
 
-    private var observers = [NSKeyValueObservation]()
-
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -43,7 +41,7 @@ class TerminalViewController : UIViewController, UITextFieldDelegate, TerminalDe
                                                name: UIResponder.keyboardWillChangeFrameNotification,
                                                object: nil)
         self.title = "Terminal"
-        LaunchController.shared().terminalDelegate = self
+        LaunchController.shared().btController.terminal = self
     }
 
     deinit {
@@ -54,7 +52,7 @@ class TerminalViewController : UIViewController, UITextFieldDelegate, TerminalDe
 
     @IBAction func sendPressed(_ sender: Any) {
         if let sendText = sendField.text {
-            LaunchController.shared().sendCommand(sendText);
+            LaunchController.shared().btController.sendCommand(sendText);
         }
         sendField.text = ""
     }
