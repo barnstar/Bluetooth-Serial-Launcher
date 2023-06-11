@@ -140,11 +140,11 @@
                                     <action selector="fireTouchUp:" destination="1ab-li-zD3" eventType="touchCancel" id="reZ-u7-RDe"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ppv-ln-Srf">
-                                <rect key="frame" x="115" y="457" width="200" height="48"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ppv-ln-Srf">
+                                <rect key="frame" x="115" y="442" width="200" height="48"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Continuity is OK" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h3i-Vq-pC6">
-                                        <rect key="frame" x="32.333333333333343" y="13.333333333333334" width="135.66666666666666" height="21.333333333333329"/>
+                                        <rect key="frame" x="32.333333333333343" y="13.333333333333313" width="135.66666666666666" height="21.333333333333329"/>
                                         <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -157,12 +157,15 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="85a-62-kXd"/>
                                     <constraint firstItem="h3i-Vq-pC6" firstAttribute="centerX" secondItem="Ppv-ln-Srf" secondAttribute="centerX" id="CN9-8x-Vf2"/>
+                                    <constraint firstItem="h3i-Vq-pC6" firstAttribute="centerY" secondItem="Ppv-ln-Srf" secondAttribute="centerY" id="E7y-6h-To6"/>
+                                    <constraint firstItem="h3i-Vq-pC6" firstAttribute="centerY" secondItem="Ppv-ln-Srf" secondAttribute="centerY" id="evE-cX-lCI"/>
                                     <constraint firstAttribute="width" constant="200" id="hpx-by-grR"/>
+                                    <constraint firstItem="h3i-Vq-pC6" firstAttribute="centerY" secondItem="Ppv-ln-Srf" secondAttribute="centerY" id="jmV-v4-nuI"/>
                                     <constraint firstItem="h3i-Vq-pC6" firstAttribute="centerY" secondItem="Ppv-ln-Srf" secondAttribute="centerY" id="zT8-Sa-33S"/>
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="WY9-Nl-hF3">
-                                <rect key="frame" x="145.33333333333331" y="651" width="139.33333333333331" height="38"/>
+                                <rect key="frame" x="145.33333333333331" y="571" width="139.33333333333331" height="38"/>
                                 <subviews>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="iLt-zn-EdY">
                                         <rect key="frame" x="0.0" y="0.0" width="51" height="38"/>
@@ -181,6 +184,7 @@
                                     </label>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="WRV-Bs-dcx" firstAttribute="leading" secondItem="iLt-zn-EdY" secondAttribute="trailing" constant="16" id="ugw-wT-JDJ"/>
                                     <constraint firstAttribute="height" constant="38" id="wng-eH-eU2"/>
                                 </constraints>
                             </stackView>
@@ -194,15 +198,16 @@
                             <constraint firstItem="lNH-Sc-Dsb" firstAttribute="top" secondItem="buq-Xr-9ou" secondAttribute="top" constant="4" id="Jk0-TK-xe1"/>
                             <constraint firstItem="buq-Xr-9ou" firstAttribute="bottom" secondItem="sTi-Ad-1RS" secondAttribute="bottom" constant="80" id="MRC-87-n36"/>
                             <constraint firstItem="buq-Xr-9ou" firstAttribute="trailing" secondItem="SGk-sc-zzC" secondAttribute="trailing" constant="20" id="NLA-Qa-wxF"/>
-                            <constraint firstItem="sTi-Ad-1RS" firstAttribute="top" secondItem="WY9-Nl-hF3" secondAttribute="bottom" constant="20" id="TZz-bL-Ywt"/>
+                            <constraint firstItem="sTi-Ad-1RS" firstAttribute="top" secondItem="WY9-Nl-hF3" secondAttribute="bottom" constant="100" id="TZz-bL-Ywt"/>
                             <constraint firstItem="lNH-Sc-Dsb" firstAttribute="leading" secondItem="buq-Xr-9ou" secondAttribute="leading" constant="10" id="a9M-h6-37C"/>
+                            <constraint firstItem="Ppv-ln-Srf" firstAttribute="centerY" secondItem="9JL-UR-c5h" secondAttribute="centerY" id="ad1-pb-TYP"/>
                             <constraint firstItem="wcf-h2-Urv" firstAttribute="centerY" secondItem="sTi-Ad-1RS" secondAttribute="centerY" id="k1i-N7-3ho"/>
                             <constraint firstItem="wcf-h2-Urv" firstAttribute="leading" secondItem="buq-Xr-9ou" secondAttribute="leading" constant="20" id="ndh-cK-kM3"/>
                             <constraint firstItem="sTi-Ad-1RS" firstAttribute="centerX" secondItem="9JL-UR-c5h" secondAttribute="centerX" id="pJb-h7-olb"/>
                             <constraint firstItem="Ppv-ln-Srf" firstAttribute="centerX" secondItem="9JL-UR-c5h" secondAttribute="centerX" id="u9Q-0C-rBa"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Launch" id="Bci-nj-rPi">
+                    <navigationItem key="navigationItem" title="Launch" largeTitleDisplayMode="always" id="Bci-nj-rPi">
                         <barButtonItem key="rightBarButtonItem" title="Validate" id="ekd-qX-JW0">
                             <connections>
                                 <action selector="validatePressed:" destination="1ab-li-zD3" id="0y4-J1-pxM"/>

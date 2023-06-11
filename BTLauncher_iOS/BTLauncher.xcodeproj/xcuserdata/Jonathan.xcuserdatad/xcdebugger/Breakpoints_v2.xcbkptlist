@@ -153,8 +153,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "58"
             endingLineNumber = "58"
-            landmarkName = "startObservers()"
-            landmarkType = "7">
+            landmarkName = "SettingsViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -184,8 +184,8 @@
             filePath = "BTLauncher/LaunchController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "258"
-            endingLineNumber = "258"
+            startingLineNumber = "256"
+            endingLineNumber = "256"
             landmarkName = "handleIncomingCommand(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -235,22 +235,6 @@
             startingLineNumber = "242"
             endingLineNumber = "242"
             landmarkName = "handleIncomingCommand(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0D2EB88A-DB17-4B99-817D-CD757457DD7E"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BTLauncher/LaunchController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "329"
-            endingLineNumber = "329"
-            landmarkName = "serialDidReadRSSI(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -328,41 +312,9 @@
             filePath = "BTLauncher/BluetoothSerial.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "214"
-            endingLineNumber = "214"
+            startingLineNumber = "207"
+            endingLineNumber = "207"
             landmarkName = "centralManager(_:didDisconnectPeripheral:error:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "4DDD0E3A-7A30-495E-8860-7A5F5F2497F6"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BTLauncher/LaunchController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "293"
-            endingLineNumber = "293"
-            landmarkName = "serialDidReceiveString(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "CE48D56E-3FFD-40AF-ABE3-7F418BB37535"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BTLauncher/LaunchController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "309"
-            endingLineNumber = "309"
-            landmarkName = "serialDidReceiveString(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

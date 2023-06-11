@@ -1,6 +1,6 @@
 # Launcher
 Light things on fire remotely with your iThing!
-Now with automatic video...
+
 
 # Hardware
 - Arduino Nano

@@ -2,7 +2,7 @@
 /*********************************************************************************
  * BT Video Launcher
  *
- * Launch your stuff with the bluetooths... With video!
+ * Launch your stuff with the bluetooths.
  *
  * Copyright 2019, Jonathan Nobels
  *

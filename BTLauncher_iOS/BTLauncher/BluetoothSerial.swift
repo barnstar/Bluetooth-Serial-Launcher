@@ -1,7 +1,7 @@
 /*********************************************************************************
  * BT Video Launcher
  *
- * Launch your stuff with the bluetooths... With video!
+ * Launch your stuff with the bluetooths.
  *
  * Copyright 2019, Jonathan Nobels
  *
@@ -48,23 +48,6 @@ protocol BluetoothConnectionDelegate
     func serialDidReadRSSI(_ rssi: NSNumber)
 }
 
-extension BluetoothSerialDelegate
-{
-    func serialDidReceiveString(_ message: String) {}
-    func serialDidReceiveBytes(_ bytes: [UInt8]) {}
-    func serialDidReceiveData(_ data: Data) {}
-    func serialDidReadRSSI(_ rssi: NSNumber) {}
-    func serialIsReady(_ peripheral: CBPeripheral) {}
-}
-
-extension BluetoothConnectionDelegate 
-{
-    func serialDidDiscoverPeripheral(_ peripheral: CBPeripheral, RSSI: NSNumber?) {}
-    func serialDidConnect(_ peripheral: CBPeripheral) {}
-    func serialDidFailToConnect(_ peripheral: CBPeripheral, error: NSError?) {}
-    func serialDidReadRSSI(_ rssi: NSNumber) {}
-}
-
 final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate 
 {
     var delegate: BluetoothSerialDelegate?
@@ -104,7 +87,7 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
     private var writeType: CBCharacteristicWriteType = .withoutResponse
 
 
-    /// Start  for peripherals
+    /// Scan  for peripherals
     func startScan()
     {
         guard centralManager.state == .poweredOn else { return }
@@ -152,31 +135,41 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
         connectedPeripheral!.readRSSI()
     }
     
-    func sendMessageToDevice(_ message: String)
+    @discardableResult
+    func sendMessageToDevice(_ message: String) -> Bool
     {
         NSLog("Sending message: \(message)")
-        guard isReady else { return }
+        guard isReady,
+              let connectedPeripheral = connectedPeripheral else { return false }
 
         if let data = message.data(using: String.Encoding.utf8) {
-            connectedPeripheral!.writeValue(data, for: writeCharacteristic!, type: writeType)
+            connectedPeripheral.writeValue(data, for: writeCharacteristic!, type: writeType)
+            return true
         }
+        return false
     }
     
-    func sendBytesToDevice(_ bytes: [UInt8]) 
+    @discardableResult
+    func sendBytesToDevice(_ bytes: [UInt8]) -> Bool
     {
-        guard isReady else { return }
-        
+        guard isReady,
+              let connectedPeripheral = connectedPeripheral else { return false  }
+
         let data = Data(bytes: bytes, count: bytes.count)
-        connectedPeripheral!.writeValue(data, for: writeCharacteristic!, type: writeType)
+        connectedPeripheral.writeValue(data, for: writeCharacteristic!, type: writeType)
+        return true
     }
     
-    func sendDataToDevice(_ data: Data) 
+    @discardableResult
+    func sendDataToDevice(_ data: Data) -> Bool
     {
-        guard isReady else { return }
-        
-        connectedPeripheral!.writeValue(data, for: writeCharacteristic!, type: writeType)
+        guard isReady,
+              let connectedPeripheral = connectedPeripheral else { return false  }
+
+        connectedPeripheral.writeValue(data, for: writeCharacteristic!, type: writeType)
+        return true
     }
-    
+
     
     // MARK: CBCentralManagerDelegate
 
@@ -242,8 +235,7 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
     
     func peripheral(_ peripheral: CBPeripheral,
                     didDiscoverCharacteristicsFor service: CBService,
-                    error: Error?)
-                     {
+                    error: Error?) {
         for characteristic in service.characteristics! {
             if characteristic.uuid == characteristicUUID {
                 peripheral.setNotifyValue(true, for: characteristic)
@@ -273,4 +265,23 @@ final class BluetoothSerial: NSObject, CBCentralManagerDelegate, CBPeripheralDel
         connectionDelegate?.serialDidReadRSSI(RSSI)
         delegate?.serialDidReadRSSI(RSSI)
     }
+}
+
+// MARK:- Default Implementations
+
+extension BluetoothSerialDelegate
+{
+    func serialDidReceiveString(_ message: String) {}
+    func serialDidReceiveBytes(_ bytes: [UInt8]) {}
+    func serialDidReceiveData(_ data: Data) {}
+    func serialDidReadRSSI(_ rssi: NSNumber) {}
+    func serialIsReady(_ peripheral: CBPeripheral) {}
+}
+
+extension BluetoothConnectionDelegate
+{
+    func serialDidDiscoverPeripheral(_ peripheral: CBPeripheral, RSSI: NSNumber?) {}
+    func serialDidConnect(_ peripheral: CBPeripheral) {}
+    func serialDidFailToConnect(_ peripheral: CBPeripheral, error: NSError?) {}
+    func serialDidReadRSSI(_ rssi: NSNumber) {}
 }

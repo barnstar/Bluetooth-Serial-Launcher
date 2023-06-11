@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ABAF2C512A33734100C36947 /* BTSerialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABAF2C502A33734100C36947 /* BTSerialController.swift */; };
 		C20256F121E7AE6800DE6E53 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20256F021E7AE6800DE6E53 /* AppDelegate.swift */; };
 		C20256F621E7AE6800DE6E53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C20256F421E7AE6800DE6E53 /* Main.storyboard */; };
 		C20256F821E7AE6900DE6E53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C20256F721E7AE6900DE6E53 /* Assets.xcassets */; };
@@ -22,6 +23,8 @@
 
 /* Begin PBXFileReference section */
 		AB2C843F25CCDB840046FADC /* BTLauncher */ = {isa = PBXFileReference; lastKnownFileType = folder; name = BTLauncher; path = ../Launcher/BTLauncher; sourceTree = "<group>"; };
+		ABAF2C4F2A33717B00C36947 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		ABAF2C502A33734100C36947 /* BTSerialController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSerialController.swift; sourceTree = "<group>"; };
 		C20256ED21E7AE6800DE6E53 /* BTLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BTLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C20256F021E7AE6800DE6E53 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C20256F521E7AE6800DE6E53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -53,6 +56,7 @@
 		C20256E421E7AE6800DE6E53 = {
 			isa = PBXGroup;
 			children = (
+				ABAF2C4F2A33717B00C36947 /* README.md */,
 				C20256EF21E7AE6800DE6E53 /* BTLauncher */,
 				AB2C843F25CCDB840046FADC /* BTLauncher */,
 				C20256EE21E7AE6800DE6E53 /* Products */,
@@ -76,6 +80,7 @@
 				C20256F021E7AE6800DE6E53 /* AppDelegate.swift */,
 				C2FC4E5321E9116200865E10 /* LocalSettings.swift */,
 				C202570421E7AF6500DE6E53 /* LaunchController.swift */,
+				ABAF2C502A33734100C36947 /* BTSerialController.swift */,
 				C202570621E7BD1700DE6E53 /* LaunchViewController.swift */,
 				C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */,
 				C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */,
@@ -167,6 +172,7 @@
 				C202570921E7BD5000DE6E53 /* ConnectionViewController.swift in Sources */,
 				C202570321E7AECE00DE6E53 /* BluetoothSerial.swift in Sources */,
 				C202570721E7BD1700DE6E53 /* LaunchViewController.swift in Sources */,
+				ABAF2C512A33734100C36947 /* BTSerialController.swift in Sources */,
 				C2FC4E5221E90F7D00865E10 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

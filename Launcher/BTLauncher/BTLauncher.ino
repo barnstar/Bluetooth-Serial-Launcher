@@ -2,7 +2,7 @@
 /*********************************************************************************
  * BT Video Launcher
  *
- * Launch your stuff with the bluetooths... With video!
+ * Launch your stuff with the bluetooth
  *
  * Copyright 2018, Jonathan Nobels
  *
@@ -378,6 +378,7 @@ void setContinuityTestOn(bool on)
         continuity = false;
         String cmd = command(kCtyNone);
         BTSerial.println(cmd);
+        digitalWrite(BUZZER_PIN, LOW);
     }
 }
 
@@ -472,8 +473,8 @@ float launcherBatteryVoltage()
 {
     int val = analogRead(HV_BAT_VOLTAGE_PIN);
     //Map 0->1024 to 0->5
-    //HV is on a 3:1 divider so multiply by 3 to get the actual voltage
-    float v = ((float)val * 5.0 / 1024.0) * 3.0;
+    //HV is on a 4:1 divider so multiply by 4 to get the actual voltage
+    float v = ((float)val * 5.0 / 1024.0) * 4.0;
     return v;
 }
 
