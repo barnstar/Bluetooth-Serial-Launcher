@@ -318,5 +318,356 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BF4898FA-9441-468F-8CDF-55B1C08A07FF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/BluetoothSerial.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "293"
+            endingLineNumber = "293"
+            landmarkName = "connectToPeripheral(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "BF4898FA-9441-468F-8CDF-55B1C08A07FF - 4f61d2e0aa707302"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BTLauncherSUI.BluetoothSerial.stopScan() -&gt; ()"
+                  moduleName = "BTLauncherSUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jonathan/Desktop/Source/BTLauncher-SwiftUI/BTLauncher_iOS/BTLauncherSUI/BT%20Serial/BluetoothSerial.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "291"
+                  endingLineNumber = "291"
+                  offsetFromSymbolStart = "236">
+               </Location>
+               <Location
+                  uuid = "BF4898FA-9441-468F-8CDF-55B1C08A07FF - fda6241c51f2f206"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BTLauncherSUI.BluetoothSerial.connectToPeripheral(Foundation.UUID) -&gt; ()"
+                  moduleName = "BTLauncherSUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jonathan/Desktop/Source/BTLauncher-SwiftUI/BTLauncher_iOS/BTLauncherSUI/BT%20Serial/BluetoothSerial.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "291"
+                  endingLineNumber = "291"
+                  offsetFromSymbolStart = "392">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "41352733-05DA-4877-87DF-9D6213EF0E11"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/BluetoothSerial.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "291"
+            endingLineNumber = "291"
+            landmarkName = "connectToPeripheral(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "41352733-05DA-4877-87DF-9D6213EF0E11 - 4f61d2e0aa707323"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BTLauncherSUI.BluetoothSerial.stopScan() -&gt; ()"
+                  moduleName = "BTLauncherSUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jonathan/Desktop/Source/BTLauncher-SwiftUI/BTLauncher_iOS/BTLauncherSUI/BT%20Serial/BluetoothSerial.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "290"
+                  endingLineNumber = "290"
+                  offsetFromSymbolStart = "60">
+               </Location>
+               <Location
+                  uuid = "41352733-05DA-4877-87DF-9D6213EF0E11 - fda6241c51f2f1c0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BTLauncherSUI.BluetoothSerial.connectToPeripheral(Foundation.UUID) -&gt; ()"
+                  moduleName = "BTLauncherSUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jonathan/Desktop/Source/BTLauncher-SwiftUI/BTLauncher_iOS/BTLauncherSUI/BT%20Serial/BluetoothSerial.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "289"
+                  endingLineNumber = "289"
+                  offsetFromSymbolStart = "168">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DC26EC62-8134-4CC2-9CF3-281202AAFBD2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/BluetoothSerial.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "120"
+            endingLineNumber = "120"
+            landmarkName = "sendMessageToDevice(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C2614517-9444-452F-99F6-5C5BA1A6E438"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/BluetoothSerial.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "sendMessageToDevice(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B0234929-4F1B-4B1B-BBA7-BB56DCF170A4"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/LaunchController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "215"
+            endingLineNumber = "215"
+            landmarkName = "handleIncomingCommand(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8B0EC4A3-B015-4F02-A927-CEC3403B8849"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/LaunchController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
+            landmarkName = "sendContinuityCommand(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9692E4E5-877C-45BD-9CC3-9E4EEABCD8E9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/LaunchController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "195"
+            endingLineNumber = "195"
+            landmarkName = "sendCheckVoltage()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "16458E09-FB91-4751-9828-67867818E62C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/LaunchController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "202"
+            endingLineNumber = "202"
+            landmarkName = "sendCheckVoltage()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3EDC9BE7-9C15-4143-9E1A-6D81D7151DA3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/BluetoothSerial.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
+            landmarkName = "centralManager(_:didDisconnectPeripheral:error:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3EDC9BE7-9C15-4143-9E1A-6D81D7151DA3 - f63e987dc6985b13"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BTLauncherSUI.BluetoothSerial.centralManager(_: __C.CBCentralManager, didDisconnectPeripheral: __C.CBPeripheral, error: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
+                  moduleName = "BTLauncherSUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jonathan/Desktop/Source/BTLauncher-SwiftUI/BTLauncher_iOS/BTLauncherSUI/BT%20Serial/BluetoothSerial.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "209"
+                  endingLineNumber = "209"
+                  offsetFromSymbolStart = "216">
+               </Location>
+               <Location
+                  uuid = "3EDC9BE7-9C15-4143-9E1A-6D81D7151DA3 - f63e987dc6985b32"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BTLauncherSUI.BluetoothSerial.centralManager(_: __C.CBCentralManager, didDisconnectPeripheral: __C.CBPeripheral, error: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
+                  moduleName = "BTLauncherSUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jonathan/Desktop/Source/BTLauncher-SwiftUI/BTLauncher_iOS/BTLauncherSUI/BT%20Serial/BluetoothSerial.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "208"
+                  endingLineNumber = "208"
+                  offsetFromSymbolStart = "216">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2310615D-B644-4BA0-B514-F536D6F6D4E5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/BluetoothSerial.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "213"
+            endingLineNumber = "213"
+            landmarkName = "centralManagerDidUpdateState(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "2310615D-B644-4BA0-B514-F536D6F6D4E5 - 720b3dc377a7732c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BTLauncherSUI.BluetoothSerial.centralManagerDidUpdateState(__C.CBCentralManager) -&gt; ()"
+                  moduleName = "BTLauncherSUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jonathan/Desktop/Source/BTLauncher-SwiftUI/BTLauncher_iOS/BTLauncherSUI/BT%20Serial/BluetoothSerial.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "227"
+                  endingLineNumber = "227"
+                  offsetFromSymbolStart = "260">
+               </Location>
+               <Location
+                  uuid = "2310615D-B644-4BA0-B514-F536D6F6D4E5 - 720b3dc377a7732c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BTLauncherSUI.BluetoothSerial.centralManagerDidUpdateState(__C.CBCentralManager) -&gt; ()"
+                  moduleName = "BTLauncherSUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jonathan/Desktop/Source/BTLauncher-SwiftUI/BTLauncher_iOS/BTLauncherSUI/BT%20Serial/BluetoothSerial.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "227"
+                  endingLineNumber = "227"
+                  offsetFromSymbolStart = "220">
+               </Location>
+               <Location
+                  uuid = "2310615D-B644-4BA0-B514-F536D6F6D4E5 - 720b3dc377a770cf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BTLauncherSUI.BluetoothSerial.centralManagerDidUpdateState(__C.CBCentralManager) -&gt; ()"
+                  moduleName = "BTLauncherSUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jonathan/Desktop/Source/BTLauncher-SwiftUI/BTLauncher_iOS/BTLauncherSUI/BT%20Serial/BluetoothSerial.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "228"
+                  endingLineNumber = "228"
+                  offsetFromSymbolStart = "220">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D76A2139-3E96-40D6-ABC9-697E35CD1CEC"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/BluetoothSerial.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
+            landmarkName = "peripheral(_:didDiscoverCharacteristicsFor:error:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "68A65107-2EAF-469A-A926-FE46CDC02E76"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/BT Serial/BluetoothSerial.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "300"
+            endingLineNumber = "300"
+            landmarkName = "disconnect()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "17F4ECC6-3516-4A2B-85D4-BB40D8D3C55D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BTLauncherSUI/ Views/LauncherTabView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
+            landmarkName = "previews"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

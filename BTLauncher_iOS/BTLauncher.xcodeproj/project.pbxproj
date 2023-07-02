@@ -7,43 +7,53 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		ABAF2C512A33734100C36947 /* BTSerialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABAF2C502A33734100C36947 /* BTSerialController.swift */; };
-		C20256F121E7AE6800DE6E53 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20256F021E7AE6800DE6E53 /* AppDelegate.swift */; };
-		C20256F621E7AE6800DE6E53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C20256F421E7AE6800DE6E53 /* Main.storyboard */; };
-		C20256F821E7AE6900DE6E53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C20256F721E7AE6900DE6E53 /* Assets.xcassets */; };
-		C20256FB21E7AE6900DE6E53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C20256F921E7AE6900DE6E53 /* LaunchScreen.storyboard */; };
-		C202570321E7AECE00DE6E53 /* BluetoothSerial.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570221E7AECE00DE6E53 /* BluetoothSerial.swift */; };
-		C202570521E7AF6500DE6E53 /* LaunchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570421E7AF6500DE6E53 /* LaunchController.swift */; };
-		C202570721E7BD1700DE6E53 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570621E7BD1700DE6E53 /* LaunchViewController.swift */; };
-		C202570921E7BD5000DE6E53 /* ConnectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */; };
-		C20CBB5821F0C370000516F8 /* TerminalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20CBB5721F0C370000516F8 /* TerminalViewController.swift */; };
-		C2FC4E5221E90F7D00865E10 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */; };
-		C2FC4E5421E9116200865E10 /* LocalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2FC4E5321E9116200865E10 /* LocalSettings.swift */; };
+		AB9AD1C92A4C7B320003CE36 /* BTLauncherSUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9AD1C82A4C7B320003CE36 /* BTLauncherSUIApp.swift */; };
+		AB9AD1CB2A4C7B320003CE36 /* LauncherTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9AD1CA2A4C7B320003CE36 /* LauncherTabView.swift */; };
+		AB9AD1CD2A4C7B320003CE36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB9AD1CC2A4C7B320003CE36 /* Assets.xcassets */; };
+		AB9AD1D02A4C7B320003CE36 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB9AD1CF2A4C7B320003CE36 /* Preview Assets.xcassets */; };
+		AB9AD1D42A4C7B380003CE36 /* BluetoothSerial.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570221E7AECE00DE6E53 /* BluetoothSerial.swift */; };
+		AB9AD1D52A4C7B3E0003CE36 /* LaunchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202570421E7AF6500DE6E53 /* LaunchController.swift */; };
+		AB9AD1D62A4C7B450003CE36 /* CommandParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABAF2C502A33734100C36947 /* CommandParser.swift */; };
+		AB9AD1D72A4C7B490003CE36 /* LocalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2FC4E5321E9116200865E10 /* LocalSettings.swift */; };
+		AB9AD1D92A4C7CCC0003CE36 /* ConnectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9AD1D82A4C7CCC0003CE36 /* ConnectionsView.swift */; };
+		AB9AD1DB2A4C7CEA0003CE36 /* LauncherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9AD1DA2A4C7CEA0003CE36 /* LauncherView.swift */; };
+		AB9AD1DE2A4C805F0003CE36 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9AD1DD2A4C805F0003CE36 /* SettingsView.swift */; };
+		AB9AD1E12A4C80D00003CE36 /* TerminalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9AD1E02A4C80D00003CE36 /* TerminalView.swift */; };
+		AB9AD1E32A4C840D0003CE36 /* BTConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9AD1E22A4C840D0003CE36 /* BTConnectionManager.swift */; };
+		AB9AD1E52A4F2BF70003CE36 /* PeripheralViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9AD1E42A4F2BF70003CE36 /* PeripheralViewModel.swift */; };
+		AB9AD1E72A5067F30003CE36 /* LaunchControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9AD1E62A5067F30003CE36 /* LaunchControllerViewModel.swift */; };
+		AB9AD1E92A51BCFA0003CE36 /* CustomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9AD1E82A51BCFA0003CE36 /* CustomButtons.swift */; };
+		AB9AD1EB2A51C5F90003CE36 /* CommandHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9AD1EA2A51C5F90003CE36 /* CommandHistory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AB2C843F25CCDB840046FADC /* BTLauncher */ = {isa = PBXFileReference; lastKnownFileType = folder; name = BTLauncher; path = ../Launcher/BTLauncher; sourceTree = "<group>"; };
+		AB9AD1C62A4C7B320003CE36 /* BTLauncherSUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BTLauncherSUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB9AD1C82A4C7B320003CE36 /* BTLauncherSUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLauncherSUIApp.swift; sourceTree = "<group>"; };
+		AB9AD1CA2A4C7B320003CE36 /* LauncherTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherTabView.swift; sourceTree = "<group>"; };
+		AB9AD1CC2A4C7B320003CE36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AB9AD1CF2A4C7B320003CE36 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		AB9AD1D82A4C7CCC0003CE36 /* ConnectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsView.swift; sourceTree = "<group>"; };
+		AB9AD1DA2A4C7CEA0003CE36 /* LauncherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherView.swift; sourceTree = "<group>"; };
+		AB9AD1DD2A4C805F0003CE36 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AB9AD1E02A4C80D00003CE36 /* TerminalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalView.swift; sourceTree = "<group>"; };
+		AB9AD1E22A4C840D0003CE36 /* BTConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionManager.swift; sourceTree = "<group>"; };
+		AB9AD1E42A4F2BF70003CE36 /* PeripheralViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralViewModel.swift; sourceTree = "<group>"; };
+		AB9AD1E62A5067F30003CE36 /* LaunchControllerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchControllerViewModel.swift; sourceTree = "<group>"; };
+		AB9AD1E82A51BCFA0003CE36 /* CustomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtons.swift; sourceTree = "<group>"; };
+		AB9AD1EA2A51C5F90003CE36 /* CommandHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandHistory.swift; sourceTree = "<group>"; };
+		ABA39E8E2A51D47F0094F34A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ABAF2C4F2A33717B00C36947 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		ABAF2C502A33734100C36947 /* BTSerialController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSerialController.swift; sourceTree = "<group>"; };
-		C20256ED21E7AE6800DE6E53 /* BTLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BTLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C20256F021E7AE6800DE6E53 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C20256F521E7AE6800DE6E53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		C20256F721E7AE6900DE6E53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C20256FA21E7AE6900DE6E53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		C20256FC21E7AE6900DE6E53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ABAF2C502A33734100C36947 /* CommandParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandParser.swift; sourceTree = "<group>"; };
 		C202570221E7AECE00DE6E53 /* BluetoothSerial.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothSerial.swift; sourceTree = "<group>"; };
 		C202570421E7AF6500DE6E53 /* LaunchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchController.swift; sourceTree = "<group>"; };
-		C202570621E7BD1700DE6E53 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
-		C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionViewController.swift; sourceTree = "<group>"; };
-		C20CBB5721F0C370000516F8 /* TerminalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalViewController.swift; sourceTree = "<group>"; };
 		C2FC4E4C21E8DA7500865E10 /* LauncherProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LauncherProtocol.h; sourceTree = "<group>"; };
-		C2FC4E4E21E8DEAA00865E10 /* BTLauncher-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BTLauncher-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
-		C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		C2FC4E4E21E8DEAA00865E10 /* BTLauncher-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "BTLauncher-Bridging-Header.h"; path = "BTLauncherSUI/BTLauncher-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		C2FC4E5321E9116200865E10 /* LocalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		C20256EA21E7AE6800DE6E53 /* Frameworks */ = {
+		AB9AD1C32A4C7B320003CE36 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -53,12 +63,71 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AB9AD1C72A4C7B320003CE36 /* BTLauncherSUI */ = {
+			isa = PBXGroup;
+			children = (
+				C2FC4E4E21E8DEAA00865E10 /* BTLauncher-Bridging-Header.h */,
+				C2FC4E4C21E8DA7500865E10 /* LauncherProtocol.h */,
+				AB9AD1C82A4C7B320003CE36 /* BTLauncherSUIApp.swift */,
+				AB9AD1EC2A51C6150003CE36 /* BT Serial */,
+				AB9AD1DF2A4C807A0003CE36 /*  Views */,
+				AB9AD1DC2A4C7DD20003CE36 /* Model */,
+				AB9AD1CC2A4C7B320003CE36 /* Assets.xcassets */,
+				AB9AD1CE2A4C7B320003CE36 /* Preview Content */,
+			);
+			path = BTLauncherSUI;
+			sourceTree = "<group>";
+		};
+		AB9AD1CE2A4C7B320003CE36 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				AB9AD1CF2A4C7B320003CE36 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		AB9AD1DC2A4C7DD20003CE36 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C2FC4E5321E9116200865E10 /* LocalSettings.swift */,
+				AB9AD1E42A4F2BF70003CE36 /* PeripheralViewModel.swift */,
+				AB9AD1E62A5067F30003CE36 /* LaunchControllerViewModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		AB9AD1DF2A4C807A0003CE36 /*  Views */ = {
+			isa = PBXGroup;
+			children = (
+				AB9AD1CA2A4C7B320003CE36 /* LauncherTabView.swift */,
+				AB9AD1DA2A4C7CEA0003CE36 /* LauncherView.swift */,
+				AB9AD1D82A4C7CCC0003CE36 /* ConnectionsView.swift */,
+				AB9AD1DD2A4C805F0003CE36 /* SettingsView.swift */,
+				AB9AD1E02A4C80D00003CE36 /* TerminalView.swift */,
+				AB9AD1E82A51BCFA0003CE36 /* CustomButtons.swift */,
+			);
+			path = " Views";
+			sourceTree = "<group>";
+		};
+		AB9AD1EC2A51C6150003CE36 /* BT Serial */ = {
+			isa = PBXGroup;
+			children = (
+				C202570421E7AF6500DE6E53 /* LaunchController.swift */,
+				C202570221E7AECE00DE6E53 /* BluetoothSerial.swift */,
+				AB9AD1EA2A51C5F90003CE36 /* CommandHistory.swift */,
+				ABAF2C502A33734100C36947 /* CommandParser.swift */,
+				AB9AD1E22A4C840D0003CE36 /* BTConnectionManager.swift */,
+			);
+			path = "BT Serial";
+			sourceTree = "<group>";
+		};
 		C20256E421E7AE6800DE6E53 = {
 			isa = PBXGroup;
 			children = (
+				ABA39E8E2A51D47F0094F34A /* Info.plist */,
 				ABAF2C4F2A33717B00C36947 /* README.md */,
-				C20256EF21E7AE6800DE6E53 /* BTLauncher */,
 				AB2C843F25CCDB840046FADC /* BTLauncher */,
+				AB9AD1C72A4C7B320003CE36 /* BTLauncherSUI */,
 				C20256EE21E7AE6800DE6E53 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,51 +135,29 @@
 		C20256EE21E7AE6800DE6E53 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C20256ED21E7AE6800DE6E53 /* BTLauncher.app */,
+				AB9AD1C62A4C7B320003CE36 /* BTLauncherSUI.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		C20256EF21E7AE6800DE6E53 /* BTLauncher */ = {
-			isa = PBXGroup;
-			children = (
-				C2FC4E4E21E8DEAA00865E10 /* BTLauncher-Bridging-Header.h */,
-				C2FC4E4C21E8DA7500865E10 /* LauncherProtocol.h */,
-				C202570221E7AECE00DE6E53 /* BluetoothSerial.swift */,
-				C20256F021E7AE6800DE6E53 /* AppDelegate.swift */,
-				C2FC4E5321E9116200865E10 /* LocalSettings.swift */,
-				C202570421E7AF6500DE6E53 /* LaunchController.swift */,
-				ABAF2C502A33734100C36947 /* BTSerialController.swift */,
-				C202570621E7BD1700DE6E53 /* LaunchViewController.swift */,
-				C202570821E7BD5000DE6E53 /* ConnectionViewController.swift */,
-				C2FC4E5121E90F7D00865E10 /* SettingsViewController.swift */,
-				C20CBB5721F0C370000516F8 /* TerminalViewController.swift */,
-				C20256F421E7AE6800DE6E53 /* Main.storyboard */,
-				C20256F721E7AE6900DE6E53 /* Assets.xcassets */,
-				C20256F921E7AE6900DE6E53 /* LaunchScreen.storyboard */,
-				C20256FC21E7AE6900DE6E53 /* Info.plist */,
-			);
-			path = BTLauncher;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C20256EC21E7AE6800DE6E53 /* BTLauncher */ = {
+		AB9AD1C52A4C7B320003CE36 /* BTLauncherSUI */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C20256FF21E7AE6900DE6E53 /* Build configuration list for PBXNativeTarget "BTLauncher" */;
+			buildConfigurationList = AB9AD1D32A4C7B320003CE36 /* Build configuration list for PBXNativeTarget "BTLauncherSUI" */;
 			buildPhases = (
-				C20256E921E7AE6800DE6E53 /* Sources */,
-				C20256EA21E7AE6800DE6E53 /* Frameworks */,
-				C20256EB21E7AE6800DE6E53 /* Resources */,
+				AB9AD1C22A4C7B320003CE36 /* Sources */,
+				AB9AD1C32A4C7B320003CE36 /* Frameworks */,
+				AB9AD1C42A4C7B320003CE36 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = BTLauncher;
-			productName = BTLauncher;
-			productReference = C20256ED21E7AE6800DE6E53 /* BTLauncher.app */;
+			name = BTLauncherSUI;
+			productName = BTLauncherSUI;
+			productReference = AB9AD1C62A4C7B320003CE36 /* BTLauncherSUI.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -119,13 +166,12 @@
 		C20256E521E7AE6800DE6E53 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1010;
+				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Jonathan Nobels";
 				TargetAttributes = {
-					C20256EC21E7AE6800DE6E53 = {
-						CreatedOnToolsVersion = 10.1;
-						LastSwiftMigration = 1240;
+					AB9AD1C52A4C7B320003CE36 = {
+						CreatedOnToolsVersion = 14.3.1;
 					};
 				};
 			};
@@ -142,63 +188,115 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C20256EC21E7AE6800DE6E53 /* BTLauncher */,
+				AB9AD1C52A4C7B320003CE36 /* BTLauncherSUI */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		C20256EB21E7AE6800DE6E53 /* Resources */ = {
+		AB9AD1C42A4C7B320003CE36 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C20256FB21E7AE6900DE6E53 /* LaunchScreen.storyboard in Resources */,
-				C20256F821E7AE6900DE6E53 /* Assets.xcassets in Resources */,
-				C20256F621E7AE6800DE6E53 /* Main.storyboard in Resources */,
+				AB9AD1D02A4C7B320003CE36 /* Preview Assets.xcassets in Resources */,
+				AB9AD1CD2A4C7B320003CE36 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		C20256E921E7AE6800DE6E53 /* Sources */ = {
+		AB9AD1C22A4C7B320003CE36 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C202570521E7AF6500DE6E53 /* LaunchController.swift in Sources */,
-				C20256F121E7AE6800DE6E53 /* AppDelegate.swift in Sources */,
-				C20CBB5821F0C370000516F8 /* TerminalViewController.swift in Sources */,
-				C2FC4E5421E9116200865E10 /* LocalSettings.swift in Sources */,
-				C202570921E7BD5000DE6E53 /* ConnectionViewController.swift in Sources */,
-				C202570321E7AECE00DE6E53 /* BluetoothSerial.swift in Sources */,
-				C202570721E7BD1700DE6E53 /* LaunchViewController.swift in Sources */,
-				ABAF2C512A33734100C36947 /* BTSerialController.swift in Sources */,
-				C2FC4E5221E90F7D00865E10 /* SettingsViewController.swift in Sources */,
+				AB9AD1E32A4C840D0003CE36 /* BTConnectionManager.swift in Sources */,
+				AB9AD1E12A4C80D00003CE36 /* TerminalView.swift in Sources */,
+				AB9AD1E92A51BCFA0003CE36 /* CustomButtons.swift in Sources */,
+				AB9AD1D52A4C7B3E0003CE36 /* LaunchController.swift in Sources */,
+				AB9AD1D92A4C7CCC0003CE36 /* ConnectionsView.swift in Sources */,
+				AB9AD1E72A5067F30003CE36 /* LaunchControllerViewModel.swift in Sources */,
+				AB9AD1DB2A4C7CEA0003CE36 /* LauncherView.swift in Sources */,
+				AB9AD1CB2A4C7B320003CE36 /* LauncherTabView.swift in Sources */,
+				AB9AD1D72A4C7B490003CE36 /* LocalSettings.swift in Sources */,
+				AB9AD1D62A4C7B450003CE36 /* CommandParser.swift in Sources */,
+				AB9AD1E52A4F2BF70003CE36 /* PeripheralViewModel.swift in Sources */,
+				AB9AD1EB2A51C5F90003CE36 /* CommandHistory.swift in Sources */,
+				AB9AD1DE2A4C805F0003CE36 /* SettingsView.swift in Sources */,
+				AB9AD1C92A4C7B320003CE36 /* BTLauncherSUIApp.swift in Sources */,
+				AB9AD1D42A4C7B380003CE36 /* BluetoothSerial.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		C20256F421E7AE6800DE6E53 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C20256F521E7AE6800DE6E53 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		C20256F921E7AE6900DE6E53 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C20256FA21E7AE6900DE6E53 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
+		AB9AD1D12A4C7B320003CE36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"BTLauncherSUI/Preview Content\"";
+				DEVELOPMENT_TEAM = 8MUG75JRMF;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.barnstar.BTLauncherSUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AB9AD1D22A4C7B320003CE36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"BTLauncherSUI/Preview Content\"";
+				DEVELOPMENT_TEAM = 8MUG75JRMF;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.barnstar.BTLauncherSUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		C20256FD21E7AE6900DE6E53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -256,7 +354,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BTLauncher-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BTLauncherSUI/BTLauncher-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -311,70 +409,29 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BTLauncher-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BTLauncherSUI/BTLauncher-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		C202570021E7AE6900DE6E53 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8MUG75JRMF;
-				INFOPLIST_FILE = BTLauncher/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.barnstar.BTLauncher;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		C202570121E7AE6900DE6E53 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8MUG75JRMF;
-				INFOPLIST_FILE = BTLauncher/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.barnstar.BTLauncher;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AB9AD1D32A4C7B320003CE36 /* Build configuration list for PBXNativeTarget "BTLauncherSUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB9AD1D12A4C7B320003CE36 /* Debug */,
+				AB9AD1D22A4C7B320003CE36 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C20256E821E7AE6800DE6E53 /* Build configuration list for PBXProject "BTLauncher" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C20256FD21E7AE6900DE6E53 /* Debug */,
 				C20256FE21E7AE6900DE6E53 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C20256FF21E7AE6900DE6E53 /* Build configuration list for PBXNativeTarget "BTLauncher" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C202570021E7AE6900DE6E53 /* Debug */,
-				C202570121E7AE6900DE6E53 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
