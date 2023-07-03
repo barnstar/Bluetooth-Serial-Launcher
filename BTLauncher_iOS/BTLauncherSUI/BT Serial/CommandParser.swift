@@ -87,3 +87,15 @@ class CommandParser: NSObject {
     }
 }
 
+extension CommandParser {
+    static func constructCommand(_ command:String, value:String?) -> String
+    {
+        var ret = CMD_TERM_S + command
+        if let value = value {
+            ret = ret + CMD_SEP_S + value
+        }
+        ret = ret + CMD_TERM_S
+        return ret
+    }
+}
+

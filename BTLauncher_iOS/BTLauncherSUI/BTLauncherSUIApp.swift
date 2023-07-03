@@ -36,7 +36,6 @@ struct BTLauncherSUIApp: App {
             LauncherTabView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .environmentObject(controller)
-                .environmentObject(controller.btSerial.connectionManager)
         }
     }
 }

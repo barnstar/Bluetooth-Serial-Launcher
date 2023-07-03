@@ -47,15 +47,15 @@ class LaunchController : ObservableObject
         didSet { viewModel.validated = validated }
     }
     
-    private var deviceId : String?
-    private var deviceVersion : String?
-    private var setCodeCallback : (()->Void)?
+    var deviceId : String?
+    var deviceVersion : String?
+    var setCodeCallback : (()->Void)?
     
     let btSerial: BluetoothSerial = BluetoothSerial()
     
     var subscriberes = [AnyCancellable]()
-    private var signalTimer : AnyCancellable?
-    private var voltageTimer : AnyCancellable?
+    var signalTimer : AnyCancellable?
+    var voltageTimer : AnyCancellable?
     
     init() {
         self.armed = false
@@ -66,7 +66,7 @@ class LaunchController : ObservableObject
         btSerial.commandParser.$command
             .filter { nil != $0 }
             .sink { [weak self] value in
-                self?.handleIncomingCommand(value!)
+                self?.handleResponse(value!)
             }.store(in: &subscriberes)
         
         /// Observers the serial managers connected peripheral property
@@ -118,97 +118,94 @@ class LaunchController : ObservableObject
 
     //MARK: Command Interface
 
-    private func constructCommand(_ command:String, value:String?) -> String
-    {
-        var ret = CMD_TERM_S + command
-        if let value = value {
-            ret = ret + CMD_SEP_S + value
-        }
-        ret = ret + CMD_TERM_S
-        return ret
-    }
-
     func ping()
     {
         //Allow ping w/o validation
-        let cmdStr = constructCommand(PING, value:nil)
+        let cmdStr = CommandParser.constructCommand(PING, value:nil)
         btSerial.sendMessageToDevice(cmdStr)
     }
 
+    /// Updates the units validation code
     func sendSetValidationCodeCommand(_ code: String, callback:@escaping ()->Void)
     {
         guard validated else { return }
 
         setCodeCallback = callback
-        let cmdStr = constructCommand(SETCODE, value: code)
+        let cmdStr = CommandParser.constructCommand(SETCODE, value: code)
         btSerial.sendMessageToDevice(cmdStr)
     }
 
+    /// Sends the request to validate with the given code
     func sendValidationCommand()
     {
         if validated { return }
         
-        let cmdStr = constructCommand(VALIDATE, value: LocalSettings.settings.validationCode)
+        let cmdStr = CommandParser.constructCommand(VALIDATE, value: LocalSettings.settings.validationCode)
         btSerial.sendMessageToDevice(cmdStr)
     }
 
+    /// Sends the fire on/fire off commands
     func sendFireCommand(_ enable: Bool)
     {
         guard validated else { return }
 
         switch (armed, enable) {
         case (true, true):
-            btSerial.sendMessageToDevice(constructCommand(FIRE_ON, value:nil))
+            btSerial.sendMessageToDevice(CommandParser.constructCommand(FIRE_ON, value:nil))
         case (_, false):
-            btSerial.sendMessageToDevice(constructCommand(FIRE_OFF, value:nil))
+            btSerial.sendMessageToDevice(CommandParser.constructCommand(FIRE_OFF, value:nil))
         case (false, true):
             break
         }
 
     }
 
+    /// Enables or disables the continuity check
     func sendContinuityCommand(_ enable: Bool)
     {
         guard validated else { return }
 
-        let cmdStr = constructCommand((enable ? CTY_ON : CTY_OFF), value:nil)
+        let cmdStr = CommandParser.constructCommand((enable ? CTY_ON : CTY_OFF), value:nil)
         btSerial.sendMessageToDevice(cmdStr)
     }
 
+    /// Enables/Disables the alarm buzzer
     func sendArmBuzzerEnabledCommand(_ enable: Bool)
     {
-        let cmdStr = constructCommand(ARM_BUZZ_EN, value:enable ? "1" : "0")
+        let cmdStr = CommandParser.constructCommand(ARM_BUZZ_EN, value:enable ? "1" : "0")
         btSerial.sendMessageToDevice(cmdStr)
     }
 
+    /// Sends the arm/disarm commands
     func sendArmedCommand(_ enable: Bool)
     {
         guard validated else { return }
 
-        let cmdStr = constructCommand((enable ? ARM_ON : ARM_OFF), value:nil)
+        let cmdStr = CommandParser.constructCommand((enable ? ARM_ON : ARM_OFF), value:nil)
         btSerial.sendMessageToDevice(cmdStr)
         armed = enable
     }
 
+    /// Sends a request for both the low and high voltage battery voltges
     public func sendCheckVoltage()
     {       
         //Low voltage (arduino battery)
-        let cmdStrLv = constructCommand(LV_BAT_LEV, value:nil)
+        let cmdStrLv = CommandParser.constructCommand(LV_BAT_LEV, value:nil)
         btSerial.sendMessageToDevice(cmdStrLv)
 
         //High voltage (main battery)
-        let cmdStrHv = constructCommand(HV_BAT_LEV, value:nil)
+        let cmdStrHv = CommandParser.constructCommand(HV_BAT_LEV, value:nil)
         btSerial.sendMessageToDevice(cmdStrHv)
 
     }
 
-    private func handleIncomingCommand(_ cmd:String)
+    /// Handles an incoming command string.
+    func handleResponse(_ cmd:String)
     {
         let stripped = cmd.trimmingCharacters(in: CharacterSet.init(charactersIn: CMD_TERM_S))
         let parts = stripped.components(separatedBy: CMD_SEP_S)
         let cmdStr = parts[0]
         let valStr : String? = parts.count == 2 ? parts[1] : nil
-        
         
         switch (cmdStr, valStr) {
         case (VALIDATE, LocalSettings.settings.validationCode):
@@ -224,10 +221,8 @@ class LaunchController : ObservableObject
         case (VERSION, _):
             deviceVersion = valStr
         case (SETCODE, _):
-            if let cb = setCodeCallback {
-                cb()
-                setCodeCallback = nil
-            }
+            setCodeCallback?()
+            setCodeCallback = nil
         case (LV_BAT_LEV, .some(let valStr)):
             viewModel.batteryLevel = Float(valStr) ?? 0.0
         case (HV_BAT_LEV, .some(let valStr)):

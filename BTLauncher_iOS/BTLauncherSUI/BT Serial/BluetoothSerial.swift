@@ -75,7 +75,6 @@ class BluetoothSerial:
     /// CoreBluetooth support
     var centralManager: CBCentralManager!
     var discoveredPeripherals: [UUID: CBPeripheral] = [:]
-    var writeCharacteristic: CBCharacteristic?
    
     override init() {
         super.init()
@@ -106,9 +105,10 @@ class BluetoothSerial:
     /// Whether to write to the HM10 with or without response. Set automatically.
     /// Legit HM10 modules (from JNHuaMao) require 'Write without Response',
     /// while fake modules (e.g. from Bolutek) require 'Write with Response'.
-    private var writeType: CBCharacteristicWriteType = .withoutResponse
+    var writeType: CBCharacteristicWriteType = .withoutResponse
+    var writeCharacteristic: CBCharacteristic?
 
-   
+
     func readRSSI()
     {
         connectedPeripheral?.readRSSI()
@@ -118,14 +118,15 @@ class BluetoothSerial:
     func sendMessageToDevice(_ message: String) -> Bool
     {
         guard transmitEnabled,
-            let connectedPeripheral = connectedPeripheral else {
+              let connectedPeripheral = connectedPeripheral,
+              let writeCharacteristic = writeCharacteristic  else {
             commandHistory.append(message + " (FAILED - no device)", direction: .tx)
             return false
         }
 
         if let data = message.data(using: String.Encoding.utf8) {
             commandHistory.append(message, direction: .tx)
-            connectedPeripheral.writeValue(data, for: writeCharacteristic!, type: writeType)
+            connectedPeripheral.writeValue(data, for: writeCharacteristic, type: writeType)
             return true
         }
         return false
@@ -135,10 +136,13 @@ class BluetoothSerial:
     func sendBytesToDevice(_ bytes: [UInt8]) -> Bool
     {
         guard transmitEnabled,
-              let connectedPeripheral = connectedPeripheral else { return false  }
+              let writeCharacteristic = writeCharacteristic,
+              let connectedPeripheral = connectedPeripheral else {
+            return false
+        }
 
         let data = Data(bytes: bytes, count: bytes.count)
-        connectedPeripheral.writeValue(data, for: writeCharacteristic!, type: writeType)
+        connectedPeripheral.writeValue(data, for: writeCharacteristic, type: writeType)
         commandHistory.append("Sent Raw \(bytes.count) bytes", direction: .tx)
 
         return true
@@ -148,9 +152,12 @@ class BluetoothSerial:
     func sendDataToDevice(_ data: Data) -> Bool
     {
         guard transmitEnabled,
-              let connectedPeripheral = connectedPeripheral else { return false  }
+              let writeCharacteristic = writeCharacteristic,
+              let connectedPeripheral = connectedPeripheral else {
+            return false
+        }
 
-        connectedPeripheral.writeValue(data, for: writeCharacteristic!, type: writeType)
+        connectedPeripheral.writeValue(data, for: writeCharacteristic, type: writeType)
         commandHistory.append("Sent Data \(data.count) bytes", direction: .tx)
 
         return true
@@ -231,13 +238,11 @@ class BluetoothSerial:
     func peripheral(_ peripheral: CBPeripheral,
                     didDiscoverCharacteristicsFor service: CBService,
                     error: Error?) {
-        for characteristic in service.characteristics! {
-            if characteristic.uuid == characteristicUUID {
+        for characteristic in service.characteristics! where characteristic.uuid == characteristicUUID {
                 peripheral.setNotifyValue(true, for: characteristic)
                 writeCharacteristic = characteristic
                 writeType = characteristic.properties.contains(.write) ? .withResponse : .withoutResponse
                 transmitEnabled = true
-             }
         }
         
         // A device is not completely connected until we've discovered all of it's characteristics
@@ -252,7 +257,6 @@ class BluetoothSerial:
                     error: Error?)
     {
         connectionManager.serialDidReadRSSI(peripheral.identifier, rssi: RSSI)
-        
         if peripheral == self.connectedPeripheral {
             signalStrength = RSSI.floatValue
         }
@@ -262,9 +266,7 @@ class BluetoothSerial:
                     didUpdateValueFor characteristic: CBCharacteristic,
                     error: Error?)
     {
-        guard let data = characteristic.value else {
-            return
-        }
+        guard let data = characteristic.value else { return }
         commandParser.serialDidReceiveData(data)
     }
 
@@ -277,9 +279,7 @@ extension BluetoothSerial: PeripheralScanner {
     {
         self.discoveredPeripherals = [:]
         guard centralManager.state == .poweredOn else { return }
-        Task {
-            centralManager.scanForPeripherals(withServices: [serviceUUID], options: nil)
-        }
+        centralManager.scanForPeripherals(withServices: [serviceUUID], options: nil)
     }
     
     func stopScan() {
@@ -300,9 +300,14 @@ extension BluetoothSerial: PeripheralScanner {
             centralManager.cancelPeripheralConnection(p)
         }
         
+        if let p = pendingPeripheral {
+            centralManager.cancelPeripheralConnection(p)
+        }
+        
         pendingPeripheral = nil
         connectedPeripheral = nil
         writeCharacteristic = nil
+        transmitEnabled = false
     }
 }
 

@@ -35,6 +35,7 @@ struct LauncherTabView: View {
                 .tabItem({
                     Label("Connections", systemImage: "wifi")
                 })
+                .environmentObject(launchController.btSerial.connectionManager)
             LauncherView()
                 .tabItem({
                     Label("Launch", systemImage: "bolt")
@@ -63,6 +64,5 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         LauncherTabView()
             .environmentObject(controller)
-            .environmentObject(controller.btSerial.connectionManager)
     }
 }

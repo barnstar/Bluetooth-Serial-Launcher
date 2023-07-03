@@ -29,7 +29,6 @@ import SwiftUI
 
 struct LauncherView: View {
     @EnvironmentObject var launchController: LaunchController
-    @EnvironmentObject var connectionManager: BTConnectionManager
 
     var body: some View {
         NavigationStack {
@@ -164,9 +163,5 @@ struct LauncherView_Previews: PreviewProvider {
     static var previews: some View {
         LauncherView()
             .environmentObject(controller)
-            .environmentObject(controller.btSerial.connectionManager)
-            .onAppear() {
-                controller.viewModel.validated = true
-            }
     }
 }

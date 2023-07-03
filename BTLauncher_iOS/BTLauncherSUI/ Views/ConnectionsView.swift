@@ -27,7 +27,6 @@
 import SwiftUI
 
 struct ConnectionsView: View {
-    @EnvironmentObject var launchController: LaunchController
     @EnvironmentObject var connectionManager: BTConnectionManager
    
     var body: some View {
@@ -36,12 +35,7 @@ struct ConnectionsView: View {
                 ForEach(connectionManager.peripherals) { peripheral in
                     PeripheralCell(peripheral: peripheral)
                         .onTapGesture   {
-                            if let p = launchController.btSerial.connectedPeripheral {
-                                launchController.btSerial.disconnect()
-                                connectionManager.startScan()
-                            } else {
-                                connectionManager.connectToPeripheral(peripheral.peripheralID)
-                            }
+                            connectionManager.connectToPeripheral(peripheral.peripheralID)
                     }
                 }
             }
