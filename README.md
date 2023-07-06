@@ -35,7 +35,7 @@ HC08 works.  The cheaper HC05/06 will not.   Some setup of the
 BT module using basic AT commands may be required.
 
 # Schematic
-![Schematic](Schematic.png =300x)
+![image into](./Schematic.png)
 
 # Notes
 - A voltage divider is required on the battery voltage 
